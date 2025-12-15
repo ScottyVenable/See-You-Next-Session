@@ -39,9 +39,13 @@ export default function Settings() {
         }
     };
 
-    const copyHash = () => {
-        navigator.clipboard.writeText(newHash);
-        setMessage({ type: 'success', text: 'Hash copied to clipboard!' });
+    const copyHash = async () => {
+        try {
+            await navigator.clipboard.writeText(newHash);
+            setMessage({ type: 'success', text: 'Hash copied to clipboard!' });
+        } catch (err) {
+            setMessage({ type: 'error', text: 'Failed to copy hash to clipboard. Please copy manually.' });
+        }
     };
 
     return (
