@@ -66,7 +66,7 @@ export function AuthProvider({ children }) {
     };
 
     if (isLoading) {
-        return <div className="loading">Loading...</div>;
+        return <div className="loading">Checking authentication...</div>;
     }
 
     return (
