@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useGame } from '../../context/GameContext.jsx';
+import { GAME_CONFIG } from '../../data/config.js';
 import '../../styles/dev-console.css';
 
 const CONSOLE_HISTORY_KEY = 'syns_dev_console_history';
@@ -70,6 +71,7 @@ function DevConsole() {
             case 'help':
                 log('=== Dev Console Commands ===', 'header');
                 log('help              - Show this help message');
+                log('version           - Show game version');
                 log('state             - Show current game state');
                 log('focus [amount]    - Set focus to amount (or show current)');
                 log('addfocus [n]      - Add n focus points');
@@ -83,7 +85,10 @@ function DevConsole() {
                 log('reset             - Reset game state');
                 break;
 
-            case 'state':
+            case 'version':
+                log('=== Game Version ===', 'header');
+                log(`Version: ${GAME_CONFIG.VERSION}`, 'success');
+                break;
                 log('=== Current Game State ===', 'header');
                 log(`Screen: ${gameState.currentScreen}`);
                 log(`Patient: ${gameState.currentPatient?.name || 'None'}`);

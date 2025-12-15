@@ -1,5 +1,8 @@
 // Game Configuration Constants
 export const GAME_CONFIG = {
+    // Version (auto-generated from git branch + commit)
+    VERSION: typeof __GAME_VERSION__ !== 'undefined' ? __GAME_VERSION__ : 'unknown-build',
+
     // Focus System
     MAX_FOCUS: 100,
     FOCUS_COST_LOOK: 15,
