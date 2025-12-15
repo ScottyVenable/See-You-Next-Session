@@ -1,6 +1,19 @@
 # See You Next Session
 
-A narrative puzzle game where you play as a mental health professional. Diagnose patients by spotting contradictions between their dialogue and physical presentation.
+<div align="center">
+
+![Version](https://img.shields.io/badge/version-0.1.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![React](https://img.shields.io/badge/React-18.2.0-61dafb)
+![Vite](https://img.shields.io/badge/Vite-5.0.10-646cff)
+
+*A narrative puzzle game where you play as a mental health professional*
+
+**Diagnose patients by spotting contradictions between their dialogue and physical presentation.**
+
+</div>
+
+---
 
 ## 🎮 Game Features
 
@@ -19,6 +32,10 @@ A narrative puzzle game where you play as a mental health professional. Diagnose
 ### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/see-you-next-session.git
+cd see-you-next-session
+
 # Install dependencies
 npm install
 
@@ -26,12 +43,13 @@ npm install
 npm run dev
 ```
 
-The game will open at `http://localhost:3000`
+The game will open at `http://localhost:5173`
 
 ### Build for Production
 
 ```bash
 npm run build
+npm run preview  # Preview production build
 ```
 
 ## 📁 Project Structure
@@ -47,11 +65,14 @@ src/
 │   │   ├── PatientView.jsx
 │   │   ├── SynthesisZone.jsx
 │   │   └── TurnClock.jsx
-│   └── screens/       # Main game screens
-│       ├── GameScreen.jsx
-│       ├── MainMenu.jsx
-│       ├── PatientSelect.jsx
-│       └── SessionReport.jsx
+│   ├── screens/       # Main game screens
+│   │   ├── GameScreen.jsx
+│   │   ├── MainMenu.jsx
+│   │   ├── PatientSelect.jsx
+│   │   └── SessionReport.jsx
+│   └── ui/            # Reusable styled-components
+│       ├── MenuButton.jsx
+│       └── index.js
 ├── context/
 │   └── GameContext.jsx    # Global game state
 ├── data/
@@ -63,6 +84,16 @@ src/
 ├── App.jsx
 └── main.jsx
 ```
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|------------|---------|
+| **React 18** | UI Framework |
+| **Vite** | Build Tool & Dev Server |
+| **Motion** | Animations (motion/react) |
+| **Styled-Components** | Component-level styling |
+| **CSS Variables** | Theming & Design Tokens |
 
 ## 🎨 Adding Content
 
@@ -102,6 +133,10 @@ The developers are not mental health professionals. All information in this game
 - **Scott** - Programming & Design
 - **Kiki** - Art Direction & Writing
 
+## 🤝 Contributing
+
+See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for guidelines.
+
 ## 📄 License
 
-MIT License - See LICENSE file for details
+MIT License - See [LICENSE](LICENSE) file for details

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useGame } from '../../context/GameContext.jsx';
+import { MenuButton } from '../ui';
 import '../../styles/main-menu.css';
 
 const VERSION = 'v0.1.0';
@@ -122,35 +123,32 @@ function MainMenu() {
                 </motion.div>
 
                 <nav className="menu-buttons">
-                    <motion.button
-                        className="menu-btn primary"
+                    <MenuButton
+                        variant="primary"
                         onClick={handleNewGame}
+                        icon="▶"
+                        fullWidth
                         variants={buttonVariants}
-                        whileHover={{ scale: 1.03, x: 5 }}
-                        whileTap={{ scale: 0.98 }}
                     >
-                        <span className="btn-icon">▶</span>
-                        <span className="btn-text">New Game</span>
-                    </motion.button>
+                        New Game
+                    </MenuButton>
 
-                    <motion.button
-                        className={`menu-btn ${hasSaveData ? '' : 'disabled'}`}
+                    <MenuButton
+                        variant={hasSaveData ? 'secondary' : 'secondary'}
                         disabled={!hasSaveData}
+                        fullWidth
                         variants={buttonVariants}
-                        whileHover={hasSaveData ? { scale: 1.03, x: 5 } : {}}
-                        whileTap={hasSaveData ? { scale: 0.98 } : {}}
                     >
-                        <span className="btn-text">Continue</span>
-                    </motion.button>
+                        Continue
+                    </MenuButton>
 
-                    <motion.button
-                        className="menu-btn"
+                    <MenuButton
+                        variant="secondary"
+                        fullWidth
                         variants={buttonVariants}
-                        whileHover={{ scale: 1.03, x: 5 }}
-                        whileTap={{ scale: 0.98 }}
                     >
-                        <span className="btn-text">Settings</span>
-                    </motion.button>
+                        Settings
+                    </MenuButton>
                 </nav>
 
                 <motion.div
