@@ -4,6 +4,7 @@ export default function Discussions() {
     const [discussions, setDiscussions] = useState([]);
     const [newPost, setNewPost] = useState({ title: '', content: '' });
     const [loading, setLoading] = useState(true);
+    const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
 
     const owner = import.meta.env.VITE_REPO_OWNER;
     const repo = import.meta.env.VITE_REPO_NAME;
@@ -28,7 +29,7 @@ export default function Discussions() {
         if (!newPost.title.trim() || !newPost.content.trim()) return;
 
         const post = {
-            id: Date.now(),
+            id: crypto.randomUUID(),
             title: newPost.title,
             content: newPost.content,
             author: 'Team Member',
@@ -48,7 +49,7 @@ export default function Discussions() {
                     replies: [
                         ...d.replies,
                         {
-                            id: Date.now(),
+                            id: crypto.randomUUID(),
                             content: replyText,
                             author: 'Team Member',
                             date: new Date().toISOString()
@@ -62,9 +63,18 @@ export default function Discussions() {
     };
 
     const deleteDiscussion = (id) => {
-        if (confirm('Delete this discussion?')) {
-            saveDiscussions(discussions.filter(d => d.id !== id));
+        setDeleteModal({ show: true, id });
+    };
+
+    const confirmDelete = () => {
+        if (deleteModal.id) {
+            saveDiscussions(discussions.filter(d => d.id !== deleteModal.id));
         }
+        setDeleteModal({ show: false, id: null });
+    };
+
+    const cancelDelete = () => {
+        setDeleteModal({ show: false, id: null });
     };
 
     const formatDate = (dateString) => {
@@ -153,6 +163,24 @@ export default function Discussions() {
                     Open GitHub Discussions →
                 </a>
             </div>
+
+            {/* Delete Confirmation Modal */}
+            {deleteModal.show && (
+                <div className="modal-overlay" onClick={cancelDelete}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <h3>Delete Discussion?</h3>
+                        <p>Are you sure you want to delete this discussion? This action cannot be undone.</p>
+                        <div className="modal-actions">
+                            <button onClick={confirmDelete} className="btn btn-danger">
+                                Delete
+                            </button>
+                            <button onClick={cancelDelete} className="btn btn-secondary">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
