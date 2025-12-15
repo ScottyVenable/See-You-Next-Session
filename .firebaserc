@@ -1,0 +1,20 @@
+{
+    "projects": {
+        "default": "see-you-next-session-site"
+    },
+    "targets": {
+        "see-you-next-session-site": {
+            "hosting": {
+                "production": [
+                    "see-you-next-session-site"
+                ],
+                "staging": [
+                    "see-you-next-session-staging"
+                ],
+                "development": [
+                    "see-you-next-session-dev"
+                ]
+            }
+        }
+    }
+}
