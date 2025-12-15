@@ -1,7 +1,7 @@
 # Development Roadmap (MVP)
 
 **Project:** See You Next Session  
-**Team:** 2 Developers (Prog/Design + Art/Writer)  
+**Team:** 2 Developers (Scotty Venable - Lead Programmer/Co-Creative Director + Kiki - Art Director/Writer)  
 **Goal:** Playable MVP with 1 Tutorial Patient + 1 Challenge Patient.
 
 ---

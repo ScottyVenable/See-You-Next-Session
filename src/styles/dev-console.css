@@ -1,0 +1,140 @@
+/* Dev Console Styles */
+
+.dev-console {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40vh;
+    background: rgba(15, 15, 20, 0.95);
+    border-bottom: 2px solid #00ff88;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 13px;
+    z-index: 9999;
+    box-shadow: 0 4px 20px rgba(0, 255, 136, 0.2);
+}
+
+.dev-console-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(0, 255, 136, 0.1);
+    border-bottom: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+.console-title {
+    color: #00ff88;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.console-hint {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 11px;
+}
+
+.console-close {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 4px;
+    transition: color 0.2s;
+}
+
+.console-close:hover {
+    color: #ff4444;
+}
+
+.dev-console-output {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 12px;
+    scrollbar-width: thin;
+    scrollbar-color: #00ff88 transparent;
+}
+
+.dev-console-output::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dev-console-output::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dev-console-output::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 136, 0.5);
+    border-radius: 3px;
+}
+
+.console-entry {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 4px;
+    line-height: 1.4;
+}
+
+.entry-time {
+    color: rgba(255, 255, 255, 0.3);
+    flex-shrink: 0;
+}
+
+.entry-message {
+    color: rgba(255, 255, 255, 0.8);
+    word-break: break-word;
+}
+
+/* Entry types */
+.console-entry.command .entry-message {
+    color: #88ccff;
+}
+
+.console-entry.header .entry-message {
+    color: #00ff88;
+    font-weight: bold;
+}
+
+.console-entry.success .entry-message {
+    color: #44ff88;
+}
+
+.console-entry.error .entry-message {
+    color: #ff5555;
+}
+
+.console-entry.warning .entry-message {
+    color: #ffaa44;
+}
+
+.dev-console-input {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.input-prompt {
+    color: #00ff88;
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.dev-console-input input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+    caret-color: #00ff88;
+}
+
+.dev-console-input input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}

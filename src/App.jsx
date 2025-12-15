@@ -4,6 +4,7 @@ import MainMenu from './components/screens/MainMenu.jsx';
 import GameScreen from './components/screens/GameScreen.jsx';
 import SessionReport from './components/screens/SessionReport.jsx';
 import PatientSelect from './components/screens/PatientSelect.jsx';
+import DevConsole from './components/ui/DevConsole.jsx';
 
 function App() {
     const { gameState } = useGame();
@@ -26,6 +27,8 @@ function App() {
     return (
         <div className="app">
             {renderScreen()}
+            {/* Dev console - toggle with ~ key */}
+            <DevConsole />
         </div>
     );
 }

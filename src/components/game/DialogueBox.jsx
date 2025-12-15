@@ -52,7 +52,7 @@ function DialogueBox({ dialogue, onKeywordCollected, isFocusMode = false }) {
         setCollectedKeywords(new Set());
     }, [dialogue]);
 
-    // Typewriter effect
+    // Typewriter effect - processes text to hide brackets during animation
     useEffect(() => {
         if (!currentDialogue) return;
 
@@ -60,12 +60,56 @@ function DialogueBox({ dialogue, onKeywordCollected, isFocusMode = false }) {
         setDisplayedText('');
 
         const fullText = currentDialogue.text;
+        // Create display text without brackets for clean typing animation
+        // We'll add brackets back when rendering to identify keywords
+        const displayVersion = fullText;
         let index = 0;
+
+        // Calculate visible character positions (skip bracket characters during typing)
+        const visibleChars = [];
+        let inBracket = false;
+        let bracketStart = -1;
+        
+        for (let i = 0; i < fullText.length; i++) {
+            if (fullText[i] === '[') {
+                inBracket = true;
+                bracketStart = i;
+            } else if (fullText[i] === ']') {
+                inBracket = false;
+                // Add the keyword content (was inside brackets)
+                visibleChars.push({ end: i + 1, isBracketEnd: true });
+            } else if (!inBracket || fullText[i] !== '[') {
+                visibleChars.push({ end: i + 1, isBracketEnd: false });
+            }
+        }
 
         const typeInterval = setInterval(() => {
             if (index < fullText.length) {
-                setDisplayedText(fullText.substring(0, index + 1));
-                index++;
+                // Find next non-bracket stopping point
+                let nextEnd = index + 1;
+                
+                // Skip opening brackets entirely
+                while (nextEnd < fullText.length && fullText[nextEnd - 1] === '[') {
+                    nextEnd++;
+                }
+                
+                // If we're inside brackets, continue until we hit the closing bracket
+                let depth = 0;
+                for (let i = 0; i < nextEnd; i++) {
+                    if (fullText[i] === '[') depth++;
+                    if (fullText[i] === ']') depth--;
+                }
+                
+                // If we're in a bracket, fast-forward to include the whole keyword
+                if (depth > 0) {
+                    while (nextEnd < fullText.length && fullText[nextEnd] !== ']') {
+                        nextEnd++;
+                    }
+                    if (nextEnd < fullText.length) nextEnd++; // Include the ]
+                }
+                
+                setDisplayedText(fullText.substring(0, nextEnd));
+                index = nextEnd;
             } else {
                 setIsTyping(false);
                 clearInterval(typeInterval);
