@@ -21,11 +21,17 @@ jobs:
       - name: Install dependencies (root)
         run: npm install
 
+      - name: Fix vite permissions
+        run: chmod +x node_modules/.bin/vite
+
       - name: Build game
         run: npm run build
 
       - name: Install dependencies (portal)
         run: cd portal && npm install
+
+      - name: Fix portal vite permissions
+        run: chmod +x portal/node_modules/.bin/vite
 
       - name: Build portal
         run: cd portal && npm run build
