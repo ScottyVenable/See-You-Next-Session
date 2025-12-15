@@ -11,6 +11,9 @@ export default defineConfig({
     },
     server: {
         port: 3000,
-        open: true,
+        strictPort: true, // Fail if port is in use (Tauri expects exact port)
+        open: false, // Tauri opens its own window
     },
+    // Prevent vite from obscuring Rust errors
+    clearScreen: false,
 });
