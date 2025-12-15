@@ -1,0 +1,165 @@
+/* Focus Meter Component */
+.focus-meter {
+    background: linear-gradient(145deg, var(--color-bg-secondary), rgba(22, 33, 62, 0.9));
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-sm) var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    border: 2px solid transparent;
+    transition: all var(--transition-normal);
+}
+
+.focus-meter.active {
+    border-color: var(--color-success);
+    box-shadow: 0 0 20px rgba(78, 205, 196, 0.2);
+}
+
+/* Header */
+.meter-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.meter-icon {
+    font-size: 1rem;
+}
+
+.meter-label {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Meter Bar - Horizontal */
+.meter-bar-container {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.meter-bar-bg {
+    flex: 1;
+    height: 12px;
+    background: rgba(15, 52, 96, 0.8);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    position: relative;
+}
+
+.meter-bar-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, var(--color-focus-high), var(--color-success));
+    border-radius: var(--radius-md);
+    transition: width var(--transition-normal), background var(--transition-normal);
+}
+
+.focus-meter.high .meter-bar-fill {
+    background: linear-gradient(90deg, var(--color-focus-high), var(--color-success));
+}
+
+.focus-meter.medium .meter-bar-fill {
+    background: linear-gradient(90deg, var(--color-focus-medium), #f9ca24);
+}
+
+.focus-meter.low .meter-bar-fill {
+    background: linear-gradient(90deg, var(--color-focus-low), #ff6b6b);
+    animation: lowFocusPulse 1s ease-in-out infinite;
+}
+
+@keyframes lowFocusPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.meter-value {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    min-width: 50px;
+    text-align: right;
+}
+
+/* Focus Toggle Button */
+.focus-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    width: 100%;
+    padding: var(--spacing-xs) var(--spacing-md);
+    background: rgba(15, 52, 96, 0.8);
+    color: var(--color-text);
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+    border: 1px solid transparent;
+}
+
+.toggle-icon {
+    font-size: 0.9rem;
+}
+
+.focus-toggle:hover:not(:disabled) {
+    background: var(--color-focus-high);
+    color: var(--color-bg-primary);
+    border-color: var(--color-focus-high);
+}
+
+.focus-toggle.active {
+    background: var(--color-accent);
+    color: white;
+    box-shadow: 0 0 12px rgba(233, 69, 96, 0.4);
+}
+
+.focus-toggle.active:hover:not(:disabled) {
+    background: var(--color-accent-hover);
+}
+
+/* Focus Hint */
+.focus-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    font-size: 0.75rem;
+    color: var(--color-success);
+    text-align: center;
+    padding: var(--spacing-xs);
+    background: rgba(78, 205, 196, 0.1);
+    border-radius: var(--radius-sm);
+    animation: fadeIn 0.3s ease;
+}
+
+.hint-icon {
+    font-size: 0.9rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,220 @@
+﻿Patient Breakdown
+Patient Spreadsheet
+Name
+	Gender + Age
+	Disorder
+	Difficulty
+	Symptoms
+	Appearance + Behaviors
+	
+
+	Male
+
+
+
+
+	Generalized Anxiety disorder
+	Easy
+	persistent, excessive worry about various things (work, health, family) that's hard to control, plus physical signs like muscle tension, fatigue, irritability, trouble sleeping, restlessness, and difficulty concentrating
+	Bitten nails + chewed lips. Bags under eyes. Looking around (Difficulty concentrating)
+	
+
+	Female
+
+
+
+
+	Bipolar 1
+	Medium
+	significant manic episodes (lasting ≥7 days, causing major issues) with symptoms like elevated mood/irritability, high energy, less sleep, racing thoughts, fast speech, impulsivity (risky sex, spending), grandiosity, and sometimes psychosis (hallucinations/delusions). People also experience depressive episodes, with profound sadness, low energy, hopelessness, sleep/appetite changes, and suicidal thoughts, though mania defines Bipolar I
+	Choppy hair/dyed hair, self harm, bags under eyes (both manic and depressed), piercings and tattoos
+
+Manic:
+Wide Pupils, rapid eye movement, fidgeting, rapid change of positions, makeup and dressed up/skin showing.    
+
+
+Depressed: normal pupils, lack of eye contact, slumped, pjs/comfy clothes, messy hair (bun?), no makeup, flat or tearful expression. 
+	
+
+	Male (Female?)
+	Factitious disorder
+	Hard
+	intentionally faking, exaggerating, or causing physical/mental illness to assume the "sick role" for attention, not external gain, with behaviors like fabricating medical histories, tampering with tests (e.g., contaminating urine), inducing symptoms (e.g., injecting bacteria, causing wounds), and having extensive, inconsistent medical histories with frequent hospitalizations
+	No bags under eyes, perfect teeth, rosy cheeks (but like not something is wrong level), well cared for hair, well dressed/clean clothes. 
+
+-Possibility, if not leaning into diagnosis then comes back with some fake wounds. 
+
+-2nd session ‘I fell down the stairs and hurt myself really bad on my knee’ (no wounds at all)
+	
+
+Psychology Game (K+S) Sheet
+Overview & Breakdown'
+Overview & Breakdown
+A game where you play as a psychologist or psychiatrist who sees clients in a sit down setting. You have to diagnose and treat clients accurately, and clients present symptoms ranging from easy to very difficult.
+
+
+The Goal: To diagnose the patient and provide/refer to them the appropriate care.
+Mechanical Ideas
+1 hour sessions are split into 6 “turns”, 10 minutes each to simulate the intel gathering and clinical support that is given by the professional. Perhaps there is an “action points” system to do certain actions.[a] Lots of unique dialogue per client. The player must, at the end of a session, write “session notes” for the client by filling out a sheet. This sheet may be just dropdowns and short text boxes for them- or if we wanted, could be freely up to the player. We need to be able to extract the data from the session notes to be able to give the player a score and points after each session… (Not designed like a strict puzzle level though).
+
+
+- Use points to “Gather Patient Presentation” which allows you to use a magnifying glass-like tool that follows the mouse to inspect the patient to look for things like bitten nails, bruises, eye contact, etc.
+- Writing Notes: <see audio recording (16:30)>
+- When certain things are identified, the game automatically creates an entry in a “Journal”. For example, if the client is fidgeting and the player chooses to select Observe Mannerisms then a scribble sound effect is made and the Journal tab is highlighted (showing a new entry has been discovered and added). When checked it says “I noticed that the client was fidgeting” certain words will be bolded and color coated based on the type of discovery that is (mannerism, speech, etc.) when hovering over it, it might give a quick look at some data for that behavior. When clicked it goes to the symptom in the Handbook showing possible diagnosis’, causes, things to look for, etc. (same with diagnosis’)
+- Players will complete the session notes by cross referencing with the Patient Journal
+
+
+Rewards for completing a session/maybe accurately writing documentation, could be knowledge points that can be used to “upgrade” the player[b] such as new features, abilities.
+
+
+Bonus: Maybe there are options for purchasing things to decorate the office![c]
+
+
+Game Inspirations: “Papers, Please”, “No, I’m Not A Human”
+
+
+Important Considerations:
+1. We need to make sure we balance fun, with practical and respectful approaches to these topics (since these are real disorders that real people have). Research is required and disclosures are important. We can potentially get supervision from a real mental health professional as well (depending on money obviously) or post to reddit
+2. Settings and options to limit triggering content (if there is a symptom of self harm, the player can disable that, and the symptom is not used but the patient can still be diagnosed.)
+
+
+
+
+MVP Requirements
+- Don't focus on medications yet?? Maybe focus on just doing sessions and diagnostics first.
+
+
+
+
+
+
+Game Design
+Name Idea Brainstorm
+1. Diagnosis
+2. See You Next Session
+
+
+
+
+Disclosures
+- The developers are not professionals and do not claim to be. All information provided in this game is purely for entertainment purposes only and are not to be used as clinical or professional guidance. If you or someone you know is struggling with their mental health, please contact a professional <provide links/hotlines>
+
+
+Research & References
+
+
+MVP Document
+MVP Design Document
+1. High-Level Concept
+* Genre: Narrative Simulation / Puzzle
+* Elevator Pitch: A game where you play as a mental health professional. You must manage your mental energy (Focus) to spot contradictions between what a patient says and how they present, diagnosing them accurately before the session ends.
+* Inspirations: Papers, Please (Document handling/Vibe), Ace Attorney (Finding contradictions).
+________________
+
+
+2. The Core Loop
+The gameplay consists of 1-Hour Sessions split into 4 Turns (15 minutes each).
+A. The Mechanics
+1. Dialogue (Listening):
+* The patient speaks via text box.
+* Drag-and-Drop System: Players click important keywords in the dialogue (e.g., "I haven't slept") and drag them to their Clipboard. These become Text Tokens.
+2. Observation (Looking) - Uses "Focus":
+* Focus Meter: A limited resource bar (replacing Action Points).
+* The Mechanic: Player activates "Focus Mode" (screen vignettes/dims).
+* The Action: Hovering over the patient reveals physical cues (e.g., bitten nails, dilated pupils).
+* The Cost: Finding a clue costs Focus.
+* The Reward: Dragging a visual clue to the Clipboard creates a Visual Token.
+3. Synthesis (The Puzzle):
+* The Handbook: A reference book on the desk listing disorders and criteria.
+* Matching: Drag a Token onto a Handbook entry to test a theory.
+* Contradictions: Dragging a Visual Token (e.g., "Normal Reflexes") on top of a conflicting Text Token (e.g., "My leg is paralyzed") creates a Breakthrough (and restores Focus).
+4. Documentation (End of Session):
+* The player does not type notes. Instead, the "Session Note" is a form where you drag your collected Tokens into slots (e.g., "Observed Symptoms," "Patient Stated," "Final Diagnosis").
+________________
+
+
+3. MVP Patient Roster
+Based on the "Patient Spreadsheet"19191919.
+Patient Type
+	Difficulty
+	Disorder
+	Key Symptoms (Text)
+	Key Visuals (Focus Clues)
+	The Tutorial
+	Easy
+	Generalized Anxiety
+	"Persistent worry," "Can't concentrate," "Trouble sleeping".
+	Bitten nails, chewed lips, bags under eyes, looking around constantly.
+	The Challenge
+	Medium
+	Bipolar 1
+	Manic: "Racing thoughts," "Spending money," "Don't need sleep."
+
+
+Depressed: "Hopeless," "Low energy".
+	Manic: Wide pupils, fidgeting, flashy clothes.
+
+
+Depressed: Slumped posture, no makeup, flat expression.
+	The Boss
+	Hard
+	Factitious Disorder
+	Claims unlikely medical history ("I fell down stairs," "Infection won't heal").
+	Contradiction Needed: Looking "too perfect" (rosy cheeks, healthy hair) despite claiming severe illness. No actual wounds visible.
+	________________
+
+
+4. UI Layout (The "Desk")
+* Left Side: The Patient (2D Character Art).
+* Center Bottom: Dialogue Box (Draggable Text).
+* Right Side (The Workstation):
+   * Clipboard: Where you store/combine Tokens.
+   * The Handbook: Reference for diagnosis.
+   * Focus Meter: Visual bar indicating mental energy.
+   * Clock: Shows which "Turn" (15-min block) you are on.
+________________
+
+
+5. Progression & Economy
+* Scoring: Based on accurate diagnosis + correct identification of symptoms in notes.
+* Rewards: "Knowledge Points" (KP).
+* Upgrades: Spend KP to decorate the office.
+   * Functional Decor Idea: Buying a comfortable chair increases Max Focus
+   * Buying a fish tank slows down the patient's anxiety meter.
+________________
+
+
+6. Development Tools & Scope
+* Engine: Unity.
+* Art: Clip Studio Paint (2D Character Sprites + UI Assets).
+* Audio: FL Studio (Ambient office noise + "Scribble" SFX for writing notes).
+* Code: Visual Studio + Github Copilot.
+________________
+
+
+7. Important Disclosures (Must Include)
+* Disclaimer: "The developers are not professionals... information is for entertainment purposes only"
+* Resources: Link to mental health hotlines in the main menu
+* Triggers: Option to toggle off self-harm references/visuals.
+
+
+Scripts
+Sample Scripts
+
+
+
+
+Bipolar Patient Scripts
+
+
+Tools & Unity
+Development Tools: Github Copilot in Visual Studio, Unity, 
+Art Tools: Clip Studio Paint
+Sound/Music Design Tools: FL Studio
+
+
+[a]Can we do both turns AND action points?
+[b]Do we add XP and leveling?? @spookikicreations@gmail.com
+_Assigned to spookikicreations@gmail.com_
+[c]Definitley a @spookikicreations@gmail.com
+_Assigned to spookikicreations@gmail.com_

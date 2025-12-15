@@ -1,0 +1,81 @@
+/* ========================================
+   See You Next Session - Font Definitions
+   ======================================== */
+
+/* Header Font */
+@font-face {
+    font-family: 'Session Header';
+    src: url('../assets/fonts/header/JMH Typewriter-Bold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* JMH Typewriter - Regular */
+@font-face {
+    font-family: 'JMH Typewriter';
+    src: url('../assets/fonts/body/JMH Typewriter.otf') format('opentype'),
+        url('../assets/fonts/body/JMH Typewriter.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* JMH Typewriter - Thin */
+@font-face {
+    font-family: 'JMH Typewriter';
+    src: url('../assets/fonts/body/JMH Typewriter-Thin.otf') format('opentype'),
+        url('../assets/fonts/body/JMH Typewriter-Thin.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* JMH Typewriter - Bold */
+@font-face {
+    font-family: 'JMH Typewriter';
+    src: url('../assets/fonts/body/JMH Typewriter-Bold.otf') format('opentype'),
+        url('../assets/fonts/body/JMH Typewriter-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* JMH Typewriter - Black */
+@font-face {
+    font-family: 'JMH Typewriter';
+    src: url('../assets/fonts/body/JMH Typewriter-Black.otf') format('opentype'),
+        url('../assets/fonts/body/JMH Typewriter-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ========================================
+   Font Utility Classes
+   ======================================== */
+
+/* Headers use the Session Header font */
+.font-header {
+    font-family: 'Session Header', serif;
+}
+
+/* Body text uses JMH Typewriter */
+.font-body {
+    font-family: 'JMH Typewriter', monospace;
+}
+
+.font-body-thin {
+    font-family: 'JMH Typewriter', monospace;
+    font-weight: 300;
+}
+
+.font-body-bold {
+    font-family: 'JMH Typewriter', monospace;
+    font-weight: 700;
+}
+
+.font-body-black {
+    font-family: 'JMH Typewriter', monospace;
+    font-weight: 900;
+}

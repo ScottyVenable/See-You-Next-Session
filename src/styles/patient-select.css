@@ -1,0 +1,268 @@
+/* Patient Select Screen */
+.patient-select {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-primary);
+}
+
+.select-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    background: var(--color-bg-secondary);
+    border-bottom: 2px solid var(--color-bg-tertiary);
+}
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: transparent;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-text-muted);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    transition: all var(--transition-fast);
+}
+
+.back-btn:hover {
+    color: var(--color-text);
+    border-color: var(--color-text);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.back-icon {
+    font-size: 0.8rem;
+}
+
+.select-header h1 {
+    font-family: var(--font-header);
+    font-size: 1.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.header-spacer {
+    width: 80px;
+}
+
+/* Patient Grid */
+.patient-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-xl);
+    padding: var(--spacing-xl);
+    overflow-y: auto;
+    align-content: start;
+}
+
+/* Patient Card */
+.patient-card {
+    display: flex;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: linear-gradient(145deg, var(--color-bg-secondary), rgba(22, 33, 62, 0.9));
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.patient-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: transparent;
+    transition: background var(--transition-fast);
+}
+
+.patient-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 50%, rgba(255, 255, 255, 0.02) 100%);
+    pointer-events: none;
+}
+
+.patient-card.unlocked:hover {
+    border-color: rgba(233, 69, 96, 0.5);
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: var(--shadow-lg), 0 0 30px rgba(233, 69, 96, 0.15);
+}
+
+.patient-card.unlocked:hover::before {
+    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-hover));
+}
+
+.patient-card.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(0.3);
+}
+
+.patient-card.completed {
+    border-color: rgba(78, 205, 196, 0.3);
+}
+
+.patient-card.completed::before {
+    background: linear-gradient(90deg, var(--color-success), #00a885);
+}
+
+/* Portrait */
+.card-portrait {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.portrait-frame {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 2px solid var(--color-bg-tertiary);
+}
+
+.portrait-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-bg-tertiary), var(--color-bg-primary));
+}
+
+.portrait-placeholder.unlocked {
+    background: linear-gradient(135deg, var(--color-bg-tertiary), rgba(78, 205, 196, 0.2));
+}
+
+.portrait-initial {
+    font-family: var(--font-header);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-success);
+}
+
+.portrait-mystery {
+    font-size: 2.5rem;
+    color: var(--color-text-muted);
+}
+
+.completed-badge {
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-success);
+    color: var(--color-text-dark);
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    font-weight: 700;
+    box-shadow: var(--shadow-sm);
+}
+
+.locked-badge {
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg-tertiary);
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+}
+
+/* Card Info */
+.card-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.patient-name {
+    font-family: var(--font-header);
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-xs);
+    color: var(--color-text);
+}
+
+.patient-age {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-xs);
+}
+
+.divider {
+    height: 1px;
+    background: var(--color-bg-tertiary);
+    margin: var(--spacing-sm) 0;
+}
+
+.difficulty-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+    width: fit-content;
+}
+
+.difficulty-badge.easy {
+    background: rgba(78, 205, 196, 0.2);
+    color: var(--color-success);
+}
+
+.difficulty-badge.medium {
+    background: rgba(255, 230, 109, 0.2);
+    color: var(--color-warning);
+}
+
+.difficulty-badge.hard {
+    background: rgba(233, 69, 96, 0.2);
+    color: var(--color-accent);
+}
+
+.difficulty-stars {
+    font-size: 0.7rem;
+}
+
+.difficulty-label {
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.unlock-hint,
+.replay-hint {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+    margin-top: var(--spacing-sm);
+}
+
+.replay-hint {
+    color: var(--color-success);
+}
+
+.coming-soon {
+    opacity: 0.35;
+    pointer-events: none;
+}

@@ -1,0 +1,263 @@
+/* Game Screen Layout */
+.game-screen {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-primary);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Focus Mode Overlay */
+.focus-vignette {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    background: radial-gradient(ellipse at center,
+            transparent 30%,
+            rgba(0, 0, 0, 0.7) 100%);
+    animation: focusPulse 2s ease-in-out infinite;
+}
+
+@keyframes focusPulse {
+
+    0%,
+    100% {
+        opacity: 0.8;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+.game-screen.focus-mode {
+    filter: saturate(0.5);
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234ecdc4' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") 12 12, crosshair;
+}
+
+.game-screen.focus-mode .patient-panel {
+    filter: saturate(2);
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234ecdc4' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") 12 12, crosshair;
+}
+
+/* Main Layout Grid */
+.game-layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) minmax(400px, 1.4fr) minmax(280px, 320px);
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Patient Panel */
+.patient-panel {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(145deg, var(--color-bg-secondary), rgba(22, 33, 62, 0.95));
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    position: relative;
+    z-index: 10;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: var(--shadow-md);
+}
+
+/* Dialogue Panel */
+.dialogue-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.turn-controls {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--spacing-xs) 0;
+}
+
+.end-turn-btn {
+    padding: var(--spacing-md) var(--spacing-xl);
+    background: linear-gradient(135deg, var(--color-accent), #d63447);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.end-turn-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--color-accent-hover), var(--color-accent));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(233, 69, 96, 0.4);
+}
+
+/* Workstation Panel */
+.workstation-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    overflow-y: auto;
+    padding-right: var(--spacing-xs);
+}
+
+.workstation-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.workstation-top {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.handbook-btn {
+    padding: var(--spacing-md);
+    background: linear-gradient(135deg, var(--color-bg-tertiary), rgba(15, 52, 96, 0.8));
+    color: var(--color-text);
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    margin-top: auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    transition: all var(--transition-normal);
+}
+
+.handbook-btn:hover {
+    background: linear-gradient(135deg, rgba(15, 52, 96, 0.9), var(--color-bg-tertiary));
+    border-color: var(--color-accent);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   Breakthrough Modal
+   ======================================== */
+.breakthrough-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.breakthrough-modal {
+    width: 100%;
+    max-width: 500px;
+    background: linear-gradient(145deg, var(--color-bg-secondary), var(--color-bg-tertiary));
+    border-radius: var(--radius-lg);
+    border: 3px solid var(--color-success);
+    box-shadow: 0 0 40px rgba(78, 205, 196, 0.4);
+    overflow: hidden;
+    animation: popIn 0.4s ease;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.breakthrough-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    background: linear-gradient(90deg, rgba(78, 205, 196, 0.2), transparent);
+    border-bottom: 1px solid var(--color-success);
+}
+
+.breakthrough-icon {
+    font-size: 2rem;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+.breakthrough-header h3 {
+    font-family: var(--font-header);
+    font-size: 1.5rem;
+    color: var(--color-success);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.breakthrough-content {
+    padding: var(--spacing-xl);
+}
+
+.breakthrough-speaker {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.breakthrough-speaker .mood-indicator {
+    font-size: 1.5rem;
+}
+
+.breakthrough-speaker .speaker-name {
+    font-family: var(--font-body);
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.breakthrough-text {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--color-text);
+    font-style: italic;
+}
+
+.breakthrough-close {
+    display: block;
+    width: calc(100% - var(--spacing-xl) * 2);
+    margin: 0 var(--spacing-xl) var(--spacing-xl);
+    padding: var(--spacing-md);
+    background: var(--color-success);
+    color: var(--color-text-dark);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.breakthrough-close:hover {
+    background: var(--color-accent);
+    color: white;
+    transform: translateY(-2px);
+}
