@@ -1,74 +1,50 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useFirebase } from '../context/FirebaseContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function Discussions() {
-    const [discussions, setDiscussions] = useState([]);
+    const { discussions, loading, error, addDiscussion, addReply, deleteDiscussion } = useFirebase();
+    const { user } = useAuth();
     const [newPost, setNewPost] = useState({ title: '', content: '' });
-    const [loading, setLoading] = useState(true);
     const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
+    const [submitting, setSubmitting] = useState(false);
 
-    const owner = import.meta.env.VITE_REPO_OWNER;
-    const repo = import.meta.env.VITE_REPO_NAME;
-
-    // Load discussions from localStorage (simple solution for static site)
-    useEffect(() => {
-        const stored = localStorage.getItem('syns_discussions');
-        if (stored) {
-            setDiscussions(JSON.parse(stored));
-        }
-        setLoading(false);
-    }, []);
-
-    // Save discussions to localStorage
-    const saveDiscussions = (newDiscussions) => {
-        localStorage.setItem('syns_discussions', JSON.stringify(newDiscussions));
-        setDiscussions(newDiscussions);
-    };
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!newPost.title.trim() || !newPost.content.trim()) return;
 
-        const post = {
-            id: crypto.randomUUID(),
-            title: newPost.title,
-            content: newPost.content,
-            author: 'Team Member',
-            date: new Date().toISOString(),
-            replies: []
-        };
-
-        saveDiscussions([post, ...discussions]);
-        setNewPost({ title: '', content: '' });
+        setSubmitting(true);
+        try {
+            await addDiscussion(newPost.title, newPost.content, user || 'Team Member');
+            setNewPost({ title: '', content: '' });
+        } catch (err) {
+            console.error('Error posting discussion:', err);
+            alert('Failed to post discussion. Please try again.');
+        }
+        setSubmitting(false);
     };
 
-    const addReply = (discussionId, replyText) => {
-        const updated = discussions.map(d => {
-            if (d.id === discussionId) {
-                return {
-                    ...d,
-                    replies: [
-                        ...d.replies,
-                        {
-                            id: crypto.randomUUID(),
-                            content: replyText,
-                            author: 'Team Member',
-                            date: new Date().toISOString()
-                        }
-                    ]
-                };
-            }
-            return d;
-        });
-        saveDiscussions(updated);
+    const handleAddReply = async (discussionId, replyText) => {
+        try {
+            await addReply(discussionId, replyText, user || 'Team Member');
+        } catch (err) {
+            console.error('Error adding reply:', err);
+            alert('Failed to add reply. Please try again.');
+        }
     };
 
-    const deleteDiscussion = (id) => {
+    const handleDelete = (id) => {
         setDeleteModal({ show: true, id });
     };
 
-    const confirmDelete = () => {
+    const confirmDelete = async () => {
         if (deleteModal.id) {
-            saveDiscussions(discussions.filter(d => d.id !== deleteModal.id));
+            try {
+                await deleteDiscussion(deleteModal.id);
+            } catch (err) {
+                console.error('Error deleting discussion:', err);
+                alert('Failed to delete discussion.');
+            }
         }
         setDeleteModal({ show: false, id: null });
     };
@@ -77,12 +53,14 @@ export default function Discussions() {
         setDeleteModal({ show: false, id: null });
     };
 
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
+    const formatDate = (date) => {
+        if (!date) return '';
+        const d = date instanceof Date ? date : new Date(date);
+        return d.toLocaleDateString('en-US', {
             month: 'short',
             day: 'numeric',
             hour: '2-digit',
-            minute: '2-digit'
+            minute: '2-digit',
         });
     };
 
@@ -90,22 +68,26 @@ export default function Discussions() {
         <div className="discussions-page">
             <header className="page-header">
                 <h1>💬 Team Discussions</h1>
-                <p>Internal discussion board for Scott & Kiki</p>
+                <p>Real-time discussion board for Scott & Kiki — changes sync instantly!</p>
             </header>
 
-            <div className="info-banner card">
-                <p>
-                    <strong>📝 Note:</strong> Discussions are stored locally in your browser.
-                    For persistent discussions, use{' '}
-                    <a
-                        href={`https://github.com/${owner}/${repo}/discussions`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        GitHub Discussions
-                    </a>.
+            <div className="sync-banner card">
+                <div className="sync-indicator">
+                    <span className={`sync-dot ${loading ? 'syncing' : 'synced'}`}></span>
+                    <span>{loading ? 'Syncing...' : '🔄 Real-time sync enabled'}</span>
+                </div>
+                <p className="sync-info">
+                    Discussions are stored in Firebase and sync across all devices instantly.
+                    When you post, Kiki sees it immediately!
                 </p>
             </div>
+
+            {error && (
+                <div className="error-banner card">
+                    <p>⚠️ Connection error: {error}</p>
+                    <p>Discussions may not sync properly. Please refresh the page.</p>
+                </div>
+            )}
 
             <div className="new-post-form card">
                 <h3>📝 Start a Discussion</h3>
@@ -116,6 +98,7 @@ export default function Discussions() {
                         value={newPost.title}
                         onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
                         className="post-title-input"
+                        disabled={submitting}
                     />
                     <textarea
                         placeholder="What's on your mind? Share ideas, feedback, questions..."
@@ -123,15 +106,19 @@ export default function Discussions() {
                         onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
                         className="post-content-input"
                         rows={4}
+                        disabled={submitting}
                     />
-                    <button type="submit" className="btn btn-primary">
-                        Post Discussion
+                    <button type="submit" className="btn btn-primary" disabled={submitting}>
+                        {submitting ? '⏳ Posting...' : '📤 Post Discussion'}
                     </button>
                 </form>
             </div>
 
             {loading ? (
-                <div className="loading-state">Loading discussions...</div>
+                <div className="loading-state">
+                    <div className="spinner"></div>
+                    <p>Loading discussions...</p>
+                </div>
             ) : discussions.length === 0 ? (
                 <div className="empty-state card">
                     <h3>No discussions yet</h3>
@@ -139,30 +126,18 @@ export default function Discussions() {
                 </div>
             ) : (
                 <div className="discussions-list">
-                    {discussions.map(discussion => (
+                    {discussions.map((discussion) => (
                         <DiscussionCard
                             key={discussion.id}
                             discussion={discussion}
-                            onAddReply={addReply}
-                            onDelete={deleteDiscussion}
+                            onAddReply={handleAddReply}
+                            onDelete={handleDelete}
                             formatDate={formatDate}
+                            currentUser={user}
                         />
                     ))}
                 </div>
             )}
-
-            <div className="github-discussions card">
-                <h3>💬 GitHub Discussions</h3>
-                <p>For more permanent discussions, use GitHub's built-in feature:</p>
-                <a
-                    href={`https://github.com/${owner}/${repo}/discussions`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-primary"
-                >
-                    Open GitHub Discussions →
-                </a>
-            </div>
 
             {/* Delete Confirmation Modal */}
             {deleteModal.show && (
@@ -185,16 +160,20 @@ export default function Discussions() {
     );
 }
 
-function DiscussionCard({ discussion, onAddReply, onDelete, formatDate }) {
+function DiscussionCard({ discussion, onAddReply, onDelete, formatDate, currentUser }) {
     const [showReplyForm, setShowReplyForm] = useState(false);
     const [replyText, setReplyText] = useState('');
+    const [submitting, setSubmitting] = useState(false);
 
-    const handleReply = (e) => {
+    const handleReply = async (e) => {
         e.preventDefault();
         if (!replyText.trim()) return;
-        onAddReply(discussion.id, replyText);
+
+        setSubmitting(true);
+        await onAddReply(discussion.id, replyText);
         setReplyText('');
         setShowReplyForm(false);
+        setSubmitting(false);
     };
 
     return (
@@ -210,20 +189,21 @@ function DiscussionCard({ discussion, onAddReply, onDelete, formatDate }) {
                 </button>
             </div>
             <div className="discussion-meta">
-                <span>{discussion.author}</span>
+                <span className="author-badge">{discussion.author}</span>
                 <span>•</span>
-                <span>{formatDate(discussion.date)}</span>
+                <span>{formatDate(discussion.createdAt)}</span>
             </div>
             <p className="discussion-content">{discussion.content}</p>
 
-            {discussion.replies.length > 0 && (
+            {discussion.replies && discussion.replies.length > 0 && (
                 <div className="replies">
-                    <h4>Replies ({discussion.replies.length})</h4>
-                    {discussion.replies.map(reply => (
+                    <h4>💬 Replies ({discussion.replies.length})</h4>
+                    {discussion.replies.map((reply) => (
                         <div key={reply.id} className="reply">
                             <p>{reply.content}</p>
                             <span className="reply-meta">
-                                {reply.author} • {formatDate(reply.date)}
+                                <span className="author-badge small">{reply.author}</span> •{' '}
+                                {formatDate(reply.createdAt)}
                             </span>
                         </div>
                     ))}
@@ -237,23 +217,24 @@ function DiscussionCard({ discussion, onAddReply, onDelete, formatDate }) {
                         value={replyText}
                         onChange={(e) => setReplyText(e.target.value)}
                         rows={2}
+                        disabled={submitting}
                     />
                     <div className="reply-actions">
-                        <button type="submit" className="btn btn-small">Reply</button>
+                        <button type="submit" className="btn btn-small" disabled={submitting}>
+                            {submitting ? '⏳' : '📤'} Reply
+                        </button>
                         <button
                             type="button"
                             onClick={() => setShowReplyForm(false)}
                             className="btn btn-small btn-secondary"
+                            disabled={submitting}
                         >
                             Cancel
                         </button>
                     </div>
                 </form>
             ) : (
-                <button
-                    onClick={() => setShowReplyForm(true)}
-                    className="reply-btn"
-                >
+                <button onClick={() => setShowReplyForm(true)} className="reply-btn">
                     💬 Reply
                 </button>
             )}

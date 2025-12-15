@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { FirebaseProvider } from './context/FirebaseContext';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import PlayGame from './pages/PlayGame';
@@ -19,28 +20,30 @@ function ProtectedRoute({ children }) {
 function App() {
     return (
         <AuthProvider>
-            <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route
-                    path="/*"
-                    element={
-                        <ProtectedRoute>
-                            <Layout>
-                                <Routes>
-                                    <Route path="/" element={<Dashboard />} />
-                                    <Route path="/play" element={<PlayGame />} />
-                                    <Route path="/releases" element={<Releases />} />
-                                    <Route path="/documents" element={<Documents />} />
-                                    <Route path="/assets" element={<Assets />} />
-                                    <Route path="/repository" element={<Repository />} />
-                                    <Route path="/discussions" element={<Discussions />} />
-                                    <Route path="/settings" element={<Settings />} />
-                                </Routes>
-                            </Layout>
-                        </ProtectedRoute>
-                    }
-                />
-            </Routes>
+            <FirebaseProvider>
+                <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route
+                        path="/*"
+                        element={
+                            <ProtectedRoute>
+                                <Layout>
+                                    <Routes>
+                                        <Route path="/" element={<Dashboard />} />
+                                        <Route path="/play" element={<PlayGame />} />
+                                        <Route path="/releases" element={<Releases />} />
+                                        <Route path="/documents" element={<Documents />} />
+                                        <Route path="/assets" element={<Assets />} />
+                                        <Route path="/repository" element={<Repository />} />
+                                        <Route path="/discussions" element={<Discussions />} />
+                                        <Route path="/settings" element={<Settings />} />
+                                    </Routes>
+                                </Layout>
+                            </ProtectedRoute>
+                        }
+                    />
+                </Routes>
+            </FirebaseProvider>
         </AuthProvider>
     );
 }

@@ -1,13 +1,23 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useFirebase } from '../context/FirebaseContext';
 
 export default function Settings() {
     const { changePassword } = useAuth();
+    const { settings, updateSettings, sharedFiles, addSharedFile, deleteSharedFile } = useFirebase();
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState({ type: '', text: '' });
     const [newHash, setNewHash] = useState('');
+
+    // Google Drive settings
+    const [driveUrl, setDriveUrl] = useState(settings.googleDriveUrl || '');
+    const [driveSaving, setDriveSaving] = useState(false);
+
+    // Shared link form
+    const [newLink, setNewLink] = useState({ name: '', url: '', type: 'link' });
+    const [linkSaving, setLinkSaving] = useState(false);
 
     const handlePasswordChange = async (e) => {
         e.preventDefault();
@@ -39,12 +49,52 @@ export default function Settings() {
         }
     };
 
+    const handleDriveSave = async () => {
+        setDriveSaving(true);
+        try {
+            await updateSettings({ googleDriveUrl: driveUrl });
+            setMessage({ type: 'success', text: 'Google Drive link saved!' });
+        } catch (err) {
+            setMessage({ type: 'error', text: 'Failed to save Google Drive link' });
+        }
+        setDriveSaving(false);
+    };
+
+    const handleAddLink = async (e) => {
+        e.preventDefault();
+        if (!newLink.name || !newLink.url) return;
+
+        setLinkSaving(true);
+        try {
+            await addSharedFile({
+                name: newLink.name,
+                url: newLink.url,
+                type: newLink.type,
+                addedBy: 'Team Member',
+            });
+            setNewLink({ name: '', url: '', type: 'link' });
+            setMessage({ type: 'success', text: 'Link added!' });
+        } catch (err) {
+            setMessage({ type: 'error', text: 'Failed to add link' });
+        }
+        setLinkSaving(false);
+    };
+
+    const handleDeleteLink = async (id) => {
+        if (!confirm('Delete this shared link?')) return;
+        try {
+            await deleteSharedFile(id);
+        } catch (err) {
+            alert('Failed to delete link');
+        }
+    };
+
     const copyHash = async () => {
         try {
             await navigator.clipboard.writeText(newHash);
             setMessage({ type: 'success', text: 'Hash copied to clipboard!' });
         } catch (err) {
-            setMessage({ type: 'error', text: 'Failed to copy hash to clipboard. Please copy manually.' });
+            setMessage({ type: 'error', text: 'Failed to copy hash. Please copy manually.' });
         }
     };
 
@@ -52,10 +102,117 @@ export default function Settings() {
         <div className="settings-page">
             <header className="page-header">
                 <h1>⚙️ Settings</h1>
-                <p>Portal configuration and password management</p>
+                <p>Portal configuration, shared links, and Firebase-synced settings</p>
             </header>
 
             <div className="settings-grid">
+                {/* Google Drive Settings */}
+                <div className="card drive-settings-card">
+                    <h2>📁 Google Drive</h2>
+                    <p className="card-description">
+                        Set the shared Google Drive folder URL. This syncs across all team members!
+                    </p>
+
+                    <div className="form-group">
+                        <label>Google Drive Folder URL</label>
+                        <input
+                            type="url"
+                            value={driveUrl}
+                            onChange={(e) => setDriveUrl(e.target.value)}
+                            placeholder="https://drive.google.com/drive/folders/..."
+                        />
+                    </div>
+                    <button
+                        onClick={handleDriveSave}
+                        className="btn btn-primary"
+                        disabled={driveSaving}
+                    >
+                        {driveSaving ? '⏳ Saving...' : '💾 Save Drive Link'}
+                    </button>
+
+                    {settings.googleDriveUrl && (
+                        <div className="current-drive">
+                            <p>Current link:</p>
+                            <a
+                                href={settings.googleDriveUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {settings.googleDriveUrl}
+                            </a>
+                        </div>
+                    )}
+                </div>
+
+                {/* Shared Links */}
+                <div className="card shared-links-card">
+                    <h2>🔗 Shared Links</h2>
+                    <p className="card-description">
+                        Add important links that both Scott and Kiki can access.
+                    </p>
+
+                    <form onSubmit={handleAddLink} className="add-link-form">
+                        <input
+                            type="text"
+                            placeholder="Link name..."
+                            value={newLink.name}
+                            onChange={(e) => setNewLink({ ...newLink, name: e.target.value })}
+                            disabled={linkSaving}
+                        />
+                        <input
+                            type="url"
+                            placeholder="https://..."
+                            value={newLink.url}
+                            onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
+                            disabled={linkSaving}
+                        />
+                        <select
+                            value={newLink.type}
+                            onChange={(e) => setNewLink({ ...newLink, type: e.target.value })}
+                            disabled={linkSaving}
+                        >
+                            <option value="link">🔗 Link</option>
+                            <option value="doc">📄 Document</option>
+                            <option value="design">🎨 Design</option>
+                            <option value="audio">🎵 Audio</option>
+                            <option value="reference">📚 Reference</option>
+                        </select>
+                        <button type="submit" className="btn btn-primary" disabled={linkSaving}>
+                            {linkSaving ? '⏳' : '➕'} Add
+                        </button>
+                    </form>
+
+                    {sharedFiles.length > 0 ? (
+                        <ul className="shared-links-list">
+                            {sharedFiles.map((file) => (
+                                <li key={file.id} className="shared-link-item">
+                                    <span className="link-type">
+                                        {file.type === 'doc' && '📄'}
+                                        {file.type === 'design' && '🎨'}
+                                        {file.type === 'audio' && '🎵'}
+                                        {file.type === 'reference' && '📚'}
+                                        {file.type === 'link' && '🔗'}
+                                    </span>
+                                    <a href={file.url} target="_blank" rel="noopener noreferrer">
+                                        {file.name}
+                                    </a>
+                                    <span className="link-meta">by {file.addedBy}</span>
+                                    <button
+                                        onClick={() => handleDeleteLink(file.id)}
+                                        className="delete-link-btn"
+                                        title="Delete link"
+                                    >
+                                        🗑️
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="empty">No shared links yet</p>
+                    )}
+                </div>
+
+                {/* Password Change */}
                 <div className="card password-card">
                     <h2>🔐 Change Password</h2>
                     <p className="card-description">
@@ -111,22 +268,13 @@ export default function Settings() {
                                 <code>{newHash}</code>
                                 <button onClick={copyHash} className="copy-btn">📋 Copy</button>
                             </div>
-                            <div className="hash-instructions">
-                                <h4>How to update:</h4>
-                                <ol>
-                                    <li>Go to your repository on GitHub</li>
-                                    <li>Navigate to Settings → Secrets and variables → Actions</li>
-                                    <li>Find or create <code>DEV_PASSWORD_HASH</code></li>
-                                    <li>Update it with the hash above</li>
-                                    <li>The change takes effect on next deployment</li>
-                                </ol>
-                            </div>
                         </div>
                     )}
                 </div>
 
+                {/* Quick Links */}
                 <div className="card">
-                    <h2>🔗 Quick Links</h2>
+                    <h2>🔗 GitHub Settings</h2>
                     <div className="settings-links">
                         <a
                             href={`https://github.com/${import.meta.env.VITE_REPO_OWNER}/${import.meta.env.VITE_REPO_NAME}/settings/secrets/actions`}
@@ -155,32 +303,18 @@ export default function Settings() {
                     </div>
                 </div>
 
-                <div className="card">
-                    <h2>📋 Initial Setup</h2>
-                    <p>To set up authentication for the first time:</p>
-                    <ol>
-                        <li>Choose a password</li>
-                        <li>Generate its SHA-256 hash using the form above (or online tool)</li>
-                        <li>Add the hash as <code>DEV_PASSWORD_HASH</code> in GitHub Secrets</li>
-                        <li>Push changes to trigger deployment</li>
-                    </ol>
-
-                    <div className="hash-generator">
-                        <h4>Quick Hash Generator</h4>
-                        <p>Enter a password to see its hash:</p>
-                        <HashGenerator />
-                    </div>
-                </div>
-
+                {/* Portal Info */}
                 <div className="card">
                     <h2>🎨 Portal Info</h2>
                     <dl className="info-list">
                         <dt>Version</dt>
-                        <dd>1.0.0</dd>
+                        <dd>1.1.0</dd>
                         <dt>Repository</dt>
                         <dd>{import.meta.env.VITE_REPO_OWNER}/{import.meta.env.VITE_REPO_NAME}</dd>
                         <dt>Built with</dt>
-                        <dd>React + Vite + GitHub Pages</dd>
+                        <dd>React + Vite + Firebase</dd>
+                        <dt>Real-time Sync</dt>
+                        <dd>✅ Enabled</dd>
                     </dl>
                 </div>
             </div>

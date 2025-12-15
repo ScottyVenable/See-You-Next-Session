@@ -14,14 +14,16 @@ async function hashPassword(password) {
 export function AuthProvider({ children }) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         // Check for existing session
         const session = localStorage.getItem('syns_dev_session');
         if (session) {
-            const { expiry } = JSON.parse(session);
+            const { expiry, username } = JSON.parse(session);
             if (new Date().getTime() < expiry) {
                 setIsAuthenticated(true);
+                setUser(username || 'Team Member');
             } else {
                 localStorage.removeItem('syns_dev_session');
             }
@@ -29,7 +31,7 @@ export function AuthProvider({ children }) {
         setIsLoading(false);
     }, []);
 
-    const login = async (password) => {
+    const login = async (password, username = 'Team Member') => {
         const hash = await hashPassword(password);
         const expectedHash = import.meta.env.VITE_DEV_PASSWORD_HASH;
 
@@ -37,10 +39,12 @@ export function AuthProvider({ children }) {
             // Session expires in 7 days
             const session = {
                 authenticated: true,
+                username,
                 expiry: new Date().getTime() + (7 * 24 * 60 * 60 * 1000)
             };
             localStorage.setItem('syns_dev_session', JSON.stringify(session));
             setIsAuthenticated(true);
+            setUser(username);
             return true;
         }
         return false;
@@ -49,6 +53,14 @@ export function AuthProvider({ children }) {
     const logout = () => {
         localStorage.removeItem('syns_dev_session');
         setIsAuthenticated(false);
+        setUser(null);
+    };
+
+    const setUsername = (newUsername) => {
+        setUser(newUsername);
+        const session = JSON.parse(localStorage.getItem('syns_dev_session') || '{}');
+        session.username = newUsername;
+        localStorage.setItem('syns_dev_session', JSON.stringify(session));
     };
 
     const changePassword = async (currentPassword, newPassword) => {
@@ -70,7 +82,7 @@ export function AuthProvider({ children }) {
     }
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout, changePassword }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, login, logout, setUsername, changePassword }}>
             {children}
         </AuthContext.Provider>
     );
