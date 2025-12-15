@@ -72,6 +72,20 @@ Since GitHub Pages is static (no backend), authentication uses **client-side pas
 2. Hash is compared against `VITE_DEV_PASSWORD_HASH` (injected at build time)
 3. If matched, a session is stored in localStorage (7-day expiry)
 
+**⚠️ Security Disclaimer:**
+
+This authentication model is **not a true access control system**. It provides a basic password gate to deter casual visitors, but it cannot reliably protect sensitive content because:
+
+- All authentication logic runs in the browser where users can inspect, modify, or bypass it
+- The password hash is embedded in the deployed JavaScript bundle and can be extracted
+- Users can manipulate their localStorage to forge valid sessions
+- There is no server-side validation or enforcement
+
+**This should be treated as a convenience feature, not a security boundary.** If you need genuine access restriction:
+- Move the portal behind a backend with server-side authentication, or
+- Use GitHub's built-in authentication features, or
+- Treat all portal content as effectively public and avoid storing sensitive documents, private asset links, or confidential information
+
 ### 3.2 Setting Up Credentials
 
 **Initial Setup:**

@@ -3,19 +3,27 @@ import { useState, useEffect } from 'react';
 export default function Releases() {
     const [releases, setReleases] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const owner = import.meta.env.VITE_REPO_OWNER;
     const repo = import.meta.env.VITE_REPO_NAME;
 
     useEffect(() => {
         fetch(`https://api.github.com/repos/${owner}/${repo}/releases`)
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`Failed to fetch releases: ${res.status} ${res.statusText}`);
+                }
+                return res.json();
+            })
             .then(data => {
                 setReleases(Array.isArray(data) ? data : []);
                 setLoading(false);
+                setError(null);
             })
             .catch(err => {
                 console.error(err);
+                setError(err.message || 'Failed to load releases. Please try again later.');
                 setLoading(false);
             });
     }, [owner, repo]);
@@ -45,6 +53,17 @@ export default function Releases() {
 
             {loading ? (
                 <div className="loading-state">Loading releases...</div>
+            ) : error ? (
+                <div className="error-state card">
+                    <h2>⚠️ Error Loading Releases</h2>
+                    <p>{error}</p>
+                    <button 
+                        onClick={() => window.location.reload()} 
+                        className="btn btn-primary"
+                    >
+                        Retry
+                    </button>
+                </div>
             ) : releases.length === 0 ? (
                 <div className="empty-state card">
                     <h2>No Releases Yet</h2>

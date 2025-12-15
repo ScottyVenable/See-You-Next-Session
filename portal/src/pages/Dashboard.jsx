@@ -4,6 +4,11 @@ export default function Dashboard() {
     const [repoData, setRepoData] = useState(null);
     const [releases, setReleases] = useState([]);
     const [issues, setIssues] = useState([]);
+    const [errors, setErrors] = useState({
+        repo: null,
+        releases: null,
+        issues: null
+    });
 
     const owner = import.meta.env.VITE_REPO_OWNER;
     const repo = import.meta.env.VITE_REPO_NAME;
@@ -11,21 +16,39 @@ export default function Dashboard() {
     useEffect(() => {
         // Fetch repo info
         fetch(`https://api.github.com/repos/${owner}/${repo}`)
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to fetch repository data');
+                return res.json();
+            })
             .then(setRepoData)
-            .catch(console.error);
+            .catch(err => {
+                console.error(err);
+                setErrors(prev => ({ ...prev, repo: 'Unable to load repository stats' }));
+            });
 
         // Fetch latest releases
         fetch(`https://api.github.com/repos/${owner}/${repo}/releases?per_page=3`)
-            .then(res => res.json())
-            .then(setReleases)
-            .catch(console.error);
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to fetch releases');
+                return res.json();
+            })
+            .then(data => setReleases(Array.isArray(data) ? data : []))
+            .catch(err => {
+                console.error(err);
+                setErrors(prev => ({ ...prev, releases: 'Unable to load releases' }));
+            });
 
         // Fetch open issues
         fetch(`https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=5`)
-            .then(res => res.json())
-            .then(setIssues)
-            .catch(console.error);
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to fetch issues');
+                return res.json();
+            })
+            .then(data => setIssues(Array.isArray(data) ? data : []))
+            .catch(err => {
+                console.error(err);
+                setErrors(prev => ({ ...prev, issues: 'Unable to load issues' }));
+            });
     }, [owner, repo]);
 
     return (
@@ -39,7 +62,9 @@ export default function Dashboard() {
                 {/* Project Stats */}
                 <div className="card stats-card">
                     <h2>Project Stats</h2>
-                    {repoData ? (
+                    {errors.repo ? (
+                        <p className="error">{errors.repo}</p>
+                    ) : repoData ? (
                         <div className="stats-grid">
                             <div className="stat">
                                 <span className="stat-value">{repoData.stargazers_count}</span>
@@ -73,7 +98,9 @@ export default function Dashboard() {
                 {/* Recent Releases */}
                 <div className="card releases-card">
                     <h2>Recent Releases</h2>
-                    {releases.length > 0 ? (
+                    {errors.releases ? (
+                        <p className="error">{errors.releases}</p>
+                    ) : releases.length > 0 ? (
                         <ul className="release-list">
                             {releases.map(release => (
                                 <li key={release.id} className="release-item">
@@ -92,7 +119,9 @@ export default function Dashboard() {
                 {/* Open Issues */}
                 <div className="card issues-card">
                     <h2>Open Issues</h2>
-                    {issues.length > 0 ? (
+                    {errors.issues ? (
+                        <p className="error">{errors.issues}</p>
+                    ) : issues.length > 0 ? (
                         <ul className="issue-list">
                             {issues.map(issue => (
                                 <li key={issue.id} className="issue-item">
