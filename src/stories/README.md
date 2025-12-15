@@ -6,12 +6,13 @@ This folder contains narrative scripts written in [Ink](https://www.inklestudios
 
 ```
 stories/
-├── README.md           # This file
-├── compiled/           # Compiled JSON files (auto-generated)
+├── README.md               # This file
+├── compiled/               # Compiled JSON files (auto-generated)
 │   └── *.json
-└── source/             # Source .ink files
-    ├── tutorial.ink    # Tutorial patient (Anxiety)
-    └── *.ink
+└── source/                 # Source .ink files
+    ├── alex-anxiety.ink    # Tutorial - Generalized Anxiety (Easy)
+    ├── marcus-bipolar.ink  # Patient 2 - Bipolar I (Medium)
+    └── victoria-factitious.ink  # Patient 3 - Factitious Disorder (Hard/Boss)
 ```
 
 ## 🛠️ Workflow

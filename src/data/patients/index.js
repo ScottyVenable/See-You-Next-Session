@@ -1,13 +1,15 @@
 import { TUTORIAL_PATIENT } from './tutorial-patient.js';
-// Import additional patients here as they are created
-// import { BIPOLAR_PATIENT } from './bipolar-patient.js';
-// import { FACTITIOUS_PATIENT } from './factitious-patient.js';
+import { BIPOLAR_PATIENT } from './bipolar-patient.js';
+import { FACTITIOUS_PATIENT } from './factitious-patient.js';
 
 export const PATIENTS = {
     'patient-tutorial': TUTORIAL_PATIENT,
-    // 'patient-bipolar': BIPOLAR_PATIENT,
-    // 'patient-factitious': FACTITIOUS_PATIENT,
+    'patient-bipolar': BIPOLAR_PATIENT,
+    'patient-factitious': FACTITIOUS_PATIENT,
 };
+
+// Re-export individual patients
+export { TUTORIAL_PATIENT, BIPOLAR_PATIENT, FACTITIOUS_PATIENT };
 
 export const getPatientById = (id) => PATIENTS[id] || null;
 
