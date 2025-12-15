@@ -1,6 +1,6 @@
 {
     "name": "see-you-next-session",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "A narrative puzzle game where you play as a mental health professional diagnosing patients",
     "type": "module",
     "scripts": {

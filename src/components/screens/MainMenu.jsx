@@ -4,7 +4,7 @@ import { useGame } from '../../context/GameContext.jsx';
 import { MenuButton } from '../ui';
 import '../../styles/main-menu.css';
 
-const VERSION = 'v0.1.0';
+const VERSION = 'v0.2.0';
 const DISCLAIMER_KEY = 'syns_disclaimer_dismissed';
 
 // Animation variants
