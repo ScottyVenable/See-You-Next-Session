@@ -28,6 +28,7 @@ yarn-error.log*
 *.swo
 .vscode/*
 !.vscode/extensions.json
+!.vscode/extensions/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json

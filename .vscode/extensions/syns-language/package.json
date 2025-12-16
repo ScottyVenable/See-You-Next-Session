@@ -1,0 +1,45 @@
+{
+    "name": "syns-dialogue",
+    "displayName": "SYNS Dialogue Language",
+    "description": "Syntax highlighting for See You Next Session dialogue files (.syns)",
+    "version": "1.0.0",
+    "publisher": "see-you-next-session",
+    "engines": {
+        "vscode": "^1.60.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "syns",
+                "aliases": [
+                    "SYNS Dialogue",
+                    "syns"
+                ],
+                "extensions": [
+                    ".syns"
+                ],
+                "configuration": "./language-configuration.json",
+                "icon": {
+                    "light": "./icons/syns-light.png",
+                    "dark": "./icons/syns-dark.png"
+                }
+            }
+        ],
+        "grammars": [
+            {
+                "language": "syns",
+                "scopeName": "source.syns",
+                "path": "./syntaxes/syns.tmLanguage.json"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "syns",
+                "path": "./snippets/syns.snippets.json"
+            }
+        ]
+    }
+}
