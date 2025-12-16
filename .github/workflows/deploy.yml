@@ -46,13 +46,10 @@ jobs:
         run: |
           if [ "${{ github.ref }}" == "refs/heads/stable" ]; then
             echo "target=production" >> $GITHUB_OUTPUT
-            echo "channel=live" >> $GITHUB_OUTPUT
           elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
             echo "target=staging" >> $GITHUB_OUTPUT
-            echo "channel=staging" >> $GITHUB_OUTPUT
           elif [ "${{ github.ref }}" == "refs/heads/experimental" ]; then
             echo "target=development" >> $GITHUB_OUTPUT
-            echo "channel=experimental" >> $GITHUB_OUTPUT
           fi
 
       - name: Deploy to Firebase
@@ -60,7 +57,7 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}'
-          channelId: ${{ steps.deploy-target.outputs.channel }}
+          channelId: live
           target: ${{ steps.deploy-target.outputs.target }}
           projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
           entryPoint: './'
