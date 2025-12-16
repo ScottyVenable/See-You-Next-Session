@@ -19,22 +19,16 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies (root)
-        run: npm install
-
-      - name: Fix vite permissions
-        run: chmod +x node_modules/.bin/vite
+        run: npm ci
 
       - name: Build game
-        run: npm run build
+        run: npm exec vite build
 
       - name: Install dependencies (portal)
-        run: cd portal && npm install
-
-      - name: Fix portal vite permissions
-        run: chmod +x portal/node_modules/.bin/vite
+        run: cd portal && npm ci
 
       - name: Build portal
-        run: cd portal && npm run build
+        run: cd portal && npm exec vite build
 
       - name: Determine deployment target
         id: deploy-target
