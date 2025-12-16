@@ -1,0 +1,343 @@
+/* Dialogue Radial Component */
+.dialogue-radial {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: linear-gradient(145deg, var(--color-bg-secondary), rgba(22, 33, 62, 0.95));
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dialogue-radial.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.radial-disabled-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.disabled-icon {
+    font-size: 1.2rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Header */
+.radial-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.radial-header .header-icon {
+    font-size: 1.1rem;
+}
+
+.radial-header .header-text {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text);
+    letter-spacing: 0.3px;
+}
+
+/* Topics Container */
+.topics-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-md) 0;
+}
+
+/* Topic Button Container */
+.topic-button-container {
+    position: relative;
+    z-index: 1;
+}
+
+.topic-button-container.active {
+    z-index: 100;
+}
+
+/* Topic Button */
+.topic-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    min-width: 70px;
+    background: var(--color-bg-tertiary);
+    border-radius: var(--radius-lg);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.topic-button:hover {
+    border-color: var(--topic-color);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3),
+        0 0 15px color-mix(in srgb, var(--topic-color) 30%, transparent);
+}
+
+.topic-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.topic-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-text);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.topic-button:hover .topic-label {
+    color: white;
+}
+
+/* Radial Options Container */
+.radial-options {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    pointer-events: none;
+    z-index: 50;
+}
+
+/* Radial Option Button */
+.radial-option {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg-primary);
+    border: 2px solid var(--option-color);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    pointer-events: auto;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.radial-option:hover {
+    background: var(--option-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4),
+        0 0 20px color-mix(in srgb, var(--option-color) 50%, transparent);
+}
+
+.option-icon {
+    font-size: 1.2rem;
+    line-height: 1;
+    transition: transform var(--transition-fast);
+}
+
+.radial-option:hover .option-icon {
+    transform: scale(1.1);
+}
+
+/* Option Tooltip */
+.option-tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 10px;
+    background: rgba(0, 0, 0, 0.9);
+    color: var(--color-text);
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+    border-radius: var(--radius-sm);
+    pointer-events: none;
+    border: 1px solid var(--option-color);
+}
+
+.option-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Connection Lines SVG */
+.radial-connections {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+}
+
+/* Hint */
+.radial-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: rgba(15, 52, 96, 0.5);
+    border-radius: var(--radius-sm);
+    margin-top: auto;
+}
+
+.radial-hint .hint-icon {
+    font-size: 0.85rem;
+}
+
+.radial-hint span:last-child {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+/* ========================================
+   Alternative: Horizontal Topic Bar
+   ======================================== */
+.dialogue-radial.horizontal {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: var(--spacing-sm);
+}
+
+.dialogue-radial.horizontal .radial-header {
+    width: 100%;
+    border-bottom: none;
+    justify-content: center;
+    padding-bottom: 0;
+}
+
+.dialogue-radial.horizontal .topics-container {
+    flex-wrap: nowrap;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs) 0;
+}
+
+.dialogue-radial.horizontal .topic-button {
+    flex-direction: row;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    min-width: auto;
+}
+
+.dialogue-radial.horizontal .topic-icon {
+    font-size: 1.1rem;
+}
+
+.dialogue-radial.horizontal .topic-label {
+    font-size: 0.65rem;
+}
+
+.dialogue-radial.horizontal .radial-hint {
+    width: 100%;
+    margin-top: 0;
+}
+
+/* ========================================
+   Responsive Adjustments
+   ======================================== */
+@media (max-width: 768px) {
+    .topics-container {
+        gap: var(--spacing-md);
+    }
+
+    .topic-button {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        min-width: 60px;
+    }
+
+    .topic-icon {
+        font-size: 1.2rem;
+    }
+
+    .radial-option {
+        width: 38px;
+        height: 38px;
+    }
+
+    .option-icon {
+        font-size: 1rem;
+    }
+}
+
+/* ========================================
+   Animations
+   ======================================== */
+@keyframes topicGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 5px var(--topic-color);
+    }
+
+    50% {
+        box-shadow: 0 0 20px var(--topic-color);
+    }
+}
+
+.topic-button-container.active .topic-button {
+    animation: topicGlow 2s ease-in-out infinite;
+}
+
+/* Selected state indicator */
+.topic-button-container::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--topic-color);
+    border-radius: var(--radius-full);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.topic-button-container.active::after {
+    opacity: 1;
+}
+
+/* ========================================
+   Dark Overlay for Focus
+   ======================================== */
+.topic-button-container.active~.topic-button-container:not(.active) .topic-button {
+    opacity: 0.5;
+}

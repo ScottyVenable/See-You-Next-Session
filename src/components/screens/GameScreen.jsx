@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useGame } from '../../context/GameContext.jsx';
 import PatientView from '../game/PatientView.jsx';
 import DialogueBox from '../game/DialogueBox.jsx';
+import DialogueRadial from '../game/DialogueRadial.jsx';
 import Clipboard from '../game/Clipboard.jsx';
 import FocusMeter from '../game/FocusMeter.jsx';
 import TurnClock from '../game/TurnClock.jsx';
@@ -15,8 +16,17 @@ function GameScreen() {
     const [draggedToken, setDraggedToken] = useState(null);
     const [breakthroughDialogue, setBreakthroughDialogue] = useState(null);
     const [showTutorialHint, setShowTutorialHint] = useState(true);
+    const [selectedPrompt, setSelectedPrompt] = useState(null);
 
     const { currentPatient, currentTurn, focus, isFocusMode } = gameState;
+
+    // Handle dialogue prompt selection from radial menu
+    const handleSelectPrompt = useCallback((prompt) => {
+        setSelectedPrompt(prompt);
+        console.log('Selected dialogue prompt:', prompt);
+        // TODO: Integrate with dialogue system to generate response
+        // This could trigger a new dialogue entry or advance conversation
+    }, []);
 
     if (!currentPatient) {
         return (
@@ -140,6 +150,11 @@ function GameScreen() {
                             actions.addToClipboard(token);
                             setShowTutorialHint(false);
                         }}
+                    />
+
+                    <DialogueRadial
+                        onSelectPrompt={handleSelectPrompt}
+                        disabledTopics={[]}
                     />
 
                     <div className="turn-controls">
