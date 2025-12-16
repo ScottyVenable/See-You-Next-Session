@@ -1,165 +1,1303 @@
-// Patient: Alex - Tutorial (Generalized Anxiety Disorder)
-// Phase: Turn 1 - Initial Introduction
+// ============================================================================
+// Patient: Alex Chen - Tutorial Patient
+// Diagnosis: Generalized Anxiety Disorder (GAD)
+// Phase: Turn 1 - Initial Introduction & Assessment
+// 
+// Alex is a 28-year-old marketing professional who has been struggling with
+// overwhelming anxiety for the past two years. They present as put-together
+// on the surface but are barely holding it together underneath. This is their
+// first time seeking therapy, and they're skeptical but desperate.
+//
+// Key Symptoms to Discover:
+// - Chronic insomnia (contradicts "sleeping fine")
+// - Racing thoughts (especially at night)
+// - Physical tension (shoulders, jaw clenching)
+// - Avoidance behaviors (social isolation)
+// - Perfectionism rooted in childhood pressure
+// - Catastrophic thinking patterns
+// ============================================================================
+
+// ===========================================
+// OPENING SEQUENCE - First Impressions
+// ===========================================
 
 === START ===
-PATIENT (nervous): "Thanks for seeing me, doctor."
-PATIENT: "I... I've been having a [rough time] lately."
-@pause 1.5
+NARRATOR
+*Alex walks in hesitantly, clutching a coffee cup with both hands. 
+They glance around the office before sitting on the edge of the chair, 
+as if ready to bolt at any moment.*
+
+@pause 2
+
+PATIENT (nervous)
+"Thanks for... seeing me, doctor."
+
+PATIENT
+"I almost didn't come today, actually."
+
+@pause 1
+
+PATIENT (hesitant)
+"I've never done this before. Therapy, I mean."
+
+@if rapport >= 40
+    PATIENT (nervous)
+    "I'm not really sure how this works."
+@else
+    PATIENT (guarded)
+    "So... what do we do? Just talk?"
+@endif
+
 -> worry_intro
 
 === worry_intro ===
-PATIENT (anxious): "I just can't stop [worrying about everything]."
-PATIENT: "Work, my family, even little things like whether I locked the door."
+NARRATOR
+*Alex takes a long sip of coffee, avoiding eye contact.*
+
+@pause 1.5
+
+PATIENT (anxious)
+"I just... I [can't stop worrying about everything]."
+
+PATIENT
+"Work, my family, money, my health..."
+
+PATIENT (stressed)
+"Even [little things] like whether I locked the door or turned off the stove."
+
+@pause 1
+
+PATIENT (embarrassed)
+"Sometimes I go back three or four times to check."
+
 -> sleep_topic
 
 === sleep_topic ===
-@if rapport >= 60
-    PATIENT (hesitant): "And my sleep... it's been [okay, I guess]<contradicts:bags-under-eyes>."
-@else
-    PATIENT (defensive): "I'm [sleeping fine, really]<contradicts:bags-under-eyes>."
-@endif
-PATIENT: "Just a bit tired from work, you know?"
+NARRATOR
+*You notice dark circles under Alex's eyes that their concealer 
+can't quite hide.*
 
-// Response Handlers - What happens when player asks about topics
+@pause 1
+
+@if rapport >= 60
+    PATIENT (hesitant)
+    "And my sleep... it's been [okay, I guess]<contradicts:bags-under-eyes>."
+    
+    PATIENT
+    "I mean, who sleeps great these days, right?"
+@elseif rapport >= 40
+    PATIENT (defensive)
+    "Sleep? I'm [sleeping fine, really]<contradicts:bags-under-eyes>."
+    
+    PATIENT
+    "Just tired from work. That's normal."
+@else
+    PATIENT (guarded)
+    "[My sleep is fine]<contradicts:bags-under-eyes>. That's not why I'm here."
+@endif
+
+PATIENT
+"Anyway, I just wanted to... I don't know. Talk to someone, I guess."
+
+@pause 0.5
+
+PATIENT (nervous)
+"Is that enough of a reason to be here?"
+
+// ===========================================
+// RESPONSE HANDLERS - Core Topics
+// ===========================================
+
+// -------------------------------------------
+// FAMILY - Parents & Upbringing
+// -------------------------------------------
 
 === @response:family.parents ===
-@if rapport >= 70
-    PATIENT (thoughtful): "My parents... they mean well."
-    PATIENT: "But they've always [expected a lot from me]."
-    PATIENT (sad): "I don't think I've ever quite measured up."
-    @rapport +5
-@elseif rapport >= 50
-    PATIENT: "They're fine. Supportive, I guess."
-    PATIENT (hesitant): "We don't talk much these days."
+NARRATOR
+*Alex's posture stiffens slightly at the mention of parents.*
+
+@pause 0.5
+
+@if rapport >= 75
+    PATIENT (thoughtful)
+    "My parents... they [mean well], I think."
+    
+    @pause 1
+    
+    PATIENT (sad)
+    "They've always [expected a lot from me]. Always."
+    
+    PATIENT
+    "Good grades, good school, good job, good life..."
+    
+    PATIENT (vulnerable)
+    "But no matter what I achieve, there's always something more."
+    
+    @pause 0.5
+    
+    PATIENT (sad)
+    "I don't think I've ever quite [measured up] in their eyes."
+    
+    @reveal parental-pressure
+    @rapport +8
+    
+@elseif rapport >= 55
+    PATIENT (hesitant)
+    "They're... supportive, I guess. In their way."
+    
+    PATIENT
+    "We talk sometimes. Not about anything real though."
+    
+    @pause 0.5
+    
+    PATIENT (deflecting)
+    "They live across the country now, so..."
+    
+    @rapport +3
+    
 @else
-    PATIENT (guarded): "I'd rather not talk about my parents right now."
+    PATIENT (guarded)
+    "I'd rather not talk about my parents right now."
+    
+    PATIENT (defensive)
+    "They're not why I'm here. Can we focus on something else?"
+    
     @rapport -2
 @endif
 
 === @response:family.childhood ===
-@if rapport >= 75
-    PATIENT (vulnerable): "My childhood was... complicated."
-    PATIENT: "I always felt like I had to be [perfect] to be loved."
-    PATIENT (sad): "That pressure never really went away."
+NARRATOR
+*Alex looks down at their coffee cup, slowly rotating it in their hands.*
+
+@pause 1
+
+@if rapport >= 80
+    PATIENT (vulnerable)
+    "My childhood was... complicated."
+    
+    @pause 1.5
+    
+    PATIENT (sad)
+    "I always felt like I had to be [perfect] to be loved."
+    
+    PATIENT
+    "Perfect grades. Perfect behavior. Never cause any problems."
+    
+    PATIENT (thoughtful)
+    "I remember being seven and crying because I got a 95 on a test."
+    
+    @pause 0.5
+    
+    PATIENT (sad)
+    "Because I knew my parents would ask why I missed those five points."
+    
+    PATIENT (vulnerable)
+    "That pressure... it [never really went away]."
+    
     @reveal childhood-anxiety
-    @rapport +8
-@elseif rapport >= 50
-    PATIENT: "It was normal, I suppose."
-    PATIENT (deflecting): "Nothing special to report."
+    @reveal perfectionism-origin
+    @rapport +12
+    @set revealed_childhood = true
+    
+@elseif rapport >= 60
+    PATIENT (hesitant)
+    "It was... normal, I suppose."
+    
+    PATIENT
+    "Good family, good schools, all that."
+    
+    @pause 0.5
+    
+    PATIENT (deflecting)
+    "Nothing special to report, really."
+    
+    PATIENT (guarded)
+    "Why does everyone always want to talk about childhood?"
+    
+    @rapport +2
+    
 @else
-    PATIENT (defensive): "Why do you need to know about that?"
-    PATIENT: "Can we focus on the present?"
-    @rapport -3
+    PATIENT (defensive)
+    "Why do you need to know about that?"
+    
+    PATIENT (frustrated)
+    "I'm not here to dig through ancient history."
+    
+    PATIENT
+    "Can we please focus on the present?"
+    
+    @rapport -5
 @endif
 
-=== @response:work.job ===
-PATIENT: "I work in marketing. Mid-level position."
-@if rapport >= 60
-    PATIENT (stressed): "The [deadlines are constant]. It never stops."
-    PATIENT: "I'm always worried I'll miss something important."
+=== @response:family.siblings ===
+@if rapport >= 50
+    PATIENT (thoughtful)
+    "I have a younger sister. Sarah."
+    
+    @pause 0.5
+    
+    PATIENT (sad)
+    "She's... different from me. More carefree, I guess."
+    
+    @if rapport >= 70
+        PATIENT (vulnerable)
+        "Sometimes I [envy her]. She doesn't seem to worry about anything."
+        
+        PATIENT
+        "Or maybe she's just better at hiding it."
+        
+        @rapport +5
+    @else
+        PATIENT
+        "We're not super close anymore."
+    @endif
 @else
-    PATIENT: "It's fine. Pays the bills."
+    PATIENT (guarded)
+    "I have a sister. We don't really talk much."
+@endif
+
+// -------------------------------------------
+// WORK - Job & Career Stress
+// -------------------------------------------
+
+=== @response:work.job ===
+PATIENT
+"I work in marketing. Digital marketing, specifically."
+
+@pause 0.5
+
+PATIENT
+"Mid-level position at a tech company. It's... fine."
+
+@if rapport >= 65
+    PATIENT (stressed)
+    "The [deadlines are constant]. There's always another campaign."
+    
+    PATIENT
+    "Another presentation. Another crisis."
+    
+    PATIENT (anxious)
+    "I'm always worried I'll [miss something important]."
+    
+    @pause 0.5
+    
+    PATIENT (stressed)
+    "Or that someone will finally figure out I don't belong there."
+    
+    @rapport +5
+    @reveal impostor-feelings
+    
+@elseif rapport >= 45
+    PATIENT
+    "It pays well. Good benefits."
+    
+    PATIENT (deflecting)
+    "Can't complain, really."
+@else
+    PATIENT (guarded)
+    "It's just a job. Pays the bills."
 @endif
 
 === @response:work.stress ===
-@if rapport >= 65
-    PATIENT (stressed): "The stress is... [constant]."
-    PATIENT: "I wake up thinking about work. I go to sleep thinking about work."
-    PATIENT (anxious): "Sometimes I feel like I'm [drowning] and no one notices."
-    @rapport +5
+NARRATOR
+*Alex's grip tightens on the coffee cup.*
+
+@pause 0.5
+
+@if rapport >= 70
+    PATIENT (stressed)
+    "The stress is... [constant]. Relentless."
+    
+    PATIENT
+    "I wake up thinking about work. I go to sleep thinking about work."
+    
+    @pause 1
+    
+    PATIENT (anxious)
+    "Sometimes I feel like I'm [drowning] and no one even notices."
+    
+    PATIENT (vulnerable)
+    "Like I'm screaming underwater."
+    
+    @pause 0.5
+    
+    PATIENT (sad)
+    "I used to love my job. Now I [dread going in] every morning."
+    
+    @rapport +8
+    @reveal work-anxiety
+    @set admitted_work_stress = true
+    
+@elseif rapport >= 50
+    PATIENT (hesitant)
+    "Work stress? I mean, it's a demanding job."
+    
+    PATIENT
+    "But that's just how it is, isn't it?"
+    
+    PATIENT (deflecting)
+    "Everyone deals with work stress."
+    
+    @rapport +2
+    
 @else
-    PATIENT: "Work stress? That's just normal, isn't it?"
-    PATIENT (dismissive): "Everyone deals with it."
+    PATIENT (dismissive)
+    "Work is work. Stress comes with the territory."
+    
+    PATIENT
+    "I handle it fine."
 @endif
 
-=== @response:emotions.anxiety ===
-@if rapport >= 70
-    PATIENT (vulnerable): "Anxiety... yeah, that's probably the right word."
-    PATIENT: "It feels like there's always a [weight on my chest]."
-    PATIENT: "Like something bad is about to happen, even when everything's fine."
-    @rapport +10
-    @set admitted_anxiety = true
-@elseif rapport >= 45
-    PATIENT (hesitant): "I get nervous sometimes. Doesn't everyone?"
-    PATIENT: "I wouldn't call it anxiety exactly..."
+=== @response:work.performance ===
+@if rapport >= 60
+    PATIENT (anxious)
+    "My performance? I... I worry about it constantly."
+    
+    PATIENT
+    "Every email from my boss makes my [heart race]."
+    
+    @pause 0.5
+    
+    PATIENT (stressed)
+    "I [triple-check everything] before submitting."
+    
+    PATIENT
+    "Sometimes I stay late just to review my work again and again."
+    
+    @if rapport >= 75
+        PATIENT (vulnerable)
+        "It's never good enough. *I'm* never good enough."
+        
+        @rapport +10
+        @reveal perfectionism-work
+    @else
+        @rapport +5
+    @endif
 @else
-    PATIENT (defensive): "I'm not anxious. I'm just stressed."
-    PATIENT: "There's a difference."
+    PATIENT (guarded)
+    "My work is fine. I do my job."
+    
+    PATIENT
+    "Why are you asking about that?"
+@endif
+
+=== @response:work.colleagues ===
+@if rapport >= 55
+    PATIENT (thoughtful)
+    "My coworkers? They're... fine, I guess."
+    
+    @pause 0.5
+    
+    PATIENT (hesitant)
+    "I don't really [connect with them] though."
+    
+    PATIENT
+    "Everyone seems to have their groups, their inside jokes..."
+    
+    @if rapport >= 70
+        PATIENT (sad)
+        "I eat lunch at my desk most days. Alone."
+        
+        PATIENT (deflecting)
+        "It's easier that way. Less exhausting."
+        
+        @rapport +5
+        @reveal social-withdrawal-work
+    @endif
+@else
+    PATIENT
+    "We get along fine. Professional."
+@endif
+
+// -------------------------------------------
+// EMOTIONS - Anxiety & Mood
+// -------------------------------------------
+
+=== @response:emotions.anxiety ===
+NARRATOR
+*Alex pauses, seeming to consider the question carefully.*
+
+@pause 1.5
+
+@if rapport >= 75
+    PATIENT (vulnerable)
+    "Anxiety... yeah. That's probably the right word."
+    
+    @pause 1
+    
+    PATIENT
+    "It feels like there's always a [weight on my chest]."
+    
+    PATIENT (anxious)
+    "Like something bad is about to happen, even when everything's fine."
+    
+    PATIENT
+    "Especially when everything's fine, actually."
+    
+    @pause 0.5
+    
+    PATIENT (sad)
+    "Because that's when I'm waiting for the other shoe to drop."
+    
+    @rapport +12
+    @reveal anxiety-admission
+    @set admitted_anxiety = true
+    
+@elseif rapport >= 50
+    PATIENT (hesitant)
+    "I get nervous sometimes. Doesn't everyone?"
+    
+    PATIENT
+    "I wouldn't call it anxiety exactly..."
+    
+    @pause 0.5
+    
+    PATIENT (thoughtful)
+    "Or maybe I just don't want to."
+    
+    @rapport +3
+    
+@else
+    PATIENT (defensive)
+    "I'm not anxious. I'm just stressed."
+    
+    PATIENT (frustrated)
+    "There's a difference, isn't there?"
+    
+    PATIENT
+    "I can handle my stress. I don't have a problem."
+    
     @rapport -3
 @endif
 
 === @response:emotions.mood ===
-PATIENT: "My mood? It's..."
-@if rapport >= 55
-    PATIENT (sad): "It's been [up and down] honestly."
-    PATIENT: "Some days I feel okay. Other days I just want to hide."
-    @rapport +3
+PATIENT (thoughtful)
+"My mood? It's..."
+
+@pause 1
+
+@if rapport >= 60
+    PATIENT (sad)
+    "It's been [up and down], honestly."
+    
+    PATIENT
+    "Some days I feel almost normal. Like myself again."
+    
+    @pause 0.5
+    
+    PATIENT (vulnerable)
+    "Other days I just want to [hide under the covers] and disappear."
+    
+    PATIENT
+    "Those days are happening more often lately."
+    
+    @rapport +5
+    @reveal mood-fluctuation
+    
+@elseif rapport >= 40
+    PATIENT
+    "It's... okay, I guess. Normal?"
+    
+    PATIENT (hesitant)
+    "I'm not depressed or anything, if that's what you're asking."
 @else
-    PATIENT: "It's fine. Normal."
+    PATIENT (guarded)
+    "Fine. My mood is fine."
 @endif
 
-=== @response:emotions.sleep ===
-@if rapport >= 75 && has_symptom("bags-under-eyes")
-    PATIENT (relieved): "Okay, you can probably tell from looking at me."
-    PATIENT: "I [haven't slept properly in weeks]."
-    PATIENT (vulnerable): "I lie awake for hours, my mind just won't stop."
-    @set admitted_sleep = true
-    @rapport +10
-@elseif rapport >= 60
-    PATIENT (hesitant): "Sleep is... complicated."
-    PATIENT: "Some nights are better than others, I guess."
+=== @response:emotions.worry ===
+@if rapport >= 65
+    PATIENT (anxious)
+    "The worrying... it never stops."
+    
+    PATIENT
+    "It's like my brain has a [list of things to worry about]."
+    
+    @pause 0.5
+    
+    PATIENT (stressed)
+    "And as soon as I check one thing off, three more appear."
+    
+    PATIENT
+    "Did I send that email correctly? Will my car make it to work?"
+    
+    PATIENT (anxious)
+    "What if I said something wrong in that meeting? What if they hate me?"
+    
+    @pause 1
+    
+    PATIENT (vulnerable)
+    "It's [exhausting]. Living like this."
+    
+    @rapport +8
+    @reveal racing-thoughts
+    
 @else
-    PATIENT (defensive): "I told you, I sleep fine."
-    PATIENT: "Why do you keep asking about that?"
+    PATIENT
+    "I worry sometimes. Everyone does."
+    
+    PATIENT (deflecting)
+    "It's not that bad."
+@endif
+
+=== @response:emotions.fear ===
+@if rapport >= 70
+    PATIENT (vulnerable)
+    "What am I afraid of?"
+    
+    @pause 1.5
+    
+    PATIENT (thoughtful)
+    "Everything? Nothing specific?"
+    
+    PATIENT
+    "It's like this [constant hum of fear] in the background."
+    
+    PATIENT (anxious)
+    "Fear that something will go wrong. That I'll mess up."
+    
+    @pause 0.5
+    
+    PATIENT (sad)
+    "Fear that everyone will finally see that I'm [not good enough]."
+    
+    @rapport +10
+    @reveal core-fear
+    
+@else
+    PATIENT (guarded)
+    "I'm not really afraid of anything specific."
+    
+    PATIENT
+    "Normal stuff, I guess."
+@endif
+
+// -------------------------------------------
+// SLEEP - Insomnia & Rest
+// -------------------------------------------
+
+=== @response:emotions.sleep ===
+NARRATOR
+*Alex's hand unconsciously moves toward the dark circles under their eyes.*
+
+@pause 0.5
+
+@if rapport >= 80 && has_symptom("bags-under-eyes")
+    PATIENT (relieved)
+    "*sighs* Okay, you can probably tell just by looking at me."
+    
+    @pause 1
+    
+    PATIENT (vulnerable)
+    "I [haven't slept properly in weeks]. Maybe months."
+    
+    PATIENT
+    "I lie awake for hours. My mind just [won't stop]."
+    
+    @pause 0.5
+    
+    PATIENT (sad)
+    "Every mistake I've ever made. Everything that could go wrong tomorrow."
+    
+    PATIENT
+    "It all plays on repeat, over and over."
+    
+    @pause 1
+    
+    PATIENT (exhausted)
+    "By 3 AM, I'm [exhausted but wide awake]."
+    
+    PATIENT
+    "Sometimes I don't fall asleep until the sun comes up."
+    
+    @rapport +15
+    @reveal insomnia
+    @reveal racing-thoughts-night
+    @set admitted_sleep = true
+    @unlock deep_sleep_discussion
+    
+@elseif rapport >= 65
+    PATIENT (hesitant)
+    "Sleep is... complicated."
+    
+    PATIENT
+    "Some nights are better than others."
+    
+    @pause 0.5
+    
+    PATIENT (tired)
+    "I guess I don't [sleep as well as I used to]."
+    
+    PATIENT
+    "My brain doesn't seem to have an off switch anymore."
+    
+    @rapport +5
+    
+@elseif rapport >= 45
+    PATIENT (defensive)
+    "I told you, I sleep fine."
+    
+    PATIENT
+    "Everyone has trouble sleeping sometimes."
+    
+    PATIENT (deflecting)
+    "It's no big deal."
+    
+@else
+    PATIENT (guarded)
+    "Why do you [keep asking about that]?"
+    
+    PATIENT (frustrated)
+    "My sleep is fine. Can we move on?"
+    
     @rapport -5
 @endif
 
-=== @response:relationships.friends ===
-@if rapport >= 50
-    PATIENT (sad): "Friends? I've kind of [pushed everyone away] lately."
-    PATIENT: "It's just easier to be alone with my worries."
-    @rapport +5
+=== @response:sleep.routine ===
+@if rapport >= 60
+    PATIENT (hesitant)
+    "My sleep routine? I... don't really have one."
+    
+    PATIENT
+    "I usually work until I can't keep my eyes open."
+    
+    @pause 0.5
+    
+    PATIENT (anxious)
+    "Then I lie in bed [scrolling on my phone] for hours."
+    
+    PATIENT
+    "Checking emails. Checking social media. Checking... everything."
+    
+    @if rapport >= 75
+        PATIENT (vulnerable)
+        "It's like I'm [afraid to be alone with my thoughts]."
+        
+        @rapport +8
+        @reveal avoidance-behavior
+    @endif
 @else
-    PATIENT: "I have some friends. We hang out sometimes."
+    PATIENT
+    "I go to bed, I wake up. Not much of a routine."
 @endif
 
-=== @response:self.identity ===
-PATIENT (thoughtful): "How would I describe myself?"
-@if rapport >= 65
-    PATIENT: "I used to think I was capable. Confident even."
-    PATIENT (sad): "Now I'm not so sure. I feel like I'm [barely holding it together]."
-    @rapport +5
+=== @response:sleep.dreams ===
+@if rapport >= 70
+    PATIENT (thoughtful)
+    "Dreams? I... I do have nightmares sometimes."
+    
+    @pause 1
+    
+    PATIENT (anxious)
+    "Usually about work. About [messing something up]."
+    
+    PATIENT
+    "Or showing up somewhere important completely unprepared."
+    
+    @pause 0.5
+    
+    PATIENT (vulnerable)
+    "I wake up in a [cold sweat], heart pounding."
+    
+    PATIENT
+    "And then I can't fall back asleep because I'm worried it might be real."
+    
+    @rapport +8
+    @reveal nightmare-anxiety
 @else
-    PATIENT: "I don't know. Normal? Average?"
-    PATIENT: "I've never really thought about it."
+    PATIENT
+    "I don't really remember my dreams."
+@endif
+
+// -------------------------------------------
+// RELATIONSHIPS - Social & Personal
+// -------------------------------------------
+
+=== @response:relationships.friends ===
+@if rapport >= 60
+    PATIENT (sad)
+    "Friends? I've kind of [pushed everyone away] lately."
+    
+    @pause 1
+    
+    PATIENT
+    "It started small. Skipping one hangout because I was tired."
+    
+    PATIENT
+    "Then another because I had to work. And another..."
+    
+    @pause 0.5
+    
+    PATIENT (sad)
+    "Now they've [stopped asking]."
+    
+    @if rapport >= 75
+        PATIENT (vulnerable)
+        "And honestly? It's [easier to be alone] with my worries."
+        
+        PATIENT
+        "At least then I don't have to pretend I'm okay."
+        
+        @rapport +10
+        @reveal social-isolation
+    @else
+        @rapport +5
+    @endif
+@else
+    PATIENT
+    "I have some friends. We hang out sometimes."
+    
+    PATIENT (deflecting)
+    "Everyone's busy, you know how it is."
+@endif
+
+=== @response:relationships.partner ===
+NARRATOR
+*Alex's expression shifts, becoming more guarded.*
+
+@pause 0.5
+
+@if rapport >= 65
+    PATIENT (hesitant)
+    "My partner... Jordan. We've been together three years."
+    
+    PATIENT
+    "They're [patient with me]. More patient than I deserve, probably."
+    
+    @pause 1
+    
+    @if rapport >= 80
+        PATIENT (sad)
+        "But I can feel them [pulling away] sometimes."
+        
+        PATIENT
+        "I'm not really... present. Even when I'm there."
+        
+        PATIENT (vulnerable)
+        "My body's in the room but my mind is [somewhere else]."
+        
+        PATIENT (sad)
+        "Worrying about everything except the person right in front of me."
+        
+        @rapport +10
+        @reveal relationship-strain
+    @else
+        PATIENT (deflecting)
+        "Things are fine. We're fine."
+        
+        @rapport +3
+    @endif
+@else
+    PATIENT (guarded)
+    "I'd rather not talk about my relationship right now."
+@endif
+
+=== @response:relationships.trust ===
+@if rapport >= 70
+    PATIENT (thoughtful)
+    "Trust is... hard for me."
+    
+    @pause 1
+    
+    PATIENT (vulnerable)
+    "I'm always [waiting for people to let me down]."
+    
+    PATIENT
+    "So I keep them at a distance. If they can't get close, they can't hurt me."
+    
+    @pause 0.5
+    
+    PATIENT (sad)
+    "But it's lonely. Living behind walls like this."
+    
+    @rapport +8
+    @reveal trust-issues
+@else
+    PATIENT
+    "I trust people. The ones who deserve it."
+    
+    PATIENT (guarded)
+    "Why do you ask?"
+@endif
+
+// -------------------------------------------
+// PHYSICAL - Body & Health
+// -------------------------------------------
+
+=== @response:physical.symptoms ===
+NARRATOR
+*Alex shifts uncomfortably in the chair, rolling their shoulders.*
+
+@pause 0.5
+
+@if rapport >= 55
+    PATIENT (thoughtful)
+    "Physical symptoms? I guess I've noticed a few things..."
+    
+    PATIENT
+    "My shoulders are [always tense]. Like I'm bracing for something."
+    
+    @pause 0.5
+    
+    @if rapport >= 70
+        PATIENT
+        "I get [headaches] almost every day now."
+        
+        PATIENT (hesitant)
+        "And my jaw... my dentist said I've been [clenching it at night]."
+        
+        PATIENT (embarrassed)
+        "I have to wear a mouth guard. It's very sexy."
+        
+        @rapport +5
+        @reveal physical-tension
+        @reveal jaw-clenching
+    @endif
+    
+@else
+    PATIENT
+    "I'm fine physically. Just tired sometimes."
+@endif
+
+=== @response:physical.appetite ===
+@if rapport >= 60
+    PATIENT (hesitant)
+    "My appetite? It's... inconsistent."
+    
+    PATIENT
+    "Some days I forget to eat entirely. I just... don't notice."
+    
+    @pause 0.5
+    
+    PATIENT
+    "Other days I eat everything in sight. Usually at midnight."
+    
+    @if rapport >= 75
+        PATIENT (embarrassed)
+        "Stress eating, I guess. Another [coping mechanism] that doesn't really help."
+        
+        @rapport +5
+        @reveal appetite-changes
+    @endif
+@else
+    PATIENT
+    "I eat fine. Normal."
+@endif
+
+=== @response:physical.exercise ===
+@if rapport >= 50
+    PATIENT (deflecting)
+    "Exercise? I used to go to the gym regularly."
+    
+    @pause 0.5
+    
+    PATIENT (sad)
+    "Now I can barely find the energy to [walk to my car]."
+    
+    PATIENT
+    "I keep meaning to start again, but..."
+    
+    PATIENT (guilty)
+    "There's always something more urgent. Another thing to worry about."
+    
+    @rapport +3
+@else
+    PATIENT
+    "I exercise sometimes. When I have time."
+@endif
+
+// -------------------------------------------
+// SELF - Identity & Self-Perception
+// -------------------------------------------
+
+=== @response:self.identity ===
+NARRATOR
+*Alex is quiet for a long moment, staring into their coffee.*
+
+@pause 2
+
+PATIENT (thoughtful)
+"How would I describe myself?"
+
+@pause 1
+
+@if rapport >= 70
+    PATIENT (sad)
+    "I used to think I was capable. Confident, even."
+    
+    PATIENT
+    "Someone who had their life together."
+    
+    @pause 1
+    
+    PATIENT (vulnerable)
+    "Now I'm not so sure. I feel like I'm [barely holding it together]."
+    
+    PATIENT
+    "Like there's a version of me that exists for other people..."
+    
+    PATIENT (sad)
+    "And then there's the real me. The one who's [terrified all the time]."
+    
+    @rapport +10
+    @reveal identity-conflict
+    
+@elseif rapport >= 50
+    PATIENT
+    "I don't know. Normal? Average?"
+    
+    PATIENT (deflecting)
+    "I've never really thought about it that much."
+@else
+    PATIENT (guarded)
+    "I'm just me. What else is there to say?"
 @endif
 
 === @response:self.future ===
-@if rapport >= 70
-    PATIENT (vulnerable): "The future [scares me], honestly."
-    PATIENT: "I can't stop thinking about everything that could go wrong."
-    PATIENT (anxious): "What if I can't handle it? What if I fail?"
-    @rapport +8
-@elseif rapport >= 50
-    PATIENT: "I try not to think too far ahead."
-    PATIENT: "One day at a time, right?"
+@if rapport >= 75
+    PATIENT (vulnerable)
+    "The future [scares me]. Honestly."
+    
+    @pause 1
+    
+    PATIENT (anxious)
+    "I can't stop thinking about everything that could go wrong."
+    
+    PATIENT
+    "What if I can't handle it? What if I fail?"
+    
+    PATIENT (stressed)
+    "What if this feeling [never goes away]?"
+    
+    @pause 0.5
+    
+    PATIENT (sad)
+    "What if I'm like this forever?"
+    
+    @rapport +10
+    @reveal future-anxiety
+    
+@elseif rapport >= 55
+    PATIENT (hesitant)
+    "I try not to think too far ahead."
+    
+    PATIENT
+    "One day at a time, right?"
+    
+    PATIENT (deflecting)
+    "That's what people say, anyway."
+    
 @else
-    PATIENT (guarded): "The future will be fine."
-    PATIENT: "I don't want to jinx it by talking about it."
+    PATIENT (guarded)
+    "The future will be fine."
+    
+    PATIENT
+    "I don't want to jinx it by talking about it."
+    
+    @rapport -2
 @endif
 
-// Breakthrough dialogue when contradiction is found
+=== @response:self.strengths ===
+@if rapport >= 60
+    PATIENT (surprised)
+    "Strengths? I... hm."
+    
+    @pause 1.5
+    
+    PATIENT (thoughtful)
+    "I guess I'm [good at my job]. When I'm not panicking about it."
+    
+    PATIENT
+    "I'm reliable. I always come through on my commitments."
+    
+    @pause 0.5
+    
+    @if rapport >= 75
+        PATIENT (sad)
+        "Even if it [destroys me] in the process."
+        
+        PATIENT (vulnerable)
+        "Maybe that's not a strength. Maybe that's the problem."
+        
+        @rapport +8
+        @reveal self-awareness
+    @endif
+@else
+    PATIENT
+    "I do okay at things, I guess."
+@endif
+
+=== @response:self.coping ===
+@if rapport >= 65
+    PATIENT (thoughtful)
+    "Coping? I'm not sure I really cope."
+    
+    PATIENT
+    "I survive. I get through each day."
+    
+    @pause 0.5
+    
+    @if has_symptom("bitten-nails")
+        PATIENT (embarrassed)
+        "I [bite my nails]. You probably noticed."
+        
+        PATIENT
+        "It's a nervous habit. Been doing it since I was a kid."
+        
+        @rapport +3
+    @endif
+    
+    @if rapport >= 75
+        PATIENT (vulnerable)
+        "Mostly I just try to [stay busy]."
+        
+        PATIENT
+        "If I'm working, I don't have time to worry."
+        
+        PATIENT (sad)
+        "Or at least that's what I tell myself."
+        
+        @rapport +5
+        @reveal avoidance-coping
+    @endif
+@else
+    PATIENT
+    "I manage. Everyone has their ways of dealing."
+@endif
+
+// -------------------------------------------
+// THERAPY - About This Process
+// -------------------------------------------
+
+=== @response:therapy.expectations ===
+PATIENT (hesitant)
+"What do I expect from this?"
+
+@pause 1
+
+@if rapport >= 55
+    PATIENT (honest)
+    "I don't know, honestly."
+    
+    PATIENT
+    "I just want to feel [normal] again."
+    
+    @pause 0.5
+    
+    PATIENT (vulnerable)
+    "Or maybe I've never been normal. Maybe I want to finally figure out [what's wrong with me]."
+    
+    @rapport +5
+@else
+    PATIENT
+    "I'm not sure. Someone suggested I try this."
+    
+    PATIENT (skeptical)
+    "We'll see if it helps."
+@endif
+
+=== @response:therapy.previous ===
+PATIENT
+"This is my first time in therapy."
+
+@pause 0.5
+
+@if rapport >= 50
+    PATIENT (hesitant)
+    "I almost went a few years ago, but..."
+    
+    PATIENT (embarrassed)
+    "I talked myself out of it. Convinced myself I didn't need it."
+    
+    @if rapport >= 70
+        PATIENT (sad)
+        "I kept thinking 'other people have it [worse than me]'."
+        
+        PATIENT
+        "That I should just [push through] on my own."
+        
+        @rapport +5
+    @endif
+@else
+    PATIENT
+    "I've never done this before."
+@endif
+
+=== @response:therapy.concerns ===
+@if rapport >= 60
+    PATIENT (honest)
+    "I'm nervous about this. About being here."
+    
+    @pause 0.5
+    
+    PATIENT (vulnerable)
+    "Part of me is [afraid you'll judge me]."
+    
+    PATIENT
+    "That you'll think I'm weak or broken or just... pathetic."
+    
+    @pause 1
+    
+    @if rapport >= 75
+        PATIENT (sad)
+        "Because that's what I think about myself most days."
+        
+        @rapport +10
+        @reveal self-judgment
+    @else
+        @rapport +5
+    @endif
+@else
+    PATIENT
+    "No concerns really. I'm just here to talk."
+@endif
+
+// ===========================================
+// BREAKTHROUGH MOMENTS
+// ===========================================
 
 === @breakthrough:sleep ===
 @trigger keyword-sleep-lie + bags-under-eyes
-    NARRATOR: *The patient's eyes widen slightly as they realize the contradiction*
+
+NARRATOR
+*Alex's eyes widen slightly as they realize the contradiction.
+A flicker of something—relief? fear?—crosses their face.*
+
+@pause 1
+
+PATIENT (relieved)
+"*sighs deeply*"
+
+@pause 0.5
+
+PATIENT
+"Okay. Okay, you're right."
+
+@pause 1
+
+PATIENT (vulnerable)
+"I [haven't slept properly in weeks]. Maybe longer."
+
+PATIENT
+"I lie awake for hours every night."
+
+@pause 0.5
+
+PATIENT (sad)
+"My mind just [won't stop racing]<reveals:racing-thoughts>."
+
+PATIENT
+"Every mistake I've ever made. Everything I need to do tomorrow."
+
+PATIENT (anxious)
+"Everything that could go wrong."
+
+@pause 1
+
+PATIENT (exhausted)
+"It all plays on repeat, over and over."
+
+PATIENT
+"By the time I finally fall asleep, it's almost time to wake up."
+
+@pause 0.5
+
+PATIENT (vulnerable)
+"Every night I tell myself tomorrow will be different<reveals:insomnia>."
+
+PATIENT (sad)
+"But it never is."
+
+@rapport +20
+@focus +50
+@reveal insomnia
+@reveal racing-thoughts
+@set breakthrough_sleep = true
+@unlock deep_sleep_discussion
+
+NARRATOR
+*For the first time since arriving, Alex's shoulders visibly relax.
+The admission, however painful, seems to lift a weight.*
+
+-> post_breakthrough_sleep
+
+=== post_breakthrough_sleep ===
+@pause 2
+
+PATIENT (thoughtful)
+"I don't know why I said I was sleeping fine."
+
+PATIENT (sad)
+"I guess I didn't want to admit how bad it's gotten."
+
+@pause 0.5
+
+PATIENT (hesitant)
+"Even to myself."
+
+// ===========================================
+// CLOSING SEQUENCES
+// ===========================================
+
+=== end_turn ===
+NARRATOR
+*The clock on the wall indicates the session is drawing to a close.*
+
+@pause 1
+
+@if $breakthrough_sleep
+    PATIENT (thoughtful)
+    "This was... more than I expected."
+    
+    PATIENT
+    "In a good way, I think."
+    
     @pause 0.5
-    PATIENT (relieved): "*sighs* Okay, you're right."
-    PATIENT: "I [haven't slept properly in weeks]<reveals:insomnia>."
-    PATIENT (vulnerable): "I lie awake for hours, my mind just won't stop racing."
-    PATIENT: "Every night I tell myself tomorrow will be different, but it never is."
-    @rapport +15
-    @focus +40
-    @set breakthrough_sleep = true
-    @unlock deep_sleep_discussion
-@end
+    
+    PATIENT (hopeful)
+    "Can we... talk more next time? About the sleep thing?"
+    
+@elseif $admitted_anxiety
+    PATIENT (hesitant)
+    "So... same time next week?"
+    
+    PATIENT
+    "I think I'd like to keep talking."
+    
+@else
+    PATIENT (neutral)
+    "Is that it for today?"
+    
+    PATIENT
+    "I'm still not sure what I'm supposed to get out of this."
+    
+    PATIENT (hesitant)
+    "But... I'll come back, I guess."
+@endif
+
+-> SESSION_END
+
+=== SESSION_END ===
+NARRATOR
+*Alex stands, gathering their things. 
+At the door, they pause.*
+
+@pause 1
+
+@if rapport >= 60
+    PATIENT (small-smile)
+    "Thanks for listening. Really."
+    
+    PATIENT
+    "See you next time."
+@else
+    PATIENT (neutral)
+    "See you."
+@endif
+
+NARRATOR
+*The door closes softly behind them.*
+
+// ===========================================
+// END OF TURN 1
+// ===========================================
