@@ -21,7 +21,7 @@ jobs:
         run: npm install
 
       - name: Build game
-        run: npm exec vite build
+        run: npx vite build
 
       - name: Copy game build to portal
         run: |
@@ -32,7 +32,7 @@ jobs:
         run: cd portal && npm install
 
       - name: Build portal
-        run: cd portal && npm exec vite build
+        run: cd portal && npx vite build
 
       - name: Determine deployment target
         id: deploy-target
