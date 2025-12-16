@@ -1,15 +1,21 @@
 {
     "name": "syns-dialogue",
     "displayName": "SYNS Dialogue Language",
-    "description": "Syntax highlighting for See You Next Session dialogue files (.syns)",
-    "version": "1.0.0",
+    "description": "Full language support for See You Next Session dialogue files (.syns) - syntax highlighting, IntelliSense, diagnostics, and more",
+    "version": "1.1.0",
     "publisher": "see-you-next-session",
     "engines": {
         "vscode": "^1.60.0"
     },
     "categories": [
-        "Programming Languages"
+        "Programming Languages",
+        "Linters",
+        "Snippets"
     ],
+    "activationEvents": [
+        "onLanguage:syns"
+    ],
+    "main": "./out/extension.js",
     "contributes": {
         "languages": [
             {
@@ -40,6 +46,123 @@
                 "language": "syns",
                 "path": "./snippets/syns.snippets.json"
             }
+        ],
+        "configuration": {
+            "title": "SYNS Dialogue",
+            "properties": {
+                "syns.diagnostics.enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/disable diagnostic error checking"
+                },
+                "syns.diagnostics.severity.unusedBlock": {
+                    "type": "string",
+                    "default": "warning",
+                    "enum": [
+                        "error",
+                        "warning",
+                        "information",
+                        "hint"
+                    ],
+                    "description": "Severity level for unused block warnings"
+                },
+                "syns.diagnostics.severity.undefinedGoto": {
+                    "type": "string",
+                    "default": "error",
+                    "enum": [
+                        "error",
+                        "warning",
+                        "information",
+                        "hint"
+                    ],
+                    "description": "Severity level for undefined goto targets"
+                },
+                "syns.diagnostics.severity.unclosedConditional": {
+                    "type": "string",
+                    "default": "error",
+                    "enum": [
+                        "error",
+                        "warning",
+                        "information",
+                        "hint"
+                    ],
+                    "description": "Severity level for unclosed @if/@endif blocks"
+                },
+                "syns.intellisense.suggestMoods": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Suggest mood completions after speaker names"
+                },
+                "syns.intellisense.suggestBlocks": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Suggest existing block names in goto statements"
+                },
+                "syns.logging.enabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable extension logging to output channel"
+                },
+                "syns.logging.level": {
+                    "type": "string",
+                    "default": "info",
+                    "enum": [
+                        "debug",
+                        "info",
+                        "warn",
+                        "error"
+                    ],
+                    "description": "Logging verbosity level"
+                }
+            }
+        },
+        "commands": [
+            {
+                "command": "syns.validateDocument",
+                "title": "SYNS: Validate Current Document"
+            },
+            {
+                "command": "syns.goToBlock",
+                "title": "SYNS: Go to Block Definition"
+            },
+            {
+                "command": "syns.listBlocks",
+                "title": "SYNS: List All Blocks"
+            },
+            {
+                "command": "syns.showOutputChannel",
+                "title": "SYNS: Show Output Log"
+            }
+        ],
+        "menus": {
+            "editor/context": [
+                {
+                    "when": "resourceLangId == syns",
+                    "command": "syns.goToBlock",
+                    "group": "navigation"
+                }
+            ]
+        },
+        "keybindings": [
+            {
+                "command": "syns.goToBlock",
+                "key": "f12",
+                "when": "resourceLangId == syns"
+            },
+            {
+                "command": "syns.listBlocks",
+                "key": "ctrl+shift+o",
+                "when": "resourceLangId == syns"
+            }
         ]
+    },
+    "scripts": {
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.60.0",
+        "@types/node": "^16.0.0",
+        "typescript": "^4.5.0"
     }
 }
