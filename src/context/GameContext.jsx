@@ -15,6 +15,11 @@ const initialState = {
     maxFocus: GAME_CONFIG.MAX_FOCUS,
     isFocusMode: false,
 
+    // Rapport System
+    rapport: 50, // Starting neutral (0-100)
+    maxRapport: 100,
+    rapportHistory: [], // Track changes for analytics
+
     // Token System
     collectedTokens: [], // { id, type: 'text'|'visual', content, symptomRef, source }
     clipboardTokens: [],
@@ -51,6 +56,10 @@ const ACTIONS = {
     TOGGLE_FOCUS_MODE: 'TOGGLE_FOCUS_MODE',
     SPEND_FOCUS: 'SPEND_FOCUS',
     RESTORE_FOCUS: 'RESTORE_FOCUS',
+
+    // Rapport
+    CHANGE_RAPPORT: 'CHANGE_RAPPORT',
+    SET_RAPPORT: 'SET_RAPPORT',
 
     // Tokens
     COLLECT_TOKEN: 'COLLECT_TOKEN',
@@ -90,6 +99,8 @@ function gameReducer(state, action) {
                 currentTurn: 1,
                 focus: state.maxFocus,
                 isFocusMode: false,
+                rapport: action.payload.startingRapport || 50,
+                rapportHistory: [],
                 collectedTokens: [],
                 clipboardTokens: [],
                 currentDialogueIndex: 0,
@@ -129,6 +140,25 @@ function gameReducer(state, action) {
             return {
                 ...state,
                 focus: Math.min(state.maxFocus, state.focus + action.payload)
+            };
+
+        case ACTIONS.CHANGE_RAPPORT: {
+            const { amount, reason } = action.payload;
+            const newRapport = Math.max(0, Math.min(state.maxRapport, state.rapport + amount));
+            return {
+                ...state,
+                rapport: newRapport,
+                rapportHistory: [
+                    ...state.rapportHistory,
+                    { amount, reason, timestamp: Date.now(), newValue: newRapport }
+                ]
+            };
+        }
+
+        case ACTIONS.SET_RAPPORT:
+            return {
+                ...state,
+                rapport: Math.max(0, Math.min(state.maxRapport, action.payload))
             };
 
         case ACTIONS.COLLECT_TOKEN:
@@ -250,6 +280,14 @@ export function GameProvider({ children }) {
 
         restoreFocus: useCallback((amount) => {
             dispatch({ type: ACTIONS.RESTORE_FOCUS, payload: amount });
+        }, []),
+
+        changeRapport: useCallback((amount, reason = 'unknown') => {
+            dispatch({ type: ACTIONS.CHANGE_RAPPORT, payload: { amount, reason } });
+        }, []),
+
+        setRapport: useCallback((value) => {
+            dispatch({ type: ACTIONS.SET_RAPPORT, payload: value });
         }, []),
 
         collectToken: useCallback((token) => {

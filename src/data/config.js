@@ -9,6 +9,25 @@ export const GAME_CONFIG = {
     FOCUS_COST_INCORRECT_MATCH: 10,
     FOCUS_RESTORE_BREAKTHROUGH: 40,
 
+    // Rapport System
+    STARTING_RAPPORT: 50,
+    MAX_RAPPORT: 100,
+    MIN_RAPPORT: 0,
+
+    // Rapport Changes
+    RAPPORT_EMPATHETIC: 8,      // Empathetic response
+    RAPPORT_NEUTRAL: 0,         // Neutral response
+    RAPPORT_PROBING: -3,        // Probing question (slight negative)
+    RAPPORT_CHALLENGING: -8,    // Challenging/confrontational
+    RAPPORT_BREAKTHROUGH: 15,   // Finding a contradiction gently
+    RAPPORT_CLUMSY_BREAKTHROUGH: -5, // Finding contradiction aggressively
+
+    // Rapport Thresholds (affect patient behavior)
+    RAPPORT_GUARDED: 25,        // Below this, patient is defensive
+    RAPPORT_CAUTIOUS: 50,       // Below this, patient holds back
+    RAPPORT_COMFORTABLE: 75,    // Above this, patient opens up
+    RAPPORT_TRUSTING: 90,       // Above this, full disclosure possible
+
     // Turns
     MAX_TURNS: 4,
     TURN_DURATION_MINUTES: 15,

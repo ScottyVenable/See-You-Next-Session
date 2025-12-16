@@ -1,0 +1,165 @@
+// Patient: Alex - Tutorial (Generalized Anxiety Disorder)
+// Phase: Turn 1 - Initial Introduction
+
+=== START ===
+PATIENT (nervous): "Thanks for seeing me, doctor."
+PATIENT: "I... I've been having a [rough time] lately."
+@pause 1.5
+-> worry_intro
+
+=== worry_intro ===
+PATIENT (anxious): "I just can't stop [worrying about everything]."
+PATIENT: "Work, my family, even little things like whether I locked the door."
+-> sleep_topic
+
+=== sleep_topic ===
+@if rapport >= 60
+    PATIENT (hesitant): "And my sleep... it's been [okay, I guess]<contradicts:bags-under-eyes>."
+@else
+    PATIENT (defensive): "I'm [sleeping fine, really]<contradicts:bags-under-eyes>."
+@endif
+PATIENT: "Just a bit tired from work, you know?"
+
+// Response Handlers - What happens when player asks about topics
+
+=== @response:family.parents ===
+@if rapport >= 70
+    PATIENT (thoughtful): "My parents... they mean well."
+    PATIENT: "But they've always [expected a lot from me]."
+    PATIENT (sad): "I don't think I've ever quite measured up."
+    @rapport +5
+@elseif rapport >= 50
+    PATIENT: "They're fine. Supportive, I guess."
+    PATIENT (hesitant): "We don't talk much these days."
+@else
+    PATIENT (guarded): "I'd rather not talk about my parents right now."
+    @rapport -2
+@endif
+
+=== @response:family.childhood ===
+@if rapport >= 75
+    PATIENT (vulnerable): "My childhood was... complicated."
+    PATIENT: "I always felt like I had to be [perfect] to be loved."
+    PATIENT (sad): "That pressure never really went away."
+    @reveal childhood-anxiety
+    @rapport +8
+@elseif rapport >= 50
+    PATIENT: "It was normal, I suppose."
+    PATIENT (deflecting): "Nothing special to report."
+@else
+    PATIENT (defensive): "Why do you need to know about that?"
+    PATIENT: "Can we focus on the present?"
+    @rapport -3
+@endif
+
+=== @response:work.job ===
+PATIENT: "I work in marketing. Mid-level position."
+@if rapport >= 60
+    PATIENT (stressed): "The [deadlines are constant]. It never stops."
+    PATIENT: "I'm always worried I'll miss something important."
+@else
+    PATIENT: "It's fine. Pays the bills."
+@endif
+
+=== @response:work.stress ===
+@if rapport >= 65
+    PATIENT (stressed): "The stress is... [constant]."
+    PATIENT: "I wake up thinking about work. I go to sleep thinking about work."
+    PATIENT (anxious): "Sometimes I feel like I'm [drowning] and no one notices."
+    @rapport +5
+@else
+    PATIENT: "Work stress? That's just normal, isn't it?"
+    PATIENT (dismissive): "Everyone deals with it."
+@endif
+
+=== @response:emotions.anxiety ===
+@if rapport >= 70
+    PATIENT (vulnerable): "Anxiety... yeah, that's probably the right word."
+    PATIENT: "It feels like there's always a [weight on my chest]."
+    PATIENT: "Like something bad is about to happen, even when everything's fine."
+    @rapport +10
+    @set admitted_anxiety = true
+@elseif rapport >= 45
+    PATIENT (hesitant): "I get nervous sometimes. Doesn't everyone?"
+    PATIENT: "I wouldn't call it anxiety exactly..."
+@else
+    PATIENT (defensive): "I'm not anxious. I'm just stressed."
+    PATIENT: "There's a difference."
+    @rapport -3
+@endif
+
+=== @response:emotions.mood ===
+PATIENT: "My mood? It's..."
+@if rapport >= 55
+    PATIENT (sad): "It's been [up and down] honestly."
+    PATIENT: "Some days I feel okay. Other days I just want to hide."
+    @rapport +3
+@else
+    PATIENT: "It's fine. Normal."
+@endif
+
+=== @response:emotions.sleep ===
+@if rapport >= 75 && has_symptom("bags-under-eyes")
+    PATIENT (relieved): "Okay, you can probably tell from looking at me."
+    PATIENT: "I [haven't slept properly in weeks]."
+    PATIENT (vulnerable): "I lie awake for hours, my mind just won't stop."
+    @set admitted_sleep = true
+    @rapport +10
+@elseif rapport >= 60
+    PATIENT (hesitant): "Sleep is... complicated."
+    PATIENT: "Some nights are better than others, I guess."
+@else
+    PATIENT (defensive): "I told you, I sleep fine."
+    PATIENT: "Why do you keep asking about that?"
+    @rapport -5
+@endif
+
+=== @response:relationships.friends ===
+@if rapport >= 50
+    PATIENT (sad): "Friends? I've kind of [pushed everyone away] lately."
+    PATIENT: "It's just easier to be alone with my worries."
+    @rapport +5
+@else
+    PATIENT: "I have some friends. We hang out sometimes."
+@endif
+
+=== @response:self.identity ===
+PATIENT (thoughtful): "How would I describe myself?"
+@if rapport >= 65
+    PATIENT: "I used to think I was capable. Confident even."
+    PATIENT (sad): "Now I'm not so sure. I feel like I'm [barely holding it together]."
+    @rapport +5
+@else
+    PATIENT: "I don't know. Normal? Average?"
+    PATIENT: "I've never really thought about it."
+@endif
+
+=== @response:self.future ===
+@if rapport >= 70
+    PATIENT (vulnerable): "The future [scares me], honestly."
+    PATIENT: "I can't stop thinking about everything that could go wrong."
+    PATIENT (anxious): "What if I can't handle it? What if I fail?"
+    @rapport +8
+@elseif rapport >= 50
+    PATIENT: "I try not to think too far ahead."
+    PATIENT: "One day at a time, right?"
+@else
+    PATIENT (guarded): "The future will be fine."
+    PATIENT: "I don't want to jinx it by talking about it."
+@endif
+
+// Breakthrough dialogue when contradiction is found
+
+=== @breakthrough:sleep ===
+@trigger keyword-sleep-lie + bags-under-eyes
+    NARRATOR: *The patient's eyes widen slightly as they realize the contradiction*
+    @pause 0.5
+    PATIENT (relieved): "*sighs* Okay, you're right."
+    PATIENT: "I [haven't slept properly in weeks]<reveals:insomnia>."
+    PATIENT (vulnerable): "I lie awake for hours, my mind just won't stop racing."
+    PATIENT: "Every night I tell myself tomorrow will be different, but it never is."
+    @rapport +15
+    @focus +40
+    @set breakthrough_sleep = true
+    @unlock deep_sleep_discussion
+@end

@@ -8,6 +8,8 @@ import Clipboard from '../game/Clipboard.jsx';
 import FocusMeter from '../game/FocusMeter.jsx';
 import TurnClock from '../game/TurnClock.jsx';
 import Handbook from '../game/Handbook.jsx';
+import RapportMeter from '../game/RapportMeter.jsx';
+import { getRapportLevelName, getBodyLanguage } from '../../data/rapport.js';
 import '../../styles/game-screen.css';
 
 function GameScreen() {
@@ -18,7 +20,11 @@ function GameScreen() {
     const [showTutorialHint, setShowTutorialHint] = useState(true);
     const [selectedPrompt, setSelectedPrompt] = useState(null);
 
-    const { currentPatient, currentTurn, focus, isFocusMode } = gameState;
+    const { currentPatient, currentTurn, focus, isFocusMode, rapport } = gameState;
+
+    // Get rapport-based patient state
+    const rapportLevel = getRapportLevelName(rapport);
+    const bodyLanguage = getBodyLanguage(rapport);
 
     // Handle dialogue prompt selection from selector
     const handleSelectPrompt = useCallback((prompt) => {
@@ -28,6 +34,11 @@ function GameScreen() {
         // Deduct focus cost if applicable
         if (prompt.focusCost && prompt.focusCost > 0) {
             actions.spendFocus(prompt.focusCost);
+        }
+
+        // Apply rapport change
+        if (prompt.rapportValue && prompt.rapportValue !== 0) {
+            actions.changeRapport(prompt.rapportValue, `dialogue_${prompt.rapportImpact}`);
         }
 
         // TODO: Integrate with dialogue system to generate response
@@ -245,6 +256,13 @@ function GameScreen() {
                         isFocusMode={isFocusMode}
                     />
 
+                    <RapportMeter
+                        value={rapport}
+                        maxValue={gameState.maxRapport || 100}
+                        showEffects={false}
+                        compact={false}
+                    />
+
                     <Clipboard
                         tokens={gameState.clipboardTokens}
                         onRemoveToken={actions.removeFromClipboard}
@@ -262,6 +280,9 @@ function GameScreen() {
                                 });
                                 actions.restoreFocus(40);
 
+                                // Rapport boost for gentle breakthrough
+                                actions.changeRapport(15, 'breakthrough_success');
+
                                 // Find and show breakthrough dialogue
                                 const btDialogue = findBreakthroughDialogue(textToken.id, visualToken.symptomRef);
                                 if (btDialogue) {
@@ -271,6 +292,9 @@ function GameScreen() {
                             } else {
                                 // Failed match - penalize focus
                                 actions.spendFocus(10);
+
+                                // Slight rapport penalty for fumbled attempt
+                                actions.changeRapport(-5, 'synthesis_failed');
                             }
                         }}
                     />
@@ -374,6 +398,9 @@ function GameScreen() {
                             <div className="breakthrough-reward">
                                 <span className="reward-icon">✨</span>
                                 <span className="reward-text">+40 Focus Restored</span>
+                                <span className="reward-divider">•</span>
+                                <span className="reward-icon">💚</span>
+                                <span className="reward-text">+15 Rapport</span>
                             </div>
                             <motion.button
                                 className="breakthrough-close"

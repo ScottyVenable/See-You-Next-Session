@@ -26,9 +26,13 @@ import {
     Star,
     Sparkle,
     Lightning,
+    ArrowUp,
+    ArrowDown,
+    Minus,
 } from '@phosphor-icons/react';
 
 // Topic configurations - softer, more cohesive color palette
+// rapportImpact: 'empathetic' (+8), 'neutral' (0), 'probing' (-3), 'challenging' (-8)
 const DIALOGUE_TOPICS = {
     family: {
         icon: UsersThree,
@@ -36,10 +40,10 @@ const DIALOGUE_TOPICS = {
         color: '#c084fc',
         shortcut: '1',
         options: [
-            { id: 'parents', icon: Users, label: 'Parents', prompt: 'Tell me about your parents.', focusCost: 0 },
-            { id: 'siblings', icon: Baby, label: 'Siblings', prompt: 'Do you have any siblings?', focusCost: 0 },
-            { id: 'childhood', icon: Sparkle, label: 'Childhood', prompt: 'What was your childhood like?', focusCost: 1 },
-            { id: 'home', icon: House, label: 'Home Life', prompt: 'How is your home environment?', focusCost: 0 },
+            { id: 'parents', icon: Users, label: 'Parents', prompt: 'Tell me about your parents.', focusCost: 0, rapportImpact: 'neutral' },
+            { id: 'siblings', icon: Baby, label: 'Siblings', prompt: 'Do you have any siblings?', focusCost: 0, rapportImpact: 'neutral' },
+            { id: 'childhood', icon: Sparkle, label: 'Childhood', prompt: 'What was your childhood like?', focusCost: 1, rapportImpact: 'probing' },
+            { id: 'home', icon: House, label: 'Home Life', prompt: 'How is your home environment?', focusCost: 0, rapportImpact: 'empathetic' },
         ]
     },
     work: {
@@ -48,10 +52,10 @@ const DIALOGUE_TOPICS = {
         color: '#60a5fa',
         shortcut: '2',
         options: [
-            { id: 'job', icon: Buildings, label: 'Current Job', prompt: 'Tell me about your job.', focusCost: 0 },
-            { id: 'stress', icon: HeartBreak, label: 'Work Stress', prompt: 'How stressful is your work?', focusCost: 1 },
-            { id: 'colleagues', icon: Users, label: 'Colleagues', prompt: 'How do you get along with coworkers?', focusCost: 0 },
-            { id: 'goals', icon: Target, label: 'Career Goals', prompt: 'What are your career aspirations?', focusCost: 0 },
+            { id: 'job', icon: Buildings, label: 'Current Job', prompt: 'Tell me about your job.', focusCost: 0, rapportImpact: 'neutral' },
+            { id: 'stress', icon: HeartBreak, label: 'Work Stress', prompt: 'How stressful is your work?', focusCost: 1, rapportImpact: 'empathetic' },
+            { id: 'colleagues', icon: Users, label: 'Colleagues', prompt: 'How do you get along with coworkers?', focusCost: 0, rapportImpact: 'neutral' },
+            { id: 'goals', icon: Target, label: 'Career Goals', prompt: 'What are your career aspirations?', focusCost: 0, rapportImpact: 'empathetic' },
         ]
     },
     relationships: {
@@ -60,10 +64,10 @@ const DIALOGUE_TOPICS = {
         color: '#f472b6',
         shortcut: '3',
         options: [
-            { id: 'romantic', icon: HandHeart, label: 'Romantic', prompt: 'Tell me about your romantic life.', focusCost: 1 },
-            { id: 'friends', icon: Handshake, label: 'Friends', prompt: 'How are your friendships?', focusCost: 0 },
-            { id: 'social', icon: Confetti, label: 'Social Life', prompt: 'Do you enjoy socializing?', focusCost: 0 },
-            { id: 'trust', icon: ShieldCheck, label: 'Trust', prompt: 'Do you find it easy to trust others?', focusCost: 1 },
+            { id: 'romantic', icon: HandHeart, label: 'Romantic', prompt: 'Tell me about your romantic life.', focusCost: 1, rapportImpact: 'probing' },
+            { id: 'friends', icon: Handshake, label: 'Friends', prompt: 'How are your friendships?', focusCost: 0, rapportImpact: 'empathetic' },
+            { id: 'social', icon: Confetti, label: 'Social Life', prompt: 'Do you enjoy socializing?', focusCost: 0, rapportImpact: 'neutral' },
+            { id: 'trust', icon: ShieldCheck, label: 'Trust', prompt: 'Do you find it easy to trust others?', focusCost: 1, rapportImpact: 'challenging' },
         ]
     },
     emotions: {
@@ -72,10 +76,10 @@ const DIALOGUE_TOPICS = {
         color: '#fbbf24',
         shortcut: '4',
         options: [
-            { id: 'anxiety', icon: SmileyNervous, label: 'Anxiety', prompt: 'Do you experience anxiety?', focusCost: 1 },
-            { id: 'mood', icon: CloudSun, label: 'Mood', prompt: 'How has your mood been lately?', focusCost: 0 },
-            { id: 'sleep', icon: Moon, label: 'Sleep', prompt: 'How have you been sleeping?', focusCost: 0 },
-            { id: 'coping', icon: FirstAid, label: 'Coping', prompt: 'How do you cope with stress?', focusCost: 1 },
+            { id: 'anxiety', icon: SmileyNervous, label: 'Anxiety', prompt: 'Do you experience anxiety?', focusCost: 1, rapportImpact: 'probing' },
+            { id: 'mood', icon: CloudSun, label: 'Mood', prompt: 'How has your mood been lately?', focusCost: 0, rapportImpact: 'empathetic' },
+            { id: 'sleep', icon: Moon, label: 'Sleep', prompt: 'How have you been sleeping?', focusCost: 0, rapportImpact: 'neutral' },
+            { id: 'coping', icon: FirstAid, label: 'Coping', prompt: 'How do you cope with stress?', focusCost: 1, rapportImpact: 'empathetic' },
         ]
     },
     selfImage: {
@@ -84,10 +88,10 @@ const DIALOGUE_TOPICS = {
         color: '#34d399',
         shortcut: '5',
         options: [
-            { id: 'identity', icon: PuzzlePiece, label: 'Identity', prompt: 'How would you describe yourself?', focusCost: 0 },
-            { id: 'confidence', icon: Barbell, label: 'Confidence', prompt: 'How confident do you feel?', focusCost: 1 },
-            { id: 'values', icon: Star, label: 'Values', prompt: 'What matters most to you?', focusCost: 0 },
-            { id: 'future', icon: Sparkle, label: 'Future', prompt: 'How do you see your future?', focusCost: 0 },
+            { id: 'identity', icon: PuzzlePiece, label: 'Identity', prompt: 'How would you describe yourself?', focusCost: 0, rapportImpact: 'neutral' },
+            { id: 'confidence', icon: Barbell, label: 'Confidence', prompt: 'How confident do you feel?', focusCost: 1, rapportImpact: 'probing' },
+            { id: 'values', icon: Star, label: 'Values', prompt: 'What matters most to you?', focusCost: 0, rapportImpact: 'empathetic' },
+            { id: 'future', icon: Sparkle, label: 'Future', prompt: 'How do you see your future?', focusCost: 0, rapportImpact: 'empathetic' },
         ]
     }
 };
@@ -197,6 +201,49 @@ const FocusCostBadge = styled.span`
     font-weight: 700;
     margin-left: auto;
 `;
+
+const RapportBadge = styled.span`
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-size: 8px;
+    font-weight: 700;
+    background: ${props => {
+        switch (props.$impact) {
+            case 'empathetic': return 'rgba(52, 211, 153, 0.2)';
+            case 'probing': return 'rgba(251, 191, 36, 0.2)';
+            case 'challenging': return 'rgba(239, 68, 68, 0.2)';
+            default: return 'rgba(148, 163, 184, 0.2)';
+        }
+    }};
+    color: ${props => {
+        switch (props.$impact) {
+            case 'empathetic': return '#34d399';
+            case 'probing': return '#fbbf24';
+            case 'challenging': return '#ef4444';
+            default: return '#94a3b8';
+        }
+    }};
+`;
+
+// Rapport impact values
+const RAPPORT_VALUES = {
+    empathetic: 8,
+    neutral: 0,
+    probing: -3,
+    challenging: -8,
+};
+
+const getRapportIcon = (impact) => {
+    switch (impact) {
+        case 'empathetic': return ArrowUp;
+        case 'probing': return ArrowDown;
+        case 'challenging': return ArrowDown;
+        default: return Minus;
+    }
+};
 
 const TopicButton = styled.button`
     position: relative;
@@ -480,7 +527,9 @@ function DialogueSelector({ onSelectPrompt, disabledTopics = [], currentFocus = 
                 option: option.id,
                 prompt: option.prompt,
                 label: option.label,
-                focusCost: option.focusCost
+                focusCost: option.focusCost,
+                rapportImpact: option.rapportImpact,
+                rapportValue: RAPPORT_VALUES[option.rapportImpact] || 0,
             });
         }
         setSelectedTopic(null);
@@ -569,6 +618,7 @@ function DialogueSelector({ onSelectPrompt, disabledTopics = [], currentFocus = 
                             {selectedTopicData.options.map((option) => {
                                 const Icon = option.icon;
                                 const insufficientFocus = option.focusCost > currentFocus;
+                                const RapportIcon = getRapportIcon(option.rapportImpact);
 
                                 return (
                                     <OptionButton
@@ -588,6 +638,11 @@ function DialogueSelector({ onSelectPrompt, disabledTopics = [], currentFocus = 
                                         <div className="front">
                                             <Icon size={16} weight="duotone" />
                                             <span>{option.label}</span>
+                                            {option.rapportImpact !== 'neutral' && (
+                                                <RapportBadge $impact={option.rapportImpact}>
+                                                    <RapportIcon size={8} weight="bold" />
+                                                </RapportBadge>
+                                            )}
                                             {option.focusCost > 0 && (
                                                 <FocusCostBadge $hasCost={true}>
                                                     <Lightning size={10} weight="fill" />

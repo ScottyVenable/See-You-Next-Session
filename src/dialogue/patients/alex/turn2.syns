@@ -1,0 +1,125 @@
+// Patient: Alex - Tutorial (Generalized Anxiety Disorder)
+// Phase: Turn 2 - Deeper Exploration
+
+=== START ===
+@if $breakthrough_sleep
+    PATIENT (thoughtful): "I've been thinking about what we discussed... about my sleep."
+    PATIENT: "It felt good to admit that, actually."
+    @rapport +5
+    -> physical_symptoms
+@else
+    PATIENT (stressed): "I've been feeling really [on edge] lately."
+    -> physical_symptoms
+@endif
+
+=== physical_symptoms ===
+PATIENT (anxious): "My body feels tense all the time."
+PATIENT: "Like I'm [always on edge], waiting for something bad to happen."
+@pause 1
+PATIENT (stressed): "It's [hard to concentrate at work]."
+PATIENT: "My [mind just races from one worry to the next]."
+
+// Response Handlers for Turn 2
+
+=== @response:emotions.anxiety ===
+@if rapport >= 75
+    PATIENT (vulnerable): "Yes... I think I do have anxiety."
+    PATIENT: "It's hard to admit, but it's been [controlling my life]."
+    @if $admitted_sleep
+        PATIENT: "First the sleep, now this... it's all connected, isn't it?"
+        @rapport +10
+    @else
+        PATIENT (sad): "I've been trying to pretend everything's fine."
+        @rapport +5
+    @endif
+    @set admitted_anxiety = true
+@elseif rapport >= 50
+    PATIENT (hesitant): "Anxiety? I mean, maybe..."
+    PATIENT: "I get worried a lot. Is that the same thing?"
+@else
+    PATIENT (defensive): "I'm not anxious, I'm just stressed."
+    PATIENT: "There's nothing wrong with me."
+    @rapport -5
+@endif
+
+=== @response:work.stress ===
+@if rapport >= 65
+    PATIENT (stressed): "Work is... it's overwhelming."
+    PATIENT: "I [can't turn off my brain] even when I leave the office."
+    PATIENT (vulnerable): "Sometimes I sit in my car for 10 minutes before going in."
+    PATIENT: "Just trying to [prepare myself] for another day."
+    @rapport +8
+@else
+    PATIENT: "Work is fine. Busy, but that's normal."
+@endif
+
+=== @response:self.confidence ===
+@if rapport >= 70
+    PATIENT (sad): "My confidence? It's... not great."
+    PATIENT: "I used to believe in myself more."
+    PATIENT (vulnerable): "Now I [second-guess everything] I do."
+    @rapport +5
+@else
+    PATIENT: "I'm confident enough, I guess."
+    PATIENT (deflecting): "Why do you ask?"
+@endif
+
+=== @response:emotions.coping ===
+@if rapport >= 60
+    PATIENT (thoughtful): "Coping? I'm not sure I do cope."
+    @if has_symptom("bitten-nails")
+        PATIENT (embarrassed): "I bite my nails, as you might have noticed."
+        PATIENT: "It's a [nervous habit]. I can't seem to stop."
+        @rapport +5
+    @else
+        PATIENT: "I just try to push through, you know?"
+        PATIENT: "Keep busy so I don't have time to worry."
+    @endif
+@else
+    PATIENT: "I manage. Everyone has their ways of dealing."
+@endif
+
+=== @response:family.home ===
+@if rapport >= 55
+    PATIENT: "Home is... complicated."
+    @if rapport >= 75
+        PATIENT (sad): "My partner says I'm never really present."
+        PATIENT: "Even when I'm there, my [mind is somewhere else]."
+        PATIENT (vulnerable): "I can see it hurting our relationship."
+        @rapport +8
+    @else
+        PATIENT: "It's fine. Things could be better."
+    @endif
+@else
+    PATIENT: "Home is home. Nothing special."
+@endif
+
+=== @response:relationships.trust ===
+@if rapport >= 70
+    PATIENT (vulnerable): "Trust is... hard for me."
+    PATIENT: "I'm always [waiting for people to let me down]."
+    PATIENT (sad): "It's exhausting, honestly."
+    @rapport +8
+@elseif rapport >= 50
+    PATIENT (hesitant): "I trust some people."
+    PATIENT: "It takes me a while to open up."
+@else
+    PATIENT (guarded): "Why would you ask about trust?"
+    PATIENT: "Are you trying to analyze me?"
+    @rapport -5
+@endif
+
+// Breakthrough - Physical tension revelation
+
+=== @breakthrough:tension ===
+@trigger keyword-on-edge + trembling-hands
+    NARRATOR: *You notice the patient's hands are trembling slightly*
+    PATIENT (surprised): "You noticed that, didn't you?"
+    @pause 0.5
+    PATIENT (relieved): "I didn't realize it was so obvious."
+    PATIENT: "My hands have been [shaking] for months now."
+    PATIENT (vulnerable): "I thought I was hiding it well."
+    @rapport +15
+    @focus +40
+    @set admitted_trembling = true
+@end
