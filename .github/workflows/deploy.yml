@@ -1,4 +1,4 @@
-name: Deploy to Firebase Hosting
+name: Deploy Game to Firebase Hosting
 
 on:
   push:
@@ -27,23 +27,12 @@ jobs:
       - name: Build game
         run: npm run build
 
-      - name: Determine deployment target
-        id: deploy-target
-        run: |
-          if [ "${{ github.ref }}" == "refs/heads/stable" ]; then
-            echo "target=production" >> $GITHUB_OUTPUT
-          elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
-            echo "target=staging" >> $GITHUB_OUTPUT
-          elif [ "${{ github.ref }}" == "refs/heads/experimental" ]; then
-            echo "target=development" >> $GITHUB_OUTPUT
-          fi
-
       - name: Deploy to Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}'
           channelId: live
-          target: ${{ steps.deploy-target.outputs.target }}
+          target: game
           projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
           entryPoint: './'
