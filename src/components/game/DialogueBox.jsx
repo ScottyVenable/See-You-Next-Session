@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import '../../styles/dialogue-box.css';
 
@@ -27,6 +27,26 @@ const keywordVariants = {
     }
 };
 
+// Keyword pop-in animation
+const keywordPopVariants = {
+    hidden: {
+        opacity: 0,
+        scale: 0.8,
+        y: 5
+    },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            stiffness: 500,
+            damping: 25,
+            delay: 0.1
+        }
+    }
+};
+
 const tooltipVariants = {
     hidden: { opacity: 0, y: 5, scale: 0.95 },
     visible: {
@@ -37,19 +57,98 @@ const tooltipVariants = {
     }
 };
 
-function DialogueBox({ dialogue, onKeywordCollected, isFocusMode = false }) {
+// Context menu animation
+const contextMenuVariants = {
+    hidden: {
+        opacity: 0,
+        scale: 0.9,
+        y: -5
+    },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            stiffness: 400,
+            damping: 25
+        }
+    },
+    exit: {
+        opacity: 0,
+        scale: 0.9,
+        transition: { duration: 0.15 }
+    }
+};
+
+// Helper function to determine keyword type from content/context
+function getKeywordType(keyword) {
+    const text = keyword.text.toLowerCase();
+
+    // Duration keywords (time-related)
+    if (/\b(always|never|constantly|recently|lately|sometimes|often|weeks?|months?|years?|days?|hours?|morning|night|every|since|ago)\b/.test(text)) {
+        return 'duration';
+    }
+
+    // Intensity keywords (severity/degree)
+    if (/\b(very|extremely|slightly|barely|completely|totally|really|so much|a lot|intense|severe|mild|terrible|awful|overwhelming)\b/.test(text)) {
+        return 'intensity';
+    }
+
+    // Behavior keywords (actions/habits)
+    if (/\b(can't|cannot|won't|don't|avoid|stop|keep|started|trying|habit|feel|feeling|sleep|eat|work|focus|concentrate)\b/.test(text)) {
+        return 'behavior';
+    }
+
+    // Emotion keywords
+    if (/\b(worried|anxious|scared|afraid|happy|sad|angry|frustrated|nervous|stressed|depressed|hopeless|hopeful)\b/.test(text)) {
+        return 'emotion';
+    }
+
+    // Background keywords (personal info)
+    if (/\b(job|work|family|relationship|friend|home|school|money|health|breakup|divorce|loss|death)\b/.test(text)) {
+        return 'background';
+    }
+
+    // If keyword has contradicts property, it's a contradiction type
+    if (keyword.contradicts) {
+        return 'contradiction';
+    }
+
+    // Default to general
+    return 'general';
+}
+
+function DialogueBox({ dialogue, onKeywordCollected, isFocusMode = false, patientName = 'Patient' }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [displayedText, setDisplayedText] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const [collectedKeywords, setCollectedKeywords] = useState(new Set());
     const [showMoodTooltip, setShowMoodTooltip] = useState(false);
+    const [contextMenu, setContextMenu] = useState({ show: false, x: 0, y: 0, keyword: null });
+    const [animatedKeywords, setAnimatedKeywords] = useState(new Set());
+    const dialogueRef = useRef(null);
 
     const currentDialogue = dialogue[currentIndex];
+    const totalKeywords = currentDialogue?.keywords?.length || 0;
+    const collectedCount = currentDialogue?.keywords?.filter(k => collectedKeywords.has(k.id)).length || 0;
+
+    // Close context menu when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (contextMenu.show && !e.target.closest('.keyword-context-menu')) {
+                setContextMenu({ show: false, x: 0, y: 0, keyword: null });
+            }
+        };
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, [contextMenu.show]);
 
     // Reset index when dialogue changes (new turn)
     useEffect(() => {
         setCurrentIndex(0);
         setCollectedKeywords(new Set());
+        setAnimatedKeywords(new Set());
     }, [dialogue]);
 
     // Typewriter effect - processes text to hide brackets during animation
@@ -69,7 +168,7 @@ function DialogueBox({ dialogue, onKeywordCollected, isFocusMode = false }) {
         const visibleChars = [];
         let inBracket = false;
         let bracketStart = -1;
-        
+
         for (let i = 0; i < fullText.length; i++) {
             if (fullText[i] === '[') {
                 inBracket = true;
@@ -87,19 +186,19 @@ function DialogueBox({ dialogue, onKeywordCollected, isFocusMode = false }) {
             if (index < fullText.length) {
                 // Find next non-bracket stopping point
                 let nextEnd = index + 1;
-                
+
                 // Skip opening brackets entirely
                 while (nextEnd < fullText.length && fullText[nextEnd - 1] === '[') {
                     nextEnd++;
                 }
-                
+
                 // If we're inside brackets, continue until we hit the closing bracket
                 let depth = 0;
                 for (let i = 0; i < nextEnd; i++) {
                     if (fullText[i] === '[') depth++;
                     if (fullText[i] === ']') depth--;
                 }
-                
+
                 // If we're in a bracket, fast-forward to include the whole keyword
                 if (depth > 0) {
                     while (nextEnd < fullText.length && fullText[nextEnd] !== ']') {
@@ -107,14 +206,14 @@ function DialogueBox({ dialogue, onKeywordCollected, isFocusMode = false }) {
                     }
                     if (nextEnd < fullText.length) nextEnd++; // Include the ]
                 }
-                
+
                 setDisplayedText(fullText.substring(0, nextEnd));
                 index = nextEnd;
             } else {
                 setIsTyping(false);
                 clearInterval(typeInterval);
             }
-        }, 30); // Typing speed
+        }, 25); // Slightly faster typing speed
 
         return () => clearInterval(typeInterval);
     }, [currentDialogue]);
@@ -129,11 +228,57 @@ function DialogueBox({ dialogue, onKeywordCollected, isFocusMode = false }) {
         }
     };
 
-    const handleKeywordClick = useCallback((keyword) => {
+    const handleKeywordClick = useCallback((keyword, e) => {
         if (collectedKeywords.has(keyword.id)) return;
-
+        e.stopPropagation();
         setCollectedKeywords(prev => new Set([...prev, keyword.id]));
         onKeywordCollected(keyword);
+        // Close context menu if open
+        setContextMenu({ show: false, x: 0, y: 0, keyword: null });
+    }, [collectedKeywords, onKeywordCollected]);
+
+    // Handle right-click context menu
+    const handleKeywordRightClick = useCallback((e, keyword) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const rect = dialogueRef.current?.getBoundingClientRect() || { left: 0, top: 0 };
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        setContextMenu({
+            show: true,
+            x,
+            y,
+            keyword
+        });
+    }, []);
+
+    // Context menu actions
+    const handleContextMenuAction = useCallback((action, keyword) => {
+        switch (action) {
+            case 'collect':
+                if (!collectedKeywords.has(keyword.id)) {
+                    setCollectedKeywords(prev => new Set([...prev, keyword.id]));
+                    onKeywordCollected(keyword);
+                }
+                break;
+            case 'highlight':
+                // TODO: Implement highlight in handbook
+                console.log('Highlight in handbook:', keyword.text);
+                break;
+            case 'ask':
+                // TODO: Implement ask about this
+                console.log('Ask about:', keyword.text);
+                break;
+            case 'explore':
+                // TODO: Implement explore further (for background keywords)
+                console.log('Explore further:', keyword.text);
+                break;
+            default:
+                break;
+        }
+        setContextMenu({ show: false, x: 0, y: 0, keyword: null });
     }, [collectedKeywords, onKeywordCollected]);
 
     // Parse text to highlight keywords
@@ -177,14 +322,28 @@ function DialogueBox({ dialogue, onKeywordCollected, isFocusMode = false }) {
 
             if (keyword) {
                 const isCollected = collectedKeywords.has(keyword.id);
+                const keywordType = getKeywordType(keyword);
+                const shouldAnimate = !animatedKeywords.has(keyword.id);
+
+                // Mark as animated
+                if (shouldAnimate && !isTyping) {
+                    setTimeout(() => {
+                        setAnimatedKeywords(prev => new Set([...prev, keyword.id]));
+                    }, 100);
+                }
+
                 parts.push(
-                    <span
+                    <motion.span
                         key={`keyword-${keyword.id}`}
-                        className={`dialogue-keyword ${isCollected ? 'collected' : 'available'}`}
+                        className={`dialogue-keyword ${isCollected ? 'collected' : 'available'} keyword-type-${keywordType}`}
+                        variants={shouldAnimate && !isTyping ? keywordPopVariants : undefined}
+                        initial={shouldAnimate && !isTyping ? "hidden" : false}
+                        animate="visible"
                         onClick={(e) => {
                             e.stopPropagation();
-                            if (!isCollected) handleKeywordClick(keyword);
+                            if (!isCollected) handleKeywordClick(keyword, e);
                         }}
+                        onContextMenu={(e) => handleKeywordRightClick(e, keyword)}
                         draggable={isCollected}
                         onDragStart={(e) => {
                             if (!isCollected) return;
@@ -197,10 +356,13 @@ function DialogueBox({ dialogue, onKeywordCollected, isFocusMode = false }) {
                             };
                             e.dataTransfer.setData('application/json', JSON.stringify(token));
                         }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                     >
+                        <span className="keyword-type-indicator" />
                         {keywordText}
                         {!isCollected && <span className="keyword-hint">+</span>}
-                    </span>
+                    </motion.span>
                 );
             } else {
                 parts.push(
@@ -232,14 +394,21 @@ function DialogueBox({ dialogue, onKeywordCollected, isFocusMode = false }) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
             >
-                <p>The patient sits quietly...</p>
+                <div className="empty-dialogue-content">
+                    <span className="empty-icon">💭</span>
+                    <p>The patient sits quietly, gathering their thoughts...</p>
+                </div>
             </motion.div>
         );
     }
 
+    const hasKeywords = totalKeywords > 0;
+    const allCollected = collectedCount === totalKeywords && totalKeywords > 0;
+
     return (
         <motion.div
-            className="dialogue-box"
+            ref={dialogueRef}
+            className={`dialogue-box ${allCollected ? 'all-collected' : ''}`}
             onClick={handleAdvance}
             key={currentIndex}
             variants={dialogueVariants}
@@ -248,45 +417,145 @@ function DialogueBox({ dialogue, onKeywordCollected, isFocusMode = false }) {
             exit="exit"
         >
             <div className="dialogue-speaker">
-                <motion.span
-                    className="speaker-name"
+                <motion.div
+                    className="speaker-info"
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 }}
                 >
-                    Patient
-                </motion.span>
-                <motion.div
-                    className={`mood-chip-wrapper ${isFocusMode ? 'focus-active' : ''}`}
-                    onMouseEnter={() => setShowMoodTooltip(true)}
-                    onMouseLeave={() => setShowMoodTooltip(false)}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.15, type: "spring" }}
-                >
-                    <span className={`mood-chip ${currentDialogue.speakerMood}`}>
-                        Appears {getMoodTag(currentDialogue.speakerMood).toLowerCase()}
-                    </span>
-                    <AnimatePresence>
-                        {showMoodTooltip && (
-                            <motion.div
-                                className="mood-tooltip"
-                                variants={tooltipVariants}
-                                initial="hidden"
-                                animate="visible"
-                                exit="hidden"
-                            >
-                                {getMoodDescription(currentDialogue.speakerMood, isFocusMode)}
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                    <span className="speaker-avatar">👤</span>
+                    <span className="speaker-name">{patientName}</span>
                 </motion.div>
+
+                <div className="speaker-meta">
+                    <motion.div
+                        className={`mood-chip-wrapper ${isFocusMode ? 'focus-active' : ''}`}
+                        onMouseEnter={() => setShowMoodTooltip(true)}
+                        onMouseLeave={() => setShowMoodTooltip(false)}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.15, type: "spring" }}
+                    >
+                        <span className={`mood-chip ${currentDialogue.speakerMood}`}>
+                            <span className="mood-emoji">{getMoodEmoji(currentDialogue.speakerMood)}</span>
+                            <span className="mood-label">{getMoodTag(currentDialogue.speakerMood)}</span>
+                        </span>
+                        <AnimatePresence>
+                            {showMoodTooltip && (
+                                <motion.div
+                                    className="mood-tooltip"
+                                    variants={tooltipVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit="hidden"
+                                >
+                                    <span className="tooltip-header">{isFocusMode ? 'Clinical Observation' : 'Your Impression'}</span>
+                                    <span className="tooltip-text">{getMoodDescription(currentDialogue.speakerMood, isFocusMode)}</span>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </motion.div>
+
+                    {hasKeywords && (
+                        <motion.div
+                            className={`keyword-counter ${allCollected ? 'complete' : ''}`}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.2, type: "spring" }}
+                        >
+                            <span className="counter-icon">🔑</span>
+                            <span className="counter-text">{collectedCount}/{totalKeywords}</span>
+                        </motion.div>
+                    )}
+                </div>
             </div>
 
             <div className="dialogue-text">
+                <span className="dialogue-quote">"</span>
                 {renderDialogueText()}
                 {isTyping && <span className="typing-cursor">|</span>}
+                <span className="dialogue-quote">"</span>
             </div>
+
+            {/* Keyword Context Menu */}
+            <AnimatePresence>
+                {contextMenu.show && contextMenu.keyword && (
+                    <motion.div
+                        className="keyword-context-menu"
+                        style={{
+                            left: contextMenu.x,
+                            top: contextMenu.y,
+                        }}
+                        variants={contextMenuVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="context-menu-header">
+                            <span className="context-keyword-text">"{contextMenu.keyword.text}"</span>
+                            <span className={`context-keyword-type type-${getKeywordType(contextMenu.keyword)}`}>
+                                {getKeywordType(contextMenu.keyword)}
+                            </span>
+                        </div>
+                        <div className="context-menu-divider" />
+                        <ul className="context-menu-list">
+                            {!collectedKeywords.has(contextMenu.keyword.id) && (
+                                <li>
+                                    <button
+                                        className="context-menu-item"
+                                        onClick={() => handleContextMenuAction('collect', contextMenu.keyword)}
+                                    >
+                                        <span className="menu-icon">📝</span>
+                                        <span className="menu-label">Create Text Token</span>
+                                    </button>
+                                </li>
+                            )}
+                            <li>
+                                <button
+                                    className="context-menu-item"
+                                    onClick={() => handleContextMenuAction('ask', contextMenu.keyword)}
+                                >
+                                    <span className="menu-icon">💬</span>
+                                    <span className="menu-label">Ask About This</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    className="context-menu-item"
+                                    onClick={() => handleContextMenuAction('highlight', contextMenu.keyword)}
+                                >
+                                    <span className="menu-icon">📖</span>
+                                    <span className="menu-label">Highlight in Handbook</span>
+                                </button>
+                            </li>
+                            {getKeywordType(contextMenu.keyword) === 'background' && (
+                                <li>
+                                    <button
+                                        className="context-menu-item"
+                                        onClick={() => handleContextMenuAction('explore', contextMenu.keyword)}
+                                    >
+                                        <span className="menu-icon">🔍</span>
+                                        <span className="menu-label">Explore Further</span>
+                                    </button>
+                                </li>
+                            )}
+                        </ul>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {hasKeywords && !allCollected && !isTyping && (
+                <motion.div
+                    className="keyword-hint-bar"
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                >
+                    <span className="hint-icon">💡</span>
+                    <span className="hint-text">Click highlighted words to collect them as evidence</span>
+                </motion.div>
+            )}
 
             <motion.div
                 className="dialogue-footer"
@@ -294,18 +563,36 @@ function DialogueBox({ dialogue, onKeywordCollected, isFocusMode = false }) {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
             >
-                <span className="dialogue-progress">
-                    {currentIndex + 1} / {dialogue.length}
-                </span>
+                <div className="progress-dots">
+                    {dialogue.map((_, idx) => (
+                        <span
+                            key={idx}
+                            className={`progress-dot ${idx === currentIndex ? 'active' : ''} ${idx < currentIndex ? 'passed' : ''}`}
+                        />
+                    ))}
+                </div>
                 <AnimatePresence>
                     {!isTyping && currentIndex < dialogue.length - 1 && (
                         <motion.span
                             className="continue-hint"
                             initial={{ opacity: 0, x: 10 }}
-                            animate={{ opacity: 1, x: 0 }}
+                            animate={{ opacity: [0.5, 1, 0.5], x: 0 }}
                             exit={{ opacity: 0 }}
+                            transition={{
+                                opacity: { repeat: Infinity, duration: 1.5 },
+                                x: { duration: 0.2 }
+                            }}
                         >
-                            Click to continue ▶
+                            Continue <span className="continue-arrow">→</span>
+                        </motion.span>
+                    )}
+                    {!isTyping && currentIndex === dialogue.length - 1 && (
+                        <motion.span
+                            className="end-hint"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                        >
+                            End of dialogue
                         </motion.span>
                     )}
                 </AnimatePresence>

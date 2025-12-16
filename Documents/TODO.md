@@ -1,7 +1,7 @@
 1. Have the "Synthesis Zone" be contained inside the Clipboard expanded view, rather than a separate area.
 2. When expanding a section, instead of making a modal panel, it just expands that section to take up the full right side panel of the UI.
-3. In Focus Mode, have the cursor change to a magnifying glass icon.
-4. Add different font styles for keywords based on their type (e.g., duration, intensity, behavior).
+3. ✅ In Focus Mode, have the cursor change to a magnifying glass icon.
+4. ✅ Add different font styles for keywords based on their type (e.g., duration, intensity, behavior).
 5. Less "flash game" looking, more "professional indie game" looking overall aesthetic.
 6. ✅ Move the disclaimer in the title screen to be when you start a new game. Popup for 5 seconds with a "Don't show again" checkbox. Add about for "entertainment purposes only; not a substitute for professional training." to the message.
 7. In the handbook when in a disorder, you can drag an observation or keyword directly onto the disorder to see if it's related. IF so, it highlights sections of the disorder entry that are relevant.
@@ -13,7 +13,7 @@
 13. Create a document that is a detailed breakdown of a "skill tree" system for upgrading various player abilities using knowledge points earned from successful sessions. Abilities could include things like "Reduced Focus Cost for Observations," "Increased Starting Focus," "Bonus Points for Diagnoses," etc. Each ability should have multiple tiers with increasing costs and benefits. Branching starting points based on chosen specialization (e.g., Anxiety Specialist, Mood Disorder Specialist, etc.)
 
 For example, once unlocked for "Anxiety Specialist" you get a bonus when diagnosing anxiety disorders and then can go down the tree to unlock more specific skills related to that specialization.
-14. Add a dropdown when right clicking on a keyword in the dialogue box that shows actions you can take with that keyword such as "Create Text Token," "Ask about this," and "Highlight in Handbook." -- explore other suggested interaction options and add them to the optimized system. Make sure there are subtle animations for opening the dropdown.
+14. ✅ Add a dropdown when right clicking on a keyword in the dialogue box that shows actions you can take with that keyword such as "Create Text Token," "Ask about this," and "Highlight in Handbook." -- explore other suggested interaction options and add them to the optimized system. Make sure there are subtle animations for opening the dropdown.
 
 Dropdown code for an idea (ignore the actual button to hover on, we want to just link the dropdown part to the keyword we already have. We also need logic for clicking the dropdown buttons):
 
@@ -264,7 +264,7 @@ export default Radio;
 20. Create a detailed document outlining potential future features and expansions for the game post-MVP, including new patient types, additional disorders, multiplayer/co-op modes, VR support, and modding capabilities. Each feature should include a brief description, potential gameplay mechanics, and estimated development time.
 21. Add different sound effects for collecting text tokens versus visual tokens to give more audio feedback to the player.
 22. When in Focus Mode, add subtle sound effects like a heartbeat or breathing to enhance immersion.
-23. Add an animation when a clickable keyword is created in the dialogue. Right now it just pops in fast, maybe some subtle "pop" animation.
+23. ✅ Add an animation when a clickable keyword is created in the dialogue. Right now it just pops in fast, maybe some subtle "pop" animation.
 
 ## Dev Features
 1. Allow markdown in the dev console and multiline support for long output commands.
