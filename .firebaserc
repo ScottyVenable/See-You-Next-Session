@@ -13,6 +13,9 @@
                 ],
                 "development": [
                     "see-you-next-session-dev"
+                ],
+                "portal": [
+                    "see-you-next-session-portal"
                 ]
             }
         }

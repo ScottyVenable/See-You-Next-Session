@@ -1,0 +1,39 @@
+name: Deploy Portal to Firebase
+
+on:
+  workflow_dispatch:  # Manual trigger only
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Clean and install dependencies
+        run: |
+          cd portal
+          rm -rf node_modules package-lock.json
+          npm install
+
+      - name: Build portal
+        run: cd portal && npm run build
+        env:
+          VITE_DEV_PASSWORD_HASH: ${{ secrets.DEV_PASSWORD_HASH }}
+          VITE_REPO_OWNER: ScottyVenable
+          VITE_REPO_NAME: See-You-Next-Session
+
+      - name: Deploy to Firebase
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}'
+          channelId: live
+          target: portal
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+          entryPoint: './'

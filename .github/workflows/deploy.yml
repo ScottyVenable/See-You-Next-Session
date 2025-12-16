@@ -27,20 +27,6 @@ jobs:
       - name: Build game
         run: npm run build
 
-      - name: Copy game build to portal
-        run: |
-          mkdir -p portal/public/game
-          cp -r dist/* portal/public/game/
-
-      - name: Clean and install dependencies (portal)
-        run: |
-          cd portal
-          rm -rf node_modules package-lock.json
-          npm install
-
-      - name: Build portal
-        run: cd portal && npm run build
-
       - name: Determine deployment target
         id: deploy-target
         run: |
