@@ -31,7 +31,7 @@ jobs:
         id: channel
         run: |
           if [ "${{ github.ref }}" == "refs/heads/stable" ]; then
-            echo "name=stable" >> $GITHUB_OUTPUT
+            echo "name=live" >> $GITHUB_OUTPUT
           elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
             echo "name=dev" >> $GITHUB_OUTPUT
           elif [ "${{ github.ref }}" == "refs/heads/experimental" ]; then
