@@ -3,10 +3,15 @@
  * See You Next Session - Custom Dialogue Language
  */
 
-// Core modules
-export { parseDialogue, parseDialogueFile, Lexer, Parser, TokenType } from './parser.js';
-export { DialogueEngine, createDialogueEngine } from './engine.js';
-export { useDialogue } from './useDialogue.js';
+// Core modules - import for re-export and local use
+import { parseDialogue, parseDialogueFile, Lexer, Parser, TokenType } from './parser.js';
+import { DialogueEngine, createDialogueEngine } from './engine.js';
+import { useDialogue } from './useDialogue.js';
+
+// Re-export all
+export { parseDialogue, parseDialogueFile, Lexer, Parser, TokenType };
+export { DialogueEngine, createDialogueEngine };
+export { useDialogue };
 
 // Patient ID to folder mapping
 const PATIENT_FOLDERS = {
@@ -16,16 +21,35 @@ const PATIENT_FOLDERS = {
     // 'patient-id': 'folder-name',
 };
 
-// Utility to load patient dialogue
+// Cache for loaded dialogue files
+const dialogueCache = new Map();
+
+// Utility to load patient dialogue using Vite's glob import
 export async function loadPatientDialogue(patientId, turn) {
     // Resolve folder name from patient ID
     const folderName = PATIENT_FOLDERS[patientId] || patientId;
-    const path = `/src/dialogue/patients/${folderName}/turn${turn}.syns`;
+    const cacheKey = `${folderName}/turn${turn}`;
+
+    // Check cache first
+    if (dialogueCache.has(cacheKey)) {
+        return dialogueCache.get(cacheKey);
+    }
 
     try {
-        const response = await fetch(path);
-        if (!response.ok) throw new Error(`Failed to load: ${path}`);
-        return await response.text();
+        // Use dynamic import with Vite's ?raw suffix to get file as string
+        const modules = import.meta.glob('./patients/**/*.syns', { query: '?raw', import: 'default' });
+        const modulePath = `./patients/${folderName}/turn${turn}.syns`;
+
+        if (modules[modulePath]) {
+            const source = await modules[modulePath]();
+            dialogueCache.set(cacheKey, source);
+            console.log(`[DialogueLoader] Loaded ${modulePath}, length: ${source.length}`);
+            return source;
+        } else {
+            console.warn(`[DialogueLoader] File not found: ${modulePath}`);
+            console.log('[DialogueLoader] Available modules:', Object.keys(modules));
+            return null;
+        }
     } catch (error) {
         console.error(`Error loading dialogue for ${patientId} (folder: ${folderName}) turn ${turn}:`, error);
         return null;

@@ -265,7 +265,8 @@ class Lexer {
                     if (this.peek() === ':') this.advance();
                     this.skipWhitespace();
 
-                    // Read the speech text
+                    // Read the speech text (may be on same line or next line)
+                    let foundText = false;
                     if (this.peek() === '"' || this.peek() === '*') {
                         const isAction = this.peek() === '*';
                         const quote = isAction ? '*' : '"';
@@ -276,6 +277,31 @@ class Lexer {
                             isAction,
                             line: startLine
                         });
+                        foundText = true;
+                    }
+
+                    // If no text on same line, check next line(s)
+                    if (!foundText) {
+                        // Skip to next line
+                        while (this.peek() !== '\n' && this.peek() !== '\0') {
+                            this.advance();
+                        }
+                        if (this.peek() === '\n') this.advance();
+                        this.skipWhitespace();
+
+                        // Check for text on next line
+                        if (this.peek() === '"' || this.peek() === '*') {
+                            const isAction = this.peek() === '*';
+                            const quote = isAction ? '*' : '"';
+                            const textLine = this.line;
+                            const text = this.readString(quote);
+                            this.tokens.push({
+                                type: TokenType.TEXT,
+                                value: text,
+                                isAction,
+                                line: textLine
+                            });
+                        }
                     }
                 } else {
                     this.tokens.push({ type: TokenType.IDENTIFIER, value: word, line: startLine });

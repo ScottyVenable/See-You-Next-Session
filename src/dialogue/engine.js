@@ -43,7 +43,11 @@ class DialogueEngine {
      * Load dialogue from a source string
      */
     loadDialogue(source) {
+        console.log('[DialogueEngine] Loading dialogue, source length:', source?.length);
         this.dialogueData = parseDialogue(source);
+        console.log('[DialogueEngine] Parsed dialogue:', this.dialogueData);
+        console.log('[DialogueEngine] Available blocks:', Object.keys(this.dialogueData?.blocks || {}));
+        console.log('[DialogueEngine] Block details:', this.dialogueData?.blocks);
         this.variables = {};
         this.currentBlock = null;
         this.currentLineIndex = 0;
@@ -67,6 +71,7 @@ class DialogueEngine {
      * Start execution from a block
      */
     startBlock(blockName = 'START') {
+        console.log('[DialogueEngine] startBlock called with:', blockName);
         if (!this.dialogueData) {
             throw new Error('No dialogue loaded');
         }
@@ -77,15 +82,19 @@ class DialogueEngine {
             return null;
         }
 
+        console.log('[DialogueEngine] Block found, lines:', block.lines?.length);
         this.currentBlock = blockName;
         this.currentLineIndex = 0;
-        return this.executeNext();
+        const result = this.executeNext();
+        console.log('[DialogueEngine] startBlock result:', result);
+        return result;
     }
 
     /**
      * Execute the next line in current block
      */
     executeNext() {
+        console.log('[DialogueEngine] executeNext, block:', this.currentBlock, 'index:', this.currentLineIndex);
         if (!this.currentBlock || !this.dialogueData) {
             return null;
         }
@@ -93,6 +102,7 @@ class DialogueEngine {
         const block = this.dialogueData.blocks[this.currentBlock];
         if (!block || this.currentLineIndex >= block.lines.length) {
             // Block finished
+            console.log('[DialogueEngine] Block finished');
             if (this.onBlockEnd) {
                 this.onBlockEnd(this.currentBlock);
             }
@@ -100,6 +110,7 @@ class DialogueEngine {
         }
 
         const line = block.lines[this.currentLineIndex];
+        console.log('[DialogueEngine] Executing line:', line);
         this.currentLineIndex++;
 
         return this.executeLine(line);
@@ -144,6 +155,8 @@ class DialogueEngine {
      * Execute speech line
      */
     executeSpeech(node) {
+        console.log('[DialogueEngine] executeSpeech node:', node);
+        console.log('[DialogueEngine] Keywords in node:', node.keywords);
         const result = {
             type: 'speech',
             speaker: node.speaker,
@@ -272,17 +285,11 @@ class DialogueEngine {
     }
 
     /**
-     * Execute pause
+     * Execute pause - skip pauses and continue to next line
      */
     executePause(node) {
-        const result = {
-            type: 'pause',
-            duration: node.duration,
-        };
-        if (this.onPause) {
-            this.onPause(node.duration);
-        }
-        return result;
+        // Skip pauses - just continue to the next line
+        return this.executeNext();
     }
 
     /**

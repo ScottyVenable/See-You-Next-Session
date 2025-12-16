@@ -187,9 +187,13 @@ function SynsDialogueBox({
 
     const dialogueRef = useRef(null);
     const typingRef = useRef(null);
+    const loadedRef = useRef(false);
 
     // Load SYNS dialogue on mount or when turn changes
     useEffect(() => {
+        // Prevent double loading
+        if (loadedRef.current) return;
+
         async function loadSynsDialogue() {
             try {
                 const source = await loadPatientDialogue(patientId, turn);
@@ -197,6 +201,7 @@ function SynsDialogueBox({
                     loadDialogue(source);
                     setIsLoaded(true);
                     setUseFallback(false);
+                    loadedRef.current = true;
                     // Auto-start from START block
                     startBlock('START');
                 } else {
@@ -214,10 +219,16 @@ function SynsDialogueBox({
         if (patientId && turn) {
             loadSynsDialogue();
         }
-    }, [patientId, turn, loadDialogue, startBlock]);
+
+        // Reset on unmount for next load
+        return () => {
+            loadedRef.current = false;
+        };
+    }, [patientId, turn]); // Removed loadDialogue and startBlock to prevent re-runs
 
     // Get current display content
     const currentContent = useMemo(() => {
+        console.log('[SynsDialogueBox] useFallback:', useFallback, 'currentSpeech:', currentSpeech);
         if (useFallback) {
             return fallbackDialogue[fallbackIndex] || null;
         }
@@ -262,6 +273,8 @@ function SynsDialogueBox({
 
     // Handle click to advance dialogue
     const handleClick = useCallback(() => {
+        console.log('[SynsDialogueBox] handleClick - isTyping:', isTyping, 'useFallback:', useFallback);
+
         if (isTyping) {
             // Skip typing animation
             if (typingRef.current) clearInterval(typingRef.current);
@@ -277,7 +290,9 @@ function SynsDialogueBox({
                 onDialogueEnd();
             }
         } else {
+            console.log('[SynsDialogueBox] Calling advance()');
             const result = advance();
+            console.log('[SynsDialogueBox] advance() result:', result);
             if (!result || result.type === 'end') {
                 if (onDialogueEnd) {
                     onDialogueEnd();
@@ -353,33 +368,47 @@ function SynsDialogueBox({
 
     const isNarrator = currentContent.speaker === 'NARRATOR';
     const isAction = currentContent.isAction;
+    const hasKeywords = currentContent.keywords?.length > 0;
+    const totalKeywords = currentContent.keywords?.length || 0;
+    const collectedCount = currentContent.keywords?.filter(k => collectedKeywords.has(k.id)).length || 0;
+    const allCollected = collectedCount === totalKeywords && totalKeywords > 0;
 
     return (
         <motion.div
             ref={dialogueRef}
-            className={`dialogue-box ${isFocusMode ? 'focus-mode' : ''} ${isNarrator ? 'narrator' : ''}`}
+            className={`dialogue-box ${allCollected ? 'all-collected' : ''} ${isFocusMode ? 'focus-mode' : ''} ${isNarrator ? 'narrator' : ''}`}
             onClick={handleClick}
             variants={dialogueVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
         >
-            {/* Speaker Header */}
-            {speakerDisplay && (
-                <div className="dialogue-header">
-                    <span className="speaker-name">{speakerDisplay}</span>
+            {/* Speaker Header - matching original DialogueBox structure */}
+            <div className="dialogue-speaker">
+                <motion.div
+                    className="speaker-info"
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 }}
+                >
+                    <span className="speaker-avatar">{isNarrator ? '📖' : '👤'}</span>
+                    <span className="speaker-name">{speakerDisplay || 'Narrator'}</span>
+                </motion.div>
 
+                <div className="speaker-meta">
                     {/* Mood indicator */}
                     {currentContent.mood && (
                         <motion.div
-                            className="mood-indicator"
-                            style={{ backgroundColor: `${moodConfig.color}20`, borderColor: moodConfig.color }}
+                            className={`mood-chip-wrapper ${isFocusMode ? 'focus-active' : ''}`}
                             onMouseEnter={() => setShowMoodTooltip(true)}
                             onMouseLeave={() => setShowMoodTooltip(false)}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.15, type: "spring" }}
                         >
-                            <span className="mood-emoji">{moodConfig.emoji}</span>
-                            <span className="mood-label" style={{ color: moodConfig.color }}>
-                                {moodConfig.label}
+                            <span className={`mood-chip ${currentContent.mood}`}>
+                                <span className="mood-emoji">{moodConfig.emoji}</span>
+                                <span className="mood-label">{moodConfig.label}</span>
                             </span>
 
                             <AnimatePresence>
@@ -391,23 +420,38 @@ function SynsDialogueBox({
                                         animate="visible"
                                         exit="hidden"
                                     >
-                                        Patient appears {moodConfig.label.toLowerCase()}
+                                        <span className="tooltip-header">{isFocusMode ? 'Clinical Observation' : 'Your Impression'}</span>
+                                        <span className="tooltip-text">Patient appears {moodConfig.label.toLowerCase()}</span>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
                         </motion.div>
                     )}
+
+                    {/* Keyword counter */}
+                    {hasKeywords && (
+                        <motion.div
+                            className={`keyword-counter ${allCollected ? 'complete' : ''}`}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.2, type: "spring" }}
+                        >
+                            <span className="counter-icon">🔑</span>
+                            <span className="counter-text">{collectedCount}/{totalKeywords}</span>
+                        </motion.div>
+                    )}
                 </div>
-            )}
+            </div>
 
             {/* Dialogue Text */}
             <div className={`dialogue-text ${isAction ? 'action-text' : ''}`}>
                 {isNarrator || isAction ? (
-                    <p className="narrator-text">
+                    <>
                         <em>{displayedText}</em>
-                    </p>
+                    </>
                 ) : (
-                    <p>
+                    <>
+                        <span className="dialogue-quote">"</span>
                         {textSegments.map((segment, idx) => {
                             if (segment.type === 'keyword') {
                                 const keyword = segment.keyword;
@@ -417,16 +461,17 @@ function SynsDialogueBox({
                                 return (
                                     <motion.span
                                         key={keyword.id || idx}
-                                        className={`keyword ${keywordType} ${isCollected ? 'collected' : ''}`}
+                                        className={`dialogue-keyword ${isCollected ? 'collected' : 'available'} keyword-type-${keywordType}`}
                                         onClick={(e) => handleKeywordClick(keyword, e)}
-                                        variants={keywordVariants}
-                                        initial="idle"
-                                        whileHover={!isCollected ? "hover" : undefined}
-                                        whileTap={!isCollected ? "tap" : undefined}
-                                        animate={isCollected ? "collected" : "idle"}
-                                        data-type={keywordType}
+                                        variants={keywordPopVariants}
+                                        initial="hidden"
+                                        animate="visible"
+                                        whileHover={!isCollected ? { scale: 1.02 } : undefined}
+                                        whileTap={!isCollected ? { scale: 0.98 } : undefined}
                                     >
+                                        <span className="keyword-type-indicator" />
                                         {segment.content}
+                                        {!isCollected && <span className="keyword-hint">+</span>}
                                         {keyword.contradicts && !isCollected && (
                                             <span className="contradiction-hint">!</span>
                                         )}
@@ -435,7 +480,8 @@ function SynsDialogueBox({
                             }
                             return <span key={idx}>{segment.content}</span>;
                         })}
-                    </p>
+                        <span className="dialogue-quote">"</span>
+                    </>
                 )}
 
                 {/* Typing cursor */}
@@ -443,27 +489,145 @@ function SynsDialogueBox({
             </div>
 
             {/* Continue indicator */}
-            {!isTyping && (
+            {!isTyping && availableResponses.length === 0 && (
                 <motion.div
-                    className="continue-indicator"
+                    className="continue-hint"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
                 >
                     <span>Click to continue</span>
-                    <span className="continue-arrow">▼</span>
+                    <span className="continue-arrow">▶</span>
                 </motion.div>
             )}
 
-            {/* Keyword counter */}
-            {currentContent.keywords?.length > 0 && (
-                <div className="keyword-counter">
-                    <span className="counter-icon">🔑</span>
-                    <span className="counter-text">
-                        {collectedKeywords.size} / {currentContent.keywords.length} collected
-                    </span>
-                </div>
+            {/* Response Options Panel */}
+            {!isTyping && availableResponses.length > 0 && (
+                <ResponsePanel
+                    responses={availableResponses}
+                    onSelectResponse={(topic, subtopic) => {
+                        handleResponse(topic, subtopic);
+                    }}
+                />
             )}
+        </motion.div>
+    );
+}
+
+// Response Panel Component
+function ResponsePanel({ responses, onSelectResponse }) {
+    // Group responses by topic
+    const groupedResponses = useMemo(() => {
+        const groups = {};
+        responses.forEach(r => {
+            if (!groups[r.topic]) {
+                groups[r.topic] = [];
+            }
+            groups[r.topic].push(r);
+        });
+        return groups;
+    }, [responses]);
+
+    const topicLabels = {
+        family: { label: 'Family', icon: '👨‍👩‍👧' },
+        work: { label: 'Work', icon: '💼' },
+        emotions: { label: 'Emotions', icon: '💭' },
+        relationships: { label: 'Relationships', icon: '💕' },
+        sleep: { label: 'Sleep', icon: '😴' },
+        physical: { label: 'Physical Health', icon: '🏃' },
+        self: { label: 'Self & Identity', icon: '🪞' },
+        coping: { label: 'Coping', icon: '🛡️' },
+        history: { label: 'History', icon: '📖' },
+    };
+
+    const subtopicLabels = {
+        parents: 'Tell me about your parents',
+        childhood: 'What was childhood like?',
+        siblings: 'Do you have siblings?',
+        job: 'What do you do for work?',
+        stress: 'Work stress',
+        performance: 'How are you performing?',
+        colleagues: 'Your coworkers',
+        anxiety: 'Tell me about your anxiety',
+        mood: 'How has your mood been?',
+        worry: 'What do you worry about?',
+        fear: 'What are you afraid of?',
+        sleep: 'How is your sleep?',
+        routine: 'Your sleep routine',
+        dreams: 'Do you dream?',
+        friends: 'Tell me about your friends',
+        partner: 'Are you in a relationship?',
+        trust: 'Trust in relationships',
+        symptoms: 'Physical symptoms',
+        appetite: 'How is your appetite?',
+        exercise: 'Do you exercise?',
+        identity: 'How do you see yourself?',
+        expectations: 'Others\' expectations',
+    };
+
+    const [expandedTopic, setExpandedTopic] = useState(null);
+
+    return (
+        <motion.div
+            className="response-panel"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+        >
+            <div className="response-panel-header">
+                <span className="response-icon">💬</span>
+                <span>Choose a topic to explore:</span>
+            </div>
+
+            <div className="response-topics">
+                {Object.entries(groupedResponses).map(([topic, subtopics]) => {
+                    const topicInfo = topicLabels[topic] || { label: topic, icon: '❓' };
+                    const isExpanded = expandedTopic === topic;
+
+                    return (
+                        <div key={topic} className="response-topic-group">
+                            <motion.button
+                                className={`response-topic-btn ${isExpanded ? 'expanded' : ''}`}
+                                onClick={() => setExpandedTopic(isExpanded ? null : topic)}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                <span className="topic-icon">{topicInfo.icon}</span>
+                                <span className="topic-label">{topicInfo.label}</span>
+                                <span className="topic-count">{subtopics.length}</span>
+                                <span className={`topic-arrow ${isExpanded ? 'expanded' : ''}`}>▼</span>
+                            </motion.button>
+
+                            <AnimatePresence>
+                                {isExpanded && (
+                                    <motion.div
+                                        className="subtopic-list"
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        {subtopics.map(({ subtopic, key }) => (
+                                            <motion.button
+                                                key={key}
+                                                className="subtopic-btn"
+                                                onClick={() => onSelectResponse(topic, subtopic)}
+                                                whileHover={{ scale: 1.01, x: 4 }}
+                                                whileTap={{ scale: 0.99 }}
+                                            >
+                                                <span className="subtopic-bullet">•</span>
+                                                <span className="subtopic-label">
+                                                    {subtopicLabels[subtopic] || subtopic}
+                                                </span>
+                                            </motion.button>
+                                        ))}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    );
+                })}
+            </div>
         </motion.div>
     );
 }

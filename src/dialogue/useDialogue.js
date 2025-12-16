@@ -96,14 +96,24 @@ export function useDialogue(gameState, actions) {
     const startBlock = useCallback((blockName = 'START') => {
         if (!engineRef.current) return;
 
+        console.log('[useDialogue] startBlock called:', blockName);
         setIsPlaying(true);
         setSpeechQueue([]);
 
         // Execute until we hit a pause or speech
         let result = engineRef.current.startBlock(blockName);
+        console.log('[useDialogue] startBlock initial result:', result);
 
         while (result && result.type !== 'speech' && result.type !== 'pause' && result.type !== 'end') {
             result = engineRef.current.executeNext();
+            console.log('[useDialogue] executeNext result:', result);
+        }
+
+        // If we got a speech result, set it as current immediately
+        if (result?.type === 'speech') {
+            console.log('[useDialogue] Setting initial speech:', result);
+            setCurrentSpeech(result);
+            setDialogueHistory(prev => [...prev, result]);
         }
     }, []);
 

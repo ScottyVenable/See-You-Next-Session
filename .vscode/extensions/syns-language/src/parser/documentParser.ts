@@ -314,7 +314,7 @@ export class SynsDocumentParser {
         for (const block of blocks) {
             // Skip special blocks that may be entry/exit points or triggered by game logic
             const specialBlocks = ['START', 'SESSION_END', 'END', 'end_turn', 'end_session'];
-            if (specialBlocks.includes(block.name) || 
+            if (specialBlocks.includes(block.name) ||
                 block.type === 'response' || block.type === 'breakthrough') {
                 continue;
             }
