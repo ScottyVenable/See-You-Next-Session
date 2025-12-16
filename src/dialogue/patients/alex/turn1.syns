@@ -1235,6 +1235,8 @@ PATIENT (sad)
 PATIENT (hesitant)
 "Even to myself."
 
+-> end_turn
+
 // ===========================================
 // CLOSING SEQUENCES
 // ===========================================

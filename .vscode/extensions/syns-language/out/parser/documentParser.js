@@ -242,7 +242,9 @@ class SynsDocumentParser {
         }
         // Check for unreferenced blocks (except special ones)
         for (const block of blocks) {
-            if (block.name === 'START' || block.name === 'SESSION_END' ||
+            // Skip special blocks that may be entry/exit points or triggered by game logic
+            const specialBlocks = ['START', 'SESSION_END', 'END', 'end_turn', 'end_session'];
+            if (specialBlocks.includes(block.name) ||
                 block.type === 'response' || block.type === 'breakthrough') {
                 continue;
             }
