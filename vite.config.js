@@ -7,10 +7,10 @@ function getGitVersion() {
     try {
         const branch = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf-8' }).trim();
         const commit = execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).trim();
-        
+
         // Map branch names to release types
         const releaseType = branch === 'stable' ? 'release' : branch === 'develop' ? 'dev' : 'experimental';
-        
+
         return `${releaseType}-${commit}`;
     } catch (e) {
         return 'unknown-build';

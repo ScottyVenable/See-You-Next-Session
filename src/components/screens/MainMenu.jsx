@@ -119,6 +119,14 @@ function MainMenu() {
                     >
                         "A diagnostic narrative game"
                     </motion.p>
+                    <motion.span
+                        className="version-badge"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.8 }}
+                    >
+                        {GAME_CONFIG.VERSION}
+                    </motion.span>
                 </motion.div>
 
                 <nav className="menu-buttons">
@@ -149,15 +157,6 @@ function MainMenu() {
                         Settings
                     </MenuButton>
                 </nav>
-
-                <motion.div
-                    className="version-badge"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1 }}
-                >
-                    {GAME_CONFIG.VERSION}
-                </motion.div>
             </motion.div>
 
             {/* Disclaimer Popup */}

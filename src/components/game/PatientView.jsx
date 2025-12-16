@@ -37,6 +37,7 @@ const hintVariants = {
 function PatientView({ patient, isFocusMode, onSymptomFound, onDragStart, onDragEnd }) {
     const { gameState, actions } = useGame();
     const [hoveredHotspot, setHoveredHotspot] = useState(null);
+    const [showNotEnoughFocus, setShowNotEnoughFocus] = useState(false);
 
     const handleHotspotClick = (symptomId) => {
         if (!isFocusMode) return;
@@ -48,7 +49,8 @@ function PatientView({ patient, isFocusMode, onSymptomFound, onDragStart, onDrag
 
         if (gameState.focus < cost) {
             // Not enough focus - show feedback
-            console.log('Not enough focus!');
+            setShowNotEnoughFocus(true);
+            setTimeout(() => setShowNotEnoughFocus(false), 2000);
             return;
         }
 
@@ -81,6 +83,11 @@ function PatientView({ patient, isFocusMode, onSymptomFound, onDragStart, onDrag
         onDragStart(token);
     };
 
+    const totalHotspots = patient.appearance?.symptomOverlays
+        ? Object.keys(patient.appearance.symptomOverlays).length
+        : 0;
+    const revealedCount = gameState.revealedSymptoms.length;
+
     return (
         <motion.div
             className={`patient-view ${isFocusMode ? 'focus-active' : ''}`}
@@ -88,6 +95,20 @@ function PatientView({ patient, isFocusMode, onSymptomFound, onDragStart, onDrag
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
         >
+            {/* Focus Mode Overlay Scanner Effect */}
+            <AnimatePresence>
+                {isFocusMode && (
+                    <motion.div
+                        className="focus-scanner-overlay"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                    >
+                        <div className="scanner-line" />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* Patient Sprite Container */}
             <div className="patient-sprite-container">
                 {/* Base Sprite - Replace with actual image */}
@@ -111,6 +132,8 @@ function PatientView({ patient, isFocusMode, onSymptomFound, onDragStart, onDrag
                 {patient.appearance?.symptomOverlays &&
                     Object.entries(patient.appearance.symptomOverlays).map(([symptomId, overlay]) => {
                         const isRevealed = gameState.revealedSymptoms.includes(symptomId);
+                        const symptom = getSymptomById(symptomId);
+                        const cost = symptom?.focusCost || GAME_CONFIG.FOCUS_COST_LOOK;
 
                         return (
                             <React.Fragment key={symptomId}>
@@ -135,7 +158,8 @@ function PatientView({ patient, isFocusMode, onSymptomFound, onDragStart, onDrag
                                         >
                                             {/* Replace with actual overlay sprite */}
                                             <div className="overlay-indicator">
-                                                ✓ {getSymptomById(symptomId)?.name}
+                                                <span className="indicator-check">✓</span>
+                                                <span className="indicator-text">{symptom?.name}</span>
                                             </div>
                                         </motion.div>
                                     )}
@@ -163,7 +187,19 @@ function PatientView({ patient, isFocusMode, onSymptomFound, onDragStart, onDrag
                                             exit={{ opacity: 0, scale: 0.5 }}
                                         >
                                             <motion.span
-                                                className="hotspot-hint"
+                                                className="hotspot-pulse"
+                                                animate={{
+                                                    scale: [1, 1.5, 1],
+                                                    opacity: [0.5, 0, 0.5],
+                                                }}
+                                                transition={{
+                                                    repeat: Infinity,
+                                                    duration: 2,
+                                                    ease: "easeInOut"
+                                                }}
+                                            />
+                                            <motion.span
+                                                className="hotspot-icon"
                                                 animate={{
                                                     scale: [1, 1.1, 1],
                                                 }}
@@ -173,8 +209,25 @@ function PatientView({ patient, isFocusMode, onSymptomFound, onDragStart, onDrag
                                                     ease: "easeInOut"
                                                 }}
                                             >
-                                                ?
+                                                🔍
                                             </motion.span>
+                                            {/* Hover tooltip */}
+                                            <AnimatePresence>
+                                                {hoveredHotspot === symptomId && (
+                                                    <motion.div
+                                                        className="hotspot-tooltip"
+                                                        initial={{ opacity: 0, y: 5 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        exit={{ opacity: 0 }}
+                                                    >
+                                                        <span className="tooltip-action">Click to observe</span>
+                                                        <span className="tooltip-cost">
+                                                            <span className="cost-icon">👁️</span>
+                                                            -{cost} Focus
+                                                        </span>
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
@@ -183,6 +236,21 @@ function PatientView({ patient, isFocusMode, onSymptomFound, onDragStart, onDrag
                     })
                 }
             </div>
+
+            {/* Not Enough Focus Warning */}
+            <AnimatePresence>
+                {showNotEnoughFocus && (
+                    <motion.div
+                        className="focus-warning-toast"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                    >
+                        <span className="warning-icon">⚠️</span>
+                        <span>Not enough Focus! Wait for it to recover.</span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Focus Mode Indicator */}
             <AnimatePresence>
@@ -194,27 +262,36 @@ function PatientView({ patient, isFocusMode, onSymptomFound, onDragStart, onDrag
                         animate="visible"
                         exit="hidden"
                     >
-                        <motion.span
-                            className="magnifying-icon"
-                            animate={{ rotate: [0, 10, -10, 0] }}
-                            transition={{ repeat: Infinity, duration: 3 }}
-                        >
-                            🔍
-                        </motion.span>
-                        <span>Click on areas of interest to observe</span>
+                        <div className="hint-content">
+                            <motion.span
+                                className="magnifying-icon"
+                                animate={{ rotate: [0, 10, -10, 0] }}
+                                transition={{ repeat: Infinity, duration: 3 }}
+                            >
+                                🔍
+                            </motion.span>
+                            <span className="hint-text">Focus Mode Active</span>
+                        </div>
+                        <span className="hint-instruction">Click highlighted areas to observe symptoms</span>
                     </motion.div>
                 )}
             </AnimatePresence>
 
             {/* Revealed Symptoms List (for accessibility) */}
             <AnimatePresence>
-                {gameState.revealedSymptoms.length > 0 && (
+                {revealedCount > 0 && (
                     <motion.div
                         className="revealed-symptoms-list"
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                     >
-                        <h4>Observed:</h4>
+                        <div className="observations-header">
+                            <h4>
+                                <span className="header-icon">👁️</span>
+                                Observations
+                            </h4>
+                            <span className="observation-count">{revealedCount}{totalHotspots > 0 ? `/${totalHotspots}` : ''}</span>
+                        </div>
                         <ul>
                             {gameState.revealedSymptoms.map((symptomId, index) => {
                                 const symptom = getSymptomById(symptomId);
@@ -228,13 +305,20 @@ function PatientView({ patient, isFocusMode, onSymptomFound, onDragStart, onDrag
                                         initial={{ opacity: 0, x: -10 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: index * 0.1 }}
-                                        whileHover={{ x: 5 }}
+                                        whileHover={{ x: 5, backgroundColor: 'rgba(78, 205, 196, 0.15)' }}
                                     >
-                                        👁️ {symptom?.name || symptomId}
+                                        <span className="symptom-icon">✓</span>
+                                        <span className="symptom-name">{symptom?.name || symptomId}</span>
+                                        <span className="drag-hint">⋮⋮</span>
                                     </motion.li>
                                 );
                             })}
                         </ul>
+                        {revealedCount > 0 && (
+                            <div className="drag-instruction">
+                                Drag observations to clipboard
+                            </div>
+                        )}
                     </motion.div>
                 )}
             </AnimatePresence>

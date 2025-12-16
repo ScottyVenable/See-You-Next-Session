@@ -19,6 +19,51 @@
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* Focus Scanner Overlay */
+.focus-scanner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 10;
+    background: linear-gradient(rgba(78, 205, 196, 0.02) 0%,
+            transparent 50%,
+            rgba(78, 205, 196, 0.02) 100%);
+}
+
+.scanner-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--color-success), transparent);
+    animation: scanDown 3s ease-in-out infinite;
+    box-shadow: 0 0 20px var(--color-success);
+}
+
+@keyframes scanDown {
+    0% {
+        top: 0;
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        top: 100%;
+        opacity: 0;
+    }
+}
+
 /* Placeholder Character */
 .placeholder-character {
     display: flex;
@@ -88,6 +133,14 @@
     gap: var(--spacing-xs);
 }
 
+.overlay-indicator .indicator-check {
+    font-size: 0.9rem;
+}
+
+.overlay-indicator .indicator-text {
+    opacity: 0.95;
+}
+
 /* Focus Mode Hotspots */
 .symptom-hotspot {
     border: 2px dashed rgba(78, 205, 196, 0.5);
@@ -123,13 +176,79 @@
     box-shadow: 0 0 20px rgba(233, 69, 96, 0.4);
 }
 
-.hotspot-hint {
+/* Hotspot Pulse Ring */
+.hotspot-pulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid var(--color-success);
+    border-radius: var(--radius-md);
+    pointer-events: none;
+}
+
+.hotspot-icon {
+    font-size: 1.25rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Hotspot Tooltip */
+.hotspot-tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(78, 205, 196, 0.3);
+    border-radius: var(--radius-md);
+    white-space: nowrap;
+    z-index: 100;
+}
+
+.hotspot-tooltip .tooltip-action {
+    font-size: 0.75rem;
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.hotspot-tooltip .tooltip-cost {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+.hotspot-tooltip .cost-icon {
+    font-size: 0.65rem;
+}
+
+/* Focus Warning Toast */
+.focus-warning-toast {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: rgba(233, 69, 96, 0.95);
+    border-radius: var(--radius-lg);
     color: white;
-    font-family: var(--font-header);
-    font-size: 1.5rem;
-    font-weight: 700;
-    opacity: 0.8;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 0.9rem;
+    font-weight: 600;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(233, 69, 96, 0.4);
+}
+
+.focus-warning-toast .warning-icon {
+    font-size: 1.25rem;
 }
 
 /* Focus Mode Hint */
@@ -139,16 +258,32 @@
     left: 50%;
     transform: translateX(-50%);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: 4px;
     padding: var(--spacing-sm) var(--spacing-lg);
     background: rgba(0, 0, 0, 0.85);
     border-radius: var(--radius-lg);
     font-family: var(--font-body);
-    font-size: 0.85rem;
-    color: var(--color-text);
     border: 1px solid var(--color-success);
     animation: slideUp 0.3s ease;
+}
+
+.focus-mode-hint .hint-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.focus-mode-hint .hint-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-success);
+}
+
+.focus-mode-hint .hint-instruction {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
 }
 
 @keyframes slideUp {
@@ -173,45 +308,104 @@
     background: var(--color-bg-tertiary);
     border-radius: var(--radius-md);
     margin-top: var(--spacing-md);
+    border: 1px solid rgba(78, 205, 196, 0.1);
 }
 
-.revealed-symptoms-list h4 {
+.observations-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-sm);
+}
+
+.observations-header h4 {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
     font-family: var(--font-body);
     font-size: 0.8rem;
     font-weight: 700;
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: var(--spacing-sm);
+    margin: 0;
+}
+
+.observations-header .header-icon {
+    font-size: 0.9rem;
+}
+
+.observation-count {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-success);
+    background: rgba(78, 205, 196, 0.1);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
 }
 
 .revealed-symptoms-list ul {
     list-style: none;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: var(--spacing-xs);
 }
 
 .revealed-symptom-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
     padding: var(--spacing-xs) var(--spacing-sm);
-    background: linear-gradient(135deg, var(--color-token-visual), #00a885);
-    color: white;
+    background: rgba(78, 205, 196, 0.08);
     border-radius: var(--radius-sm);
     font-family: var(--font-body);
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.8rem;
     cursor: grab;
     transition: all var(--transition-fast);
+    border: 1px solid transparent;
+}
+
+.revealed-symptom-item .symptom-icon {
+    color: var(--color-success);
+    font-size: 0.75rem;
+}
+
+.revealed-symptom-item .symptom-name {
+    flex: 1;
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.revealed-symptom-item .drag-hint {
+    color: var(--color-text-muted);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    font-size: 0.7rem;
+    letter-spacing: -1px;
 }
 
 .revealed-symptom-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 184, 148, 0.3);
+    border-color: rgba(78, 205, 196, 0.3);
+    transform: translateX(4px);
+}
+
+.revealed-symptom-item:hover .drag-hint {
+    opacity: 1;
 }
 
 .revealed-symptom-item:active {
     cursor: grabbing;
-    transform: translateY(0);
+    transform: translateX(0);
+}
+
+.drag-instruction {
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-sm);
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    font-style: italic;
 }
 
 /* Focus Active State */

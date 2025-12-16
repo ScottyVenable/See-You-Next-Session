@@ -176,17 +176,18 @@
     letter-spacing: 0.5px;
 }
 
-/* Version Badge */
+/* Version Badge - Inside Title Card */
 .version-badge {
-    position: absolute;
-    bottom: var(--spacing-lg);
-    right: var(--spacing-lg);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    background: rgba(0, 0, 0, 0.5);
+    display: inline-block;
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-xs) var(--spacing-md);
+    background: rgba(78, 205, 196, 0.1);
+    border: 1px solid rgba(78, 205, 196, 0.3);
     border-radius: var(--radius-sm);
     font-size: 0.75rem;
-    color: var(--color-text-muted);
+    color: var(--color-success);
     font-family: var(--font-body);
+    letter-spacing: 0.5px;
 }
 
 /* ========================================

@@ -5,24 +5,44 @@
     padding: var(--spacing-sm) var(--spacing-md);
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Clock Display */
-.clock-display {
-    width: 40px;
-    height: 40px;
+/* Clock Visual */
+.clock-visual {
     flex-shrink: 0;
 }
 
 .clock-face {
-    width: 100%;
-    height: 100%;
-    background: rgba(15, 52, 96, 0.8);
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(145deg, rgba(15, 52, 96, 0.9), rgba(26, 26, 46, 0.9));
     border-radius: var(--radius-full);
     position: relative;
-    border: 2px solid rgba(160, 160, 160, 0.3);
+    border: 2px solid rgba(160, 160, 160, 0.2);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.clock-markings {
+    position: absolute;
+    inset: 0;
+}
+
+.clock-marking {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 3px;
+    height: 3px;
+    background: rgba(160, 160, 160, 0.4);
+    border-radius: var(--radius-full);
+    transform-origin: center center;
+}
+
+.clock-marking.passed {
+    background: var(--color-success);
+    box-shadow: 0 0 4px var(--color-success);
 }
 
 .clock-hand {
@@ -30,10 +50,12 @@
     bottom: 50%;
     left: 50%;
     width: 2px;
-    height: 35%;
-    background: var(--color-accent);
+    height: 14px;
+    background: linear-gradient(to top, var(--color-accent), var(--color-accent-hover));
     transform-origin: bottom center;
-    transition: transform var(--transition-slow);
+    border-radius: 1px;
+    margin-left: -1px;
+    box-shadow: 0 0 6px rgba(233, 69, 96, 0.5);
 }
 
 .clock-center {
@@ -41,18 +63,35 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 6px;
-    height: 6px;
-    background: var(--color-accent);
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(145deg, var(--color-bg-tertiary), var(--color-bg-secondary));
     border-radius: var(--radius-full);
+    border: 2px solid var(--color-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 8px rgba(233, 69, 96, 0.3);
 }
 
-/* Turn Info */
-.turn-info {
+.clock-turn-number {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+/* Turn Details */
+.turn-details {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0;
-    min-width: 55px;
+    gap: 4px;
+}
+
+.turn-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .turn-label {
@@ -62,41 +101,37 @@
     letter-spacing: 0.5px;
 }
 
-.turn-number {
-    font-size: 1rem;
+.turn-fraction {
+    font-size: 0.8rem;
     font-weight: 700;
     color: var(--color-text);
 }
 
+.turn-topic {
+    display: flex;
+    align-items: center;
+}
+
+.topic-label {
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
 /* Progress Bar */
-.turn-progress {
-    flex: 1;
-    height: 6px;
+.turn-progress-bar {
+    height: 4px;
     background: rgba(15, 52, 96, 0.8);
     border-radius: var(--radius-sm);
-    position: relative;
     overflow: hidden;
+    margin-top: 2px;
 }
 
-.progress-fill {
+.turn-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--color-accent), #ff6b6b);
-    transition: width var(--transition-slow);
-}
-
-.progress-markers {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 var(--spacing-xs);
-}
-
-.marker {
-    font-size: 0;
-    width: 3px;
-    height: 100%;
-    background: rgba(22, 33, 62, 0.5);
+    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-hover));
+    border-radius: var(--radius-sm);
+    box-shadow: 0 0 8px rgba(233, 69, 96, 0.4);
 }
 
 .marker.passed {

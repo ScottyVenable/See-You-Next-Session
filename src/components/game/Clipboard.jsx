@@ -23,6 +23,7 @@ const slotVariants = {
     empty: { scale: 1 },
     dragOver: {
         scale: 1.02,
+        borderColor: "var(--color-accent)",
         transition: { type: "spring", stiffness: 400 }
     },
     filled: {
@@ -67,7 +68,8 @@ function Clipboard({
     onDragEnd,
     // Synthesis props
     onSynthesisAttempt,
-    clipboardTokens
+    clipboardTokens,
+    showTutorialHint = false
 }) {
     const [draggingId, setDraggingId] = useState(null);
     const [isExpanded, setIsExpanded] = useState(false);
@@ -166,6 +168,7 @@ function Clipboard({
             <div className="synthesis-header">
                 <span className="synthesis-icon">⚗️</span>
                 <span className="synthesis-title">Synthesis</span>
+                <span className="synthesis-hint">Combine evidence to find contradictions</span>
             </div>
 
             <div className="synthesis-slots-inline">
@@ -186,27 +189,37 @@ function Clipboard({
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.8 }}
-                                style={{ display: 'flex', alignItems: 'center', gap: '4px', width: '100%' }}
                             >
-                                <span className="slot-icon">📝</span>
-                                <span className="slot-content">"{textSlot.content}"</span>
-                                <button className="clear-slot" onClick={() => setTextSlot(null)}>×</button>
+                                <span className="slot-type-indicator text">💬</span>
+                                <span className="slot-content" title={textSlot.content}>"{textSlot.content}"</span>
+                                <motion.button
+                                    className="clear-slot"
+                                    onClick={() => setTextSlot(null)}
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    title="Remove"
+                                >
+                                    ×
+                                </motion.button>
                             </motion.div>
                         ) : (
-                            <motion.span
+                            <motion.div
                                 key="empty"
-                                className="slot-placeholder"
+                                className="slot-empty-content"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                             >
-                                Statement
-                            </motion.span>
+                                <span className="slot-drop-icon">📝</span>
+                                <span className="slot-placeholder">Drop Statement</span>
+                            </motion.div>
                         )}
                     </AnimatePresence>
                 </motion.div>
 
-                <span className="synthesis-plus">+</span>
+                <div className="synthesis-connector">
+                    <span className="connector-icon">+</span>
+                </div>
 
                 {/* Visual Slot */}
                 <motion.div
@@ -225,22 +238,30 @@ function Clipboard({
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.8 }}
-                                style={{ display: 'flex', alignItems: 'center', gap: '4px', width: '100%' }}
                             >
-                                <span className="slot-icon">🔍</span>
-                                <span className="slot-content">{visualSlot.content}</span>
-                                <button className="clear-slot" onClick={() => setVisualSlot(null)}>×</button>
+                                <span className="slot-type-indicator visual">👁️</span>
+                                <span className="slot-content" title={visualSlot.content}>{visualSlot.content}</span>
+                                <motion.button
+                                    className="clear-slot"
+                                    onClick={() => setVisualSlot(null)}
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    title="Remove"
+                                >
+                                    ×
+                                </motion.button>
                             </motion.div>
                         ) : (
-                            <motion.span
+                            <motion.div
                                 key="empty"
-                                className="slot-placeholder"
+                                className="slot-empty-content"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                             >
-                                Observation
-                            </motion.span>
+                                <span className="slot-drop-icon">🔍</span>
+                                <span className="slot-placeholder">Drop Observation</span>
+                            </motion.div>
                         )}
                     </AnimatePresence>
                 </motion.div>
@@ -249,13 +270,14 @@ function Clipboard({
             {/* Synthesis Actions */}
             <div className="synthesis-actions-inline">
                 <motion.button
-                    className="analyze-btn"
+                    className={`analyze-btn ${canSynthesize ? 'ready' : ''}`}
                     onClick={handleSynthesize}
                     disabled={!canSynthesize}
-                    whileHover={canSynthesize ? { scale: 1.02 } : {}}
+                    whileHover={canSynthesize ? { scale: 1.02, y: -1 } : {}}
                     whileTap={canSynthesize ? { scale: 0.98 } : {}}
                 >
-                    🔬 Analyze
+                    <span className="analyze-icon">✨</span>
+                    <span className="analyze-text">Analyze</span>
                 </motion.button>
                 <AnimatePresence>
                     {(textSlot || visualSlot) && (
@@ -294,7 +316,7 @@ function Clipboard({
                                 >
                                     💡
                                 </motion.span>
-                                <span className="result-text">Contradiction found!</span>
+                                <span className="result-text">Contradiction discovered!</span>
                             </>
                         ) : (
                             <>
@@ -304,9 +326,9 @@ function Clipboard({
                                     animate={{ scale: [0, 1.2, 1] }}
                                     transition={{ duration: 0.3 }}
                                 >
-                                    ❌
+                                    🤔
                                 </motion.span>
-                                <span className="result-text">No contradiction...</span>
+                                <span className="result-text">No connection found. Try another combination.</span>
                             </>
                         )}
                     </motion.div>
@@ -317,6 +339,21 @@ function Clipboard({
 
     return (
         <>
+            {/* Tutorial Hint */}
+            <AnimatePresence>
+                {showTutorialHint && (
+                    <motion.div
+                        className="clipboard-tutorial-hint"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                    >
+                        <span className="hint-icon">💡</span>
+                        <span>Click highlighted text in dialogue to collect evidence</span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* Expanded Panel (takes full workstation space) */}
             <AnimatePresence>
                 {isExpanded && (
