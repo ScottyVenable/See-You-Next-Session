@@ -89,7 +89,7 @@ export class SynsDocumentSymbolProvider implements vscode.DocumentSymbolProvider
                     symbol.children.push(new vscode.DocumentSymbol(
                         `-> ${goto.target}`,
                         'Goto',
-                        vscode.SymbolKind.Reference,
+                        vscode.SymbolKind.Key,
                         gotoRange,
                         gotoRange
                     ));
