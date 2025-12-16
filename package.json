@@ -18,6 +18,7 @@
         "deploy:dev": "npm run build && firebase deploy --only hosting:development"
     },
     "dependencies": {
+        "@phosphor-icons/react": "^2.1.10",
         "motion": "^12.23.26",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",

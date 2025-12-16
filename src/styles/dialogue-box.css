@@ -257,11 +257,11 @@
 .dialogue-text {
     flex: 1;
     font-family: var(--font-body);
-    font-size: 1.1rem;
-    line-height: 1.9;
+    font-size: 0.95rem;
+    line-height: 1.85;
     color: var(--color-text);
-    letter-spacing: 0.03em;
-    word-spacing: 0.05em;
+    letter-spacing: 0.02em;
+    word-spacing: 0.03em;
     position: relative;
     padding: var(--spacing-sm) 0;
 }
@@ -603,7 +603,7 @@
 /* Keyword Context Menu */
 .keyword-context-menu {
     position: absolute;
-    z-index: 100;
+    z-index: 9999;
     min-width: 200px;
     background: var(--color-bg-primary);
     border: 1px solid rgba(255, 255, 255, 0.1);

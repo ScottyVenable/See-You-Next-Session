@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useGame } from '../../context/GameContext.jsx';
 import PatientView from '../game/PatientView.jsx';
 import DialogueBox from '../game/DialogueBox.jsx';
+import DialogueSelector from '../game/DialogueSelector.jsx';
 import Clipboard from '../game/Clipboard.jsx';
 import FocusMeter from '../game/FocusMeter.jsx';
 import TurnClock from '../game/TurnClock.jsx';
@@ -15,8 +16,23 @@ function GameScreen() {
     const [draggedToken, setDraggedToken] = useState(null);
     const [breakthroughDialogue, setBreakthroughDialogue] = useState(null);
     const [showTutorialHint, setShowTutorialHint] = useState(true);
+    const [selectedPrompt, setSelectedPrompt] = useState(null);
 
     const { currentPatient, currentTurn, focus, isFocusMode } = gameState;
+
+    // Handle dialogue prompt selection from selector
+    const handleSelectPrompt = useCallback((prompt) => {
+        setSelectedPrompt(prompt);
+        console.log('Selected dialogue prompt:', prompt);
+
+        // Deduct focus cost if applicable
+        if (prompt.focusCost && prompt.focusCost > 0) {
+            actions.spendFocus(prompt.focusCost);
+        }
+
+        // TODO: Integrate with dialogue system to generate response
+        // This could trigger a new dialogue entry or advance conversation
+    }, [actions]);
 
     if (!currentPatient) {
         return (
@@ -140,6 +156,46 @@ function GameScreen() {
                             actions.addToClipboard(token);
                             setShowTutorialHint(false);
                         }}
+                        onAskAbout={(keyword) => {
+                            console.log('Ask about keyword:', keyword);
+                            // TODO: Generate follow-up question based on keyword
+                        }}
+                        onHighlightInHandbook={(keyword) => {
+                            setIsHandbookOpen(true);
+                            // TODO: Pass keyword to handbook for highlighting
+                        }}
+                        onExploreBackground={(keyword) => {
+                            console.log('Explore background:', keyword);
+                            // TODO: Show expanded info about background element
+                        }}
+                    />
+
+                    {/* Selected Prompt Indicator */}
+                    <AnimatePresence>
+                        {selectedPrompt && (
+                            <motion.div
+                                className="selected-prompt-indicator"
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                            >
+                                <span className="prompt-label">You asked:</span>
+                                <span className="prompt-text">"{selectedPrompt.prompt}"</span>
+                                <button
+                                    className="prompt-dismiss"
+                                    onClick={() => setSelectedPrompt(null)}
+                                >
+                                    ×
+                                </button>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    <DialogueSelector
+                        onSelectPrompt={handleSelectPrompt}
+                        disabledTopics={[]}
+                        currentFocus={focus.current}
                     />
 
                     <div className="turn-controls">

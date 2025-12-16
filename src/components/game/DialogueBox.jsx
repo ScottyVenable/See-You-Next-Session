@@ -119,7 +119,15 @@ function getKeywordType(keyword) {
     return 'general';
 }
 
-function DialogueBox({ dialogue, onKeywordCollected, isFocusMode = false, patientName = 'Patient' }) {
+function DialogueBox({
+    dialogue,
+    onKeywordCollected,
+    onAskAbout,
+    onHighlightInHandbook,
+    onExploreBackground,
+    isFocusMode = false,
+    patientName = 'Patient'
+}) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [displayedText, setDisplayedText] = useState('');
     const [isTyping, setIsTyping] = useState(false);
@@ -264,22 +272,31 @@ function DialogueBox({ dialogue, onKeywordCollected, isFocusMode = false, patien
                 }
                 break;
             case 'highlight':
-                // TODO: Implement highlight in handbook
-                console.log('Highlight in handbook:', keyword.text);
+                if (onHighlightInHandbook) {
+                    onHighlightInHandbook(keyword);
+                } else {
+                    console.log('Highlight in handbook:', keyword.text);
+                }
                 break;
             case 'ask':
-                // TODO: Implement ask about this
-                console.log('Ask about:', keyword.text);
+                if (onAskAbout) {
+                    onAskAbout(keyword);
+                } else {
+                    console.log('Ask about:', keyword.text);
+                }
                 break;
             case 'explore':
-                // TODO: Implement explore further (for background keywords)
-                console.log('Explore further:', keyword.text);
+                if (onExploreBackground) {
+                    onExploreBackground(keyword);
+                } else {
+                    console.log('Explore further:', keyword.text);
+                }
                 break;
             default:
                 break;
         }
         setContextMenu({ show: false, x: 0, y: 0, keyword: null });
-    }, [collectedKeywords, onKeywordCollected]);
+    }, [collectedKeywords, onKeywordCollected, onAskAbout, onHighlightInHandbook, onExploreBackground]);
 
     // Parse text to highlight keywords
     const renderDialogueText = () => {
