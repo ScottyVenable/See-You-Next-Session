@@ -1,11 +1,11 @@
 /**
- * SynsDialogueBox - Dialogue component powered by the SDNS dialogue engine
- * Integrates .session files with the game's dialogue display
+ * SynsDialogueBox - Dialogue component powered by the SYNS dialogue engine
+ * Integrates .syns files with the game's dialogue display
  */
 
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useDialogue, loadPatientDialogue } from '../../sdns/index.js';
+import { useDialogue, loadPatientDialogue } from '../../dialogue/index.js';
 import { useGame } from '../../context/GameContext.jsx';
 import '../../styles/dialogue-box.css';
 
@@ -184,31 +184,10 @@ function SynsDialogueBox({
     const [isLoaded, setIsLoaded] = useState(false);
     const [useFallback, setUseFallback] = useState(false);
     const [fallbackIndex, setFallbackIndex] = useState(0);
-    const [loadKey, setLoadKey] = useState(0); // For forcing reload
 
     const dialogueRef = useRef(null);
     const typingRef = useRef(null);
     const loadedRef = useRef(false);
-
-    // Function to force reload dialogue (useful for dev/testing)
-    const reloadDialogue = useCallback(async () => {
-        loadedRef.current = false;
-        setIsLoaded(false);
-        setLoadKey(k => k + 1);
-    }, []);
-
-    // Expose reload function on window for dev tools
-    useEffect(() => {
-        if (import.meta.env?.DEV) {
-            window.__reloadDialogue = reloadDialogue;
-            console.log('[SynsDialogueBox] Dev mode: window.__reloadDialogue() available');
-        }
-        return () => {
-            if (import.meta.env?.DEV) {
-                delete window.__reloadDialogue;
-            }
-        };
-    }, [reloadDialogue]);
 
     // Load SYNS dialogue on mount or when turn changes
     useEffect(() => {
@@ -217,9 +196,7 @@ function SynsDialogueBox({
 
         async function loadSynsDialogue() {
             try {
-                // Force reload in dev mode to get fresh content
-                const forceReload = import.meta.env?.DEV ?? false;
-                const source = await loadPatientDialogue(patientId, turn, forceReload);
+                const source = await loadPatientDialogue(patientId, turn);
                 if (source) {
                     loadDialogue(source);
                     setIsLoaded(true);
@@ -227,7 +204,6 @@ function SynsDialogueBox({
                     loadedRef.current = true;
                     // Auto-start from START block
                     startBlock('START');
-                    console.log(`[SynsDialogueBox] Loaded dialogue for ${patientId} turn ${turn}`);
                 } else {
                     console.warn(`No SYNS file found for ${patientId} turn ${turn}, using fallback`);
                     setUseFallback(true);
@@ -248,7 +224,7 @@ function SynsDialogueBox({
         return () => {
             loadedRef.current = false;
         };
-    }, [patientId, turn, loadKey]); // Added loadKey to trigger reload
+    }, [patientId, turn]); // Removed loadDialogue and startBlock to prevent re-runs
 
     // Get current display content
     const currentContent = useMemo(() => {
@@ -529,12 +505,6 @@ function SynsDialogueBox({
             {!isTyping && availableResponses.length > 0 && (
                 <ResponsePanel
                     responses={availableResponses}
-                    patientId={patientId}
-                    currentRapport={gameState?.rapport || 50}
-                    sessionState={{
-                        reveals: gameState?.reveals || [],
-                        topics: gameState?.topicInteractions || {}
-                    }}
                     onSelectResponse={(topic, subtopic) => {
                         handleResponse(topic, subtopic);
                     }}
@@ -544,215 +514,33 @@ function SynsDialogueBox({
     );
 }
 
-// Response Panel Component - Enhanced with dynamic config loading
-function ResponsePanel({ responses, onSelectResponse, patientId, currentRapport = 50, sessionState = {} }) {
-    const [expandedTopic, setExpandedTopic] = useState(null);
-    const [dialogueConfig, setDialogueConfig] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    // Load dialogue config for this patient
-    useEffect(() => {
-        async function loadConfig() {
-            try {
-                // Try to load patient-specific dialogue config
-                const config = await import(`../../patients/${patientId}/dialogue/config.json`);
-                setDialogueConfig(config.default || config);
-            } catch (err) {
-                console.log('[ResponsePanel] No config found, using defaults');
-                setDialogueConfig(null);
+// Response Panel Component
+function ResponsePanel({ responses, onSelectResponse }) {
+    // Group responses by topic
+    const groupedResponses = useMemo(() => {
+        const groups = {};
+        responses.forEach(r => {
+            if (!groups[r.topic]) {
+                groups[r.topic] = [];
             }
-            setLoading(false);
-        }
-        loadConfig();
-    }, [patientId]);
+            groups[r.topic].push(r);
+        });
+        return groups;
+    }, [responses]);
 
-    // Build available topics from config + parsed responses
-    const availableTopics = useMemo(() => {
-        if (!dialogueConfig?.topics) {
-            // Fallback: just group responses by topic with defaults
-            const groups = {};
-            responses.forEach(r => {
-                if (!groups[r.topic]) {
-                    groups[r.topic] = {
-                        id: r.topic,
-                        label: r.topic.charAt(0).toUpperCase() + r.topic.slice(1),
-                        icon: getDefaultTopicIcon(r.topic),
-                        subtopics: []
-                    };
-                }
-                groups[r.topic].subtopics.push({
-                    id: r.subtopic,
-                    key: r.key,
-                    label: getDefaultSubtopicLabel(r.subtopic),
-                    shortLabel: r.subtopic,
-                    available: true
-                });
-            });
-            return Object.values(groups);
-        }
-
-        // Build from config, filtering by availability
-        const topics = [];
-
-        for (const [topicId, topicConfig] of Object.entries(dialogueConfig.topics)) {
-            // Check if topic is unlocked
-            const unlockCondition = topicConfig.unlockCondition;
-            let isUnlocked = true;
-
-            if (unlockCondition) {
-                if (unlockCondition.rapport && currentRapport < unlockCondition.rapport) {
-                    isUnlocked = false;
-                }
-                if (unlockCondition.reveal && !sessionState.reveals?.includes(unlockCondition.reveal)) {
-                    isUnlocked = false;
-                }
-            }
-
-            if (!isUnlocked) continue;
-
-            // Get subtopics that have corresponding response blocks
-            const availableSubtopics = [];
-
-            for (const [subtopicId, subtopicConfig] of Object.entries(topicConfig.subtopics || {})) {
-                const responseKey = `${topicId}.${subtopicId}`;
-                const hasResponse = responses.some(r => r.key === responseKey);
-
-                if (!hasResponse) continue;
-
-                // Check rapport requirement
-                if (subtopicConfig.rapportRequired && currentRapport < subtopicConfig.rapportRequired) {
-                    continue;
-                }
-
-                // Check if maxed out
-                const timesAsked = sessionState.topics?.[responseKey]?.timesAsked || 0;
-                if (subtopicConfig.maxAsks && timesAsked >= subtopicConfig.maxAsks) {
-                    continue;
-                }
-
-                availableSubtopics.push({
-                    id: subtopicId,
-                    key: responseKey,
-                    label: subtopicConfig.label,
-                    shortLabel: subtopicConfig.shortLabel || subtopicId,
-                    timesAsked,
-                    maxAsks: subtopicConfig.maxAsks,
-                    tags: subtopicConfig.tags || [],
-                    available: true,
-                    rapportRequired: subtopicConfig.rapportRequired
-                });
-            }
-
-            if (availableSubtopics.length > 0) {
-                topics.push({
-                    id: topicId,
-                    label: topicConfig.label,
-                    icon: topicConfig.icon,
-                    description: topicConfig.description,
-                    subtopics: availableSubtopics,
-                    subtopicCount: availableSubtopics.length
-                });
-            }
-        }
-
-        return topics;
-    }, [dialogueConfig, responses, currentRapport, sessionState]);
-
-    if (loading) {
-        return null;
-    }
-
-    if (availableTopics.length === 0) {
-        return null;
-    }
-
-    return (
-        <motion.div
-            className="response-panel"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-        >
-            <div className="response-panel-header">
-                <span className="response-icon">💬</span>
-                <span>Topics to explore</span>
-            </div>
-
-            <div className="response-topics">
-                {availableTopics.map((topic) => {
-                    const isExpanded = expandedTopic === topic.id;
-
-                    return (
-                        <div key={topic.id} className="response-topic-group">
-                            <motion.button
-                                className={`response-topic-btn ${isExpanded ? 'expanded' : ''}`}
-                                onClick={() => setExpandedTopic(isExpanded ? null : topic.id)}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                            >
-                                <span className="topic-icon">{topic.icon}</span>
-                                <span className="topic-label">{topic.label}</span>
-                                <span className="topic-count">{topic.subtopicCount}</span>
-                                <span className={`topic-arrow ${isExpanded ? 'expanded' : ''}`}>▼</span>
-                            </motion.button>
-
-                            <AnimatePresence>
-                                {isExpanded && (
-                                    <motion.div
-                                        className="subtopic-list"
-                                        initial={{ height: 0, opacity: 0 }}
-                                        animate={{ height: 'auto', opacity: 1 }}
-                                        exit={{ height: 0, opacity: 0 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        {topic.subtopics.map((subtopic) => (
-                                            <motion.button
-                                                key={subtopic.key}
-                                                className="subtopic-btn"
-                                                onClick={() => onSelectResponse(topic.id, subtopic.id)}
-                                                whileHover={{ scale: 1.01, x: 4 }}
-                                                whileTap={{ scale: 0.99 }}
-                                            >
-                                                <span className="subtopic-bullet">•</span>
-                                                <span className="subtopic-label">{subtopic.label}</span>
-                                                {subtopic.timesAsked > 0 && (
-                                                    <span className="subtopic-asked">
-                                                        {subtopic.timesAsked}/{subtopic.maxAsks || '∞'}
-                                                    </span>
-                                                )}
-                                            </motion.button>
-                                        ))}
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
-                    );
-                })}
-            </div>
-        </motion.div>
-    );
-}
-
-// Helper: Get default topic icon
-function getDefaultTopicIcon(topic) {
-    const icons = {
-        family: '👨‍👩‍👧',
-        work: '💼',
-        emotions: '💭',
-        relationships: '💕',
-        sleep: '😴',
-        physical: '🏃',
-        self: '🪞',
-        coping: '🛡️',
-        history: '📖',
-        therapy: '🗣️'
+    const topicLabels = {
+        family: { label: 'Family', icon: '👨‍👩‍👧' },
+        work: { label: 'Work', icon: '💼' },
+        emotions: { label: 'Emotions', icon: '💭' },
+        relationships: { label: 'Relationships', icon: '💕' },
+        sleep: { label: 'Sleep', icon: '😴' },
+        physical: { label: 'Physical Health', icon: '🏃' },
+        self: { label: 'Self & Identity', icon: '🪞' },
+        coping: { label: 'Coping', icon: '🛡️' },
+        history: { label: 'History', icon: '📖' },
     };
-    return icons[topic] || '❓';
-}
 
-// Helper: Get default subtopic label
-function getDefaultSubtopicLabel(subtopic) {
-    const labels = {
+    const subtopicLabels = {
         parents: 'Tell me about your parents',
         childhood: 'What was childhood like?',
         siblings: 'Do you have siblings?',
@@ -774,9 +562,74 @@ function getDefaultSubtopicLabel(subtopic) {
         appetite: 'How is your appetite?',
         exercise: 'Do you exercise?',
         identity: 'How do you see yourself?',
-        expectations: 'Others\' expectations'
+        expectations: 'Others\' expectations',
     };
-    return labels[subtopic] || subtopic;
+
+    const [expandedTopic, setExpandedTopic] = useState(null);
+
+    return (
+        <motion.div
+            className="response-panel"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+        >
+            <div className="response-panel-header">
+                <span className="response-icon">💬</span>
+                <span>Choose a topic to explore:</span>
+            </div>
+
+            <div className="response-topics">
+                {Object.entries(groupedResponses).map(([topic, subtopics]) => {
+                    const topicInfo = topicLabels[topic] || { label: topic, icon: '❓' };
+                    const isExpanded = expandedTopic === topic;
+
+                    return (
+                        <div key={topic} className="response-topic-group">
+                            <motion.button
+                                className={`response-topic-btn ${isExpanded ? 'expanded' : ''}`}
+                                onClick={() => setExpandedTopic(isExpanded ? null : topic)}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                <span className="topic-icon">{topicInfo.icon}</span>
+                                <span className="topic-label">{topicInfo.label}</span>
+                                <span className="topic-count">{subtopics.length}</span>
+                                <span className={`topic-arrow ${isExpanded ? 'expanded' : ''}`}>▼</span>
+                            </motion.button>
+
+                            <AnimatePresence>
+                                {isExpanded && (
+                                    <motion.div
+                                        className="subtopic-list"
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        {subtopics.map(({ subtopic, key }) => (
+                                            <motion.button
+                                                key={key}
+                                                className="subtopic-btn"
+                                                onClick={() => onSelectResponse(topic, subtopic)}
+                                                whileHover={{ scale: 1.01, x: 4 }}
+                                                whileTap={{ scale: 0.99 }}
+                                            >
+                                                <span className="subtopic-bullet">•</span>
+                                                <span className="subtopic-label">
+                                                    {subtopicLabels[subtopic] || subtopic}
+                                                </span>
+                                            </motion.button>
+                                        ))}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    );
+                })}
+            </div>
+        </motion.div>
+    );
 }
 
 export default SynsDialogueBox;
