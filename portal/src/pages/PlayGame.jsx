@@ -34,10 +34,10 @@ export default function PlayGame() {
     const repoOwner = import.meta.env.VITE_REPO_OWNER || 'ScottyVenable';
     const repoName = import.meta.env.VITE_REPO_NAME || 'See-You-Next-Session';
 
-    // Game URL based on selected branch
+    // Game URL based on selected branch - now points to embedded game
     const getGameUrl = (branch) => {
-        // Each branch deploys to a different path
-        return `https://${repoOwner}.github.io/${repoName}/builds/${branch}/`;
+        // Game is embedded in /game/ directory of the same site
+        return '/game/';
     };
 
     const gameUrl = getGameUrl(BUILD_CONFIGS[selectedBuild].branch);

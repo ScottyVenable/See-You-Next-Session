@@ -24,6 +24,11 @@ jobs:
       - name: Build game
         run: npm exec vite build
 
+      - name: Copy game build to portal
+        run: |
+          mkdir -p portal/public/game
+          cp -r dist/* portal/public/game/
+
       - name: Install dependencies (portal)
         run: cd portal && npm ci
 

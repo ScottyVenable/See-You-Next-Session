@@ -2,7 +2,7 @@
     "hosting": [
         {
             "target": "production",
-            "public": "dist",
+            "public": "portal/dist",
             "ignore": [
                 "firebase.json",
                 "**/.*",
@@ -17,7 +17,7 @@
         },
         {
             "target": "staging",
-            "public": "dist",
+            "public": "portal/dist",
             "ignore": [
                 "firebase.json",
                 "**/.*",
@@ -32,7 +32,7 @@
         },
         {
             "target": "development",
-            "public": "dist",
+            "public": "portal/dist",
             "ignore": [
                 "firebase.json",
                 "**/.*",

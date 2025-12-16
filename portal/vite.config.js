@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
     plugins: [react()],
-    base: '/See-You-Next-Session/',
+    base: '/',
     build: {
         outDir: 'dist',
     },
