@@ -8,15 +8,26 @@ export { parseDialogue, parseDialogueFile, Lexer, Parser, TokenType } from './pa
 export { DialogueEngine, createDialogueEngine } from './engine.js';
 export { useDialogue } from './useDialogue.js';
 
+// Patient ID to folder mapping
+const PATIENT_FOLDERS = {
+    'patient-tutorial': 'alex',
+    'alex': 'alex',
+    // Add more patients here as they're created
+    // 'patient-id': 'folder-name',
+};
+
 // Utility to load patient dialogue
 export async function loadPatientDialogue(patientId, turn) {
-    const path = `/src/dialogue/patients/${patientId}/turn${turn}.syns`;
+    // Resolve folder name from patient ID
+    const folderName = PATIENT_FOLDERS[patientId] || patientId;
+    const path = `/src/dialogue/patients/${folderName}/turn${turn}.syns`;
+
     try {
         const response = await fetch(path);
         if (!response.ok) throw new Error(`Failed to load: ${path}`);
         return await response.text();
     } catch (error) {
-        console.error(`Error loading dialogue for ${patientId} turn ${turn}:`, error);
+        console.error(`Error loading dialogue for ${patientId} (folder: ${folderName}) turn ${turn}:`, error);
         return null;
     }
 }

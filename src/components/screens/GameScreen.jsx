@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useGame } from '../../context/GameContext.jsx';
 import PatientView from '../game/PatientView.jsx';
 import DialogueBox from '../game/DialogueBox.jsx';
+import SynsDialogueBox from '../game/SynsDialogueBox.jsx';
 import DialogueSelector from '../game/DialogueSelector.jsx';
 import Clipboard from '../game/Clipboard.jsx';
 import FocusMeter from '../game/FocusMeter.jsx';
@@ -19,6 +20,7 @@ function GameScreen() {
     const [breakthroughDialogue, setBreakthroughDialogue] = useState(null);
     const [showTutorialHint, setShowTutorialHint] = useState(true);
     const [selectedPrompt, setSelectedPrompt] = useState(null);
+    const [useSynsDialogue, setUseSynsDialogue] = useState(true); // Toggle for SYNS vs legacy dialogue
 
     const { currentPatient, currentTurn, focus, isFocusMode, rapport } = gameState;
 
@@ -151,35 +153,62 @@ function GameScreen() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: 0.1 }}
                 >
-                    <DialogueBox
-                        dialogue={currentPhase?.dialogue || []}
-                        isFocusMode={isFocusMode}
-                        patientName={currentPatient.name}
-                        onKeywordCollected={(keyword) => {
-                            const token = {
-                                id: keyword.id,
-                                type: 'text',
-                                content: keyword.text,
-                                contradicts: keyword.contradicts,
-                                relatedSymptom: keyword.relatedSymptom,
-                            };
-                            actions.collectToken(token);
-                            actions.addToClipboard(token);
-                            setShowTutorialHint(false);
-                        }}
-                        onAskAbout={(keyword) => {
-                            console.log('Ask about keyword:', keyword);
-                            // TODO: Generate follow-up question based on keyword
-                        }}
-                        onHighlightInHandbook={(keyword) => {
-                            setIsHandbookOpen(true);
-                            // TODO: Pass keyword to handbook for highlighting
-                        }}
-                        onExploreBackground={(keyword) => {
-                            console.log('Explore background:', keyword);
-                            // TODO: Show expanded info about background element
-                        }}
-                    />
+                    {useSynsDialogue ? (
+                        <SynsDialogueBox
+                            patientId={currentPatient.id}
+                            turn={currentTurn}
+                            isFocusMode={isFocusMode}
+                            patientName={currentPatient.name}
+                            fallbackDialogue={currentPhase?.dialogue || []}
+                            onKeywordCollected={(token) => {
+                                actions.collectToken(token);
+                                actions.addToClipboard(token);
+                                setShowTutorialHint(false);
+                            }}
+                            onSpeechChange={(speech) => {
+                                console.log('Current speech:', speech);
+                            }}
+                            onDialogueEnd={() => {
+                                console.log('Dialogue block ended');
+                            }}
+                            onAskAbout={(keyword) => {
+                                console.log('Ask about keyword:', keyword);
+                            }}
+                            onHighlightInHandbook={(keyword) => {
+                                setIsHandbookOpen(true);
+                            }}
+                            onExploreBackground={(keyword) => {
+                                console.log('Explore background:', keyword);
+                            }}
+                        />
+                    ) : (
+                        <DialogueBox
+                            dialogue={currentPhase?.dialogue || []}
+                            isFocusMode={isFocusMode}
+                            patientName={currentPatient.name}
+                            onKeywordCollected={(keyword) => {
+                                const token = {
+                                    id: keyword.id,
+                                    type: 'text',
+                                    content: keyword.text,
+                                    contradicts: keyword.contradicts,
+                                    relatedSymptom: keyword.relatedSymptom,
+                                };
+                                actions.collectToken(token);
+                                actions.addToClipboard(token);
+                                setShowTutorialHint(false);
+                            }}
+                            onAskAbout={(keyword) => {
+                                console.log('Ask about keyword:', keyword);
+                            }}
+                            onHighlightInHandbook={(keyword) => {
+                                setIsHandbookOpen(true);
+                            }}
+                            onExploreBackground={(keyword) => {
+                                console.log('Explore background:', keyword);
+                            }}
+                        />
+                    )}
 
                     {/* Selected Prompt Indicator */}
                     <AnimatePresence>
