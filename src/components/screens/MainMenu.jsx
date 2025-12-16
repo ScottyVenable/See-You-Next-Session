@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useGame } from '../../context/GameContext.jsx';
 import { MenuButton } from '../ui';
+import { GAME_CONFIG } from '../../data/config.js';
 import '../../styles/main-menu.css';
-
-const VERSION = 'v0.2.0';
 const DISCLAIMER_KEY = 'syns_disclaimer_dismissed';
 
 // Animation variants
@@ -157,7 +156,7 @@ function MainMenu() {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1 }}
                 >
-                    {VERSION}
+                    {GAME_CONFIG.VERSION}
                 </motion.div>
             </motion.div>
 
