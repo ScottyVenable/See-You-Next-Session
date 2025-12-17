@@ -29,7 +29,9 @@ Documents/
 │
 ├── planning/                      # Project Planning
 │   ├── TODO.md                    # Task tracker & bugs
-│   └── DEVELOPMENT_ROADMAP.md     # Phase-based roadmap
+│   ├── DEVELOPMENT_ROADMAP.md     # Phase-based roadmap
+│   ├── FEATURE_TRACKING.md        # Feature lifecycle & impact
+│   └── LAYOUT_OPTIMIZATION_TODO.md # UI layout specifications
 │
 └── reference/                     # Reference Materials
     ├── ASSET_LIST.md              # Art & audio requirements
@@ -58,6 +60,7 @@ Documents/
 | Document | Description |
 |----------|-------------|
 | [Development Roadmap](planning/DEVELOPMENT_ROADMAP.md) | MVP phases and timeline |
+| [Feature Tracking](planning/FEATURE_TRACKING.md) | Feature lifecycle and impact tracking |
 
 ### Reference
 | Document | Description |

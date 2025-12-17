@@ -26,64 +26,113 @@
 ## Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
-- npm or yarn
 
-### Installation
+Before you begin, ensure you have the following installed:
+- **Node.js** 18.0.0 or higher ([Download](https://nodejs.org/))
+- **npm** 9.0.0 or higher (comes with Node.js)
+- **Git** ([Download](https://git-scm.com/))
+
+### Quick Start
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/see-you-next-session.git
-cd see-you-next-session
+git clone https://github.com/ScottyVenable/See-You-Next-Session.git
+cd See-You-Next-Session
 
-# Install dependencies
+# Install dependencies (this may take a few minutes)
 npm install
 
 # Start development server
 npm run dev
 ```
 
-The game will open at `http://localhost:5173`
+The game will automatically open in your browser at `http://localhost:5173`
 
-### Build for Production
+**First time?** The dev server may take 10-15 seconds to start. Watch the terminal for "ready in" message.
+
+### Development Commands
 
 ```bash
-npm run build
-npm run preview  # Preview production build
+npm run dev          # Start dev server (hot reload enabled)
+npm run build        # Build for production
+npm run preview      # Preview production build locally
+npm run lint         # Run ESLint to check code quality
+npm run tauri:dev    # Run desktop version (requires Rust)
+npm run tauri:build  # Build desktop application
 ```
+
+### Desktop Build (Optional)
+
+To build the desktop version:
+
+1. **Install Rust** (required for Tauri)
+   ```bash
+   # Visit https://rustup.rs/ for installation
+   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+   ```
+
+2. **Build desktop app**
+   ```bash
+   npm run tauri:build
+   ```
+
+The desktop build will be in `src-tauri/target/release/`
+
+### Troubleshooting
+
+**Port 5173 already in use?**
+```bash
+# Kill the process using the port
+# Windows: 
+netstat -ano | findstr :5173
+taskkill /PID <PID> /F
+
+# Mac/Linux:
+lsof -ti:5173 | xargs kill
+```
+
+**Dependencies not installing?**
+```bash
+# Clear cache and retry
+rm -rf node_modules package-lock.json
+npm cache clean --force
+npm install
+```
+
+**Need help?** Check [CONTRIBUTING.md](.github/CONTRIBUTING.md#common-issues-and-solutions) for more solutions.
 
 ## Project Structure
 
 ```
-src/
-├── components/
-│   ├── game/          # Game UI components
-│   │   ├── Clipboard.jsx
-│   │   ├── DialogueBox.jsx
-│   │   ├── FocusMeter.jsx
-│   │   ├── Handbook.jsx
-│   │   ├── PatientView.jsx
-│   │   ├── SynthesisZone.jsx
-│   │   └── TurnClock.jsx
-│   ├── screens/       # Main game screens
-│   │   ├── GameScreen.jsx
-│   │   ├── MainMenu.jsx
-│   │   ├── PatientSelect.jsx
-│   │   └── SessionReport.jsx
-│   └── ui/            # Reusable styled-components
-│       ├── MenuButton.jsx
-│       └── index.js
-├── context/
-│   └── GameContext.jsx    # Global game state
-├── data/
-│   ├── config.js          # Game balance values
-│   ├── disorders.js       # Disorder definitions
-│   ├── symptoms.js        # Symptom definitions
-│   └── patients/          # Patient data files
-├── styles/                # CSS stylesheets
-├── App.jsx
-└── main.jsx
+See-You-Next-Session/
+├── src/                        # Main game source code
+│   ├── components/             # React components
+│   │   ├── game/               # Game UI (Clipboard, Handbook, etc.)
+│   │   ├── screens/            # Main screens (Menu, Game, Report)
+│   │   └── ui/                 # Reusable UI components
+│   ├── context/                # State management (GameContext, UIContext)
+│   ├── data/                   # Game data (config, disorders, patients)
+│   ├── sdns/                   # Dialogue scripting system
+│   ├── patients/               # Patient session files
+│   ├── styles/                 # CSS stylesheets
+│   └── utils/                  # Helper functions
+│
+├── Documents/                  # Project documentation
+│   ├── design/                 # Game design docs
+│   ├── technical/              # Technical architecture
+│   ├── planning/               # Roadmap and TODO
+│   └── content/                # Patient and story content
+│
+├── .github/                    # GitHub config and templates
+├── src-tauri/                  # Desktop build configuration
+├── CHANGELOG.md                # Version history
+├── CONTRIBUTING.md             # Contribution guidelines
+├── DIRECTORY_STRUCTURE.md      # Detailed structure guide
+└── SECURITY.md                 # Security policies
+
 ```
+
+**For detailed information:** See [DIRECTORY_STRUCTURE.md](DIRECTORY_STRUCTURE.md)
 
 ## Tech Stack
 
@@ -128,6 +177,14 @@ The developers are not mental health professionals. All information in this game
 - [988 Suicide & Crisis Lifeline](https://988lifeline.org/)
 - [NAMI](https://www.nami.org/)
 
+## Documentation
+
+- **[CHANGELOG.md](CHANGELOG.md)** - Version history and changes
+- **[CONTRIBUTING.md](.github/CONTRIBUTING.md)** - How to contribute
+- **[DIRECTORY_STRUCTURE.md](DIRECTORY_STRUCTURE.md)** - Project organization guide
+- **[SECURITY.md](SECURITY.md)** - Security policies and best practices
+- **[Documents/INDEX.md](Documents/INDEX.md)** - Documentation index
+
 ## Credits
 
 - **Scott** - Programming & Design
@@ -135,8 +192,16 @@ The developers are not mental health professionals. All information in this game
 
 ## Contributing
 
-See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for guidelines.
+We welcome contributions! Please see [CONTRIBUTING.md](.github/CONTRIBUTING.md) for:
+- Development setup
+- Coding standards
+- Pull request process
+- Style guides
 
 ## License
 
 MIT License - See [LICENSE](LICENSE) file for details
+
+---
+
+**Version:** 0.2.0 | **Status:** In Active Development | **Target:** MVP February 2025
