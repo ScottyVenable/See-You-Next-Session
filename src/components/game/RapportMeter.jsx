@@ -135,10 +135,10 @@ const Effect = styled.div`
 
 // Effects that unlock at different rapport levels
 const RAPPORT_EFFECTS = [
-    { threshold: 25, label: 'Patient shares surface details', icon: '💬' },
-    { threshold: 50, label: 'Patient is more forthcoming', icon: '🗣️' },
-    { threshold: 75, label: 'Patient reveals hidden concerns', icon: '💭' },
-    { threshold: 90, label: 'Full trust - breakthrough possible', icon: '✨' },
+    { threshold: 25, label: 'Patient shares surface details', icon: '[1]' },
+    { threshold: 50, label: 'Patient is more forthcoming', icon: '[2]' },
+    { threshold: 75, label: 'Patient reveals hidden concerns', icon: '[3]' },
+    { threshold: 90, label: 'Full trust - breakthrough possible', icon: '[4]' },
 ];
 
 function RapportMeter({

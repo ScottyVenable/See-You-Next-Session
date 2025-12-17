@@ -190,7 +190,7 @@ function Clipboard({
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.8 }}
                             >
-                                <span className="slot-type-indicator text">💬</span>
+                                <span className="slot-type-indicator text">[D]</span>
                                 <span className="slot-content" title={textSlot.content}>"{textSlot.content}"</span>
                                 <motion.button
                                     className="clear-slot"
@@ -210,7 +210,7 @@ function Clipboard({
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                             >
-                                <span className="slot-drop-icon">📝</span>
+                                <span className="slot-drop-icon">[T]</span>
                                 <span className="slot-placeholder">Drop Statement</span>
                             </motion.div>
                         )}
@@ -276,7 +276,7 @@ function Clipboard({
                     whileHover={canSynthesize ? { scale: 1.02, y: -1 } : {}}
                     whileTap={canSynthesize ? { scale: 0.98 } : {}}
                 >
-                    <span className="analyze-icon">✨</span>
+                    <span className="analyze-icon">[*]</span>
                     <span className="analyze-text">Analyze</span>
                 </motion.button>
                 <AnimatePresence>
@@ -326,7 +326,7 @@ function Clipboard({
                                     animate={{ scale: [0, 1.2, 1] }}
                                     transition={{ duration: 0.3 }}
                                 >
-                                    🤔
+                                    [?]
                                 </motion.span>
                                 <span className="result-text">No connection found. Try another combination.</span>
                             </>
@@ -380,7 +380,7 @@ function Clipboard({
                             {/* Token Sections Side by Side */}
                             <div className="token-columns">
                                 <div className="token-column">
-                                    <h4>💬 Statements ({textTokens.length})</h4>
+                                    <h4>[D] Statements ({textTokens.length})</h4>
                                     <div className="token-list-expanded">
                                         {textTokens.length === 0 ? (
                                             <p className="empty-hint">Click highlighted dialogue to collect</p>
@@ -401,7 +401,7 @@ function Clipboard({
                                                         whileHover={{ x: 4 }}
                                                         transition={{ delay: index * 0.05 }}
                                                     >
-                                                        <span className="token-icon">📝</span>
+                                                        <span className="token-icon">[T]</span>
                                                         <span className="token-content-expanded">"{token.content}"</span>
                                                         {token.contradicts && <span className="token-badge">!</span>}
                                                         <motion.button
@@ -495,7 +495,7 @@ function Clipboard({
                         </div>
 
                         <div className="token-section">
-                            <h4>💬 Statements</h4>
+                            <h4>[D] Statements</h4>
                             <div className="token-list text-tokens">
                                 {textTokens.length === 0 ? (
                                     <p className="empty-hint">Click dialogue keywords</p>
@@ -515,7 +515,7 @@ function Clipboard({
                                                 layout
                                                 whileHover={{ scale: 1.02, x: 3 }}
                                             >
-                                                <span className="token-icon">📝</span>
+                                                <span className="token-icon">[T]</span>
                                                 <span className="token-content">"{token.content}"</span>
                                                 <motion.button
                                                     className="remove-token"

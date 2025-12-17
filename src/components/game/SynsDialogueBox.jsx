@@ -674,7 +674,7 @@ function ResponsePanel({ responses, onSelectResponse, patientId, currentRapport 
             transition={{ delay: 0.3 }}
         >
             <div className="response-panel-header">
-                <span className="response-icon">💬</span>
+                <span className="response-icon">[D]</span>
                 <span>Topics to explore</span>
             </div>
 

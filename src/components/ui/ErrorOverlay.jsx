@@ -177,7 +177,7 @@ function ErrorOverlay() {
                     <div style={styles.errorList}>
                         {filteredErrors.length === 0 ? (
                             <div style={styles.noErrors}>
-                                ✨ No errors to display
+                                [*] No errors to display
                             </div>
                         ) : (
                             filteredErrors.slice().reverse().map(error => (

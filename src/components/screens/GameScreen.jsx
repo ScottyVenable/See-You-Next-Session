@@ -186,7 +186,7 @@ function GameScreen() {
             case 'notes':
                 return (
                     <div className="drawer-placeholder">
-                        <span className="placeholder-icon">📝</span>
+                        <span className="placeholder-icon">[N]</span>
                         <span className="placeholder-text">Session Notes</span>
                         <span className="placeholder-hint">Coming soon...</span>
                     </div>
@@ -398,7 +398,7 @@ function GameScreen() {
                         exit={{ opacity: 0, y: 20 }}
                         title="Show dialogue (D)"
                     >
-                        <span className="show-btn-icon">💬</span>
+                        <span className="show-btn-icon">[D]</span>
                         <span className="show-btn-text">Show Dialogue</span>
                     </motion.button>
                 )}
@@ -559,7 +559,7 @@ function GameScreen() {
                                 </div>
                                 <div className="breakthrough-speaker">
                                     <span className="mood-indicator">
-                                        {breakthroughDialogue.dialogue.speakerMood === 'relieved' ? '😌' : '😔'}
+                                        {breakthroughDialogue.dialogue.speakerMood === 'relieved' ? '[R]' : '[-]'}
                                     </span>
                                     <span className="speaker-name">{currentPatient.name}</span>
                                 </div>

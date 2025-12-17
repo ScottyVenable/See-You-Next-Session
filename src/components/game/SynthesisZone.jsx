@@ -167,7 +167,7 @@ function SynthesisZone({ draggedToken, clipboardTokens, onSynthesisAttempt }) {
                         </>
                     ) : (
                         <>
-                            <div className="result-icon">🤔</div>
+                            <div className="result-icon">[?]</div>
                             <div className="result-content">
                                 <p className="result-message">{result.message}</p>
                             </div>
