@@ -11,6 +11,10 @@
 Documents/
 ├── INDEX.md                       <-- You are here
 │
+├── archive/                       # Legacy Documents
+│   ├── README.md                  # Archive description
+│   └── psychology-game-notes.txt  # Early planning notes
+│
 ├── design/                        # Game Design
 │   └── GAME_DESIGN_DOCUMENT.md    # Core GDD, mechanics, features
 │
