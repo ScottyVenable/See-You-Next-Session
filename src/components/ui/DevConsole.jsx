@@ -81,6 +81,8 @@ function DevConsole() {
                 log('screen [name]     - Switch to screen (menu/game/report)');
                 log('unlock [id]       - Unlock a dialogue option');
                 log('reveal [id]       - Reveal a symptom');
+                log('todo              - Open TODO manager');
+                log('errors            - Show error log');
                 log('clear             - Clear console output');
                 log('reset             - Reset game state');
                 break;
@@ -187,6 +189,31 @@ function DevConsole() {
 
             case 'reset':
                 log('Game reset not yet implemented', 'warning');
+                break;
+
+            case 'todo':
+                log('Opening TODO Manager...', 'success');
+                window.open('/tools/todo-manager.html', '_blank', 'width=900,height=700');
+                break;
+
+            case 'errors':
+                log('=== Error Log ===', 'header');
+                try {
+                    import('../../utils/ErrorHandler.js').then(({ errorHandler }) => {
+                        const errors = errorHandler.getErrors();
+                        if (errors.length === 0) {
+                            log('No errors recorded', 'success');
+                        } else {
+                            const stats = errorHandler.getStats();
+                            log(`Total: ${stats.total} | Recent (1min): ${stats.recentCount}`);
+                            errors.slice(-10).forEach(e => {
+                                log(`[${e.level}] ${e.category}: ${e.message}`, e.level);
+                            });
+                        }
+                    });
+                } catch (e) {
+                    log('Error handler not available', 'error');
+                }
                 break;
 
             case '':

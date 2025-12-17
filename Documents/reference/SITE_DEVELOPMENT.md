@@ -11,12 +11,12 @@
 
 The **Dev Portal** is a password-protected website hosted on GitHub Pages that serves as the central hub for project collaboration between Scott and Kiki. It provides:
 
-- 🎮 **Browser playtesting** of the latest game build
-- 📦 **Release downloads** for Windows/macOS/Linux
-- 📄 **Document links** to Google Docs/Drive
-- 🎨 **Asset management** with Google Drive integration
-- 💬 **Team discussions** for quick communication
-- 💻 **Repository access** with embedded GitHub info
+- **Browser playtesting** of the latest game build
+- **Release downloads** for Windows/macOS/Linux
+- **Document links** to Google Docs/Drive
+- **Asset management** with Google Drive integration
+- **Team discussions** for quick communication
+- **Repository access** with embedded GitHub info
 
 ---
 
@@ -72,7 +72,7 @@ Since GitHub Pages is static (no backend), authentication uses **client-side pas
 2. Hash is compared against `VITE_DEV_PASSWORD_HASH` (injected at build time)
 3. If matched, a session is stored in localStorage (7-day expiry)
 
-**⚠️ Security Disclaimer:**
+**[WARNING] Security Disclaimer:**
 
 This authentication model is **not a true access control system**. It provides a basic password gate to deter casual visitors, but it cannot reliably protect sensitive content because:
 
@@ -110,7 +110,7 @@ This authentication model is **not a true access control system**. It provides a
 
 ### 3.3 Security Notes
 
-⚠️ **This is NOT production-grade security.** It's designed to:
+**[WARNING] This is NOT production-grade security.** It's designed to:
 - Keep the portal private from casual visitors
 - Provide basic access control for a 2-person team
 
@@ -185,9 +185,9 @@ The password hash is visible in the deployed JavaScript. For true security, use 
 
 **Asset Tracking:**
 Each folder includes a checklist with status:
-- ✅ Complete
-- 🔄 In Progress
-- ⏳ Pending
+- Complete
+- In Progress
+- Pending
 
 **Setup for Kiki:**
 1. Create Google Drive folders matching categories

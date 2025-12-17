@@ -2,7 +2,7 @@
 
 This document explains where to place your art and audio assets.
 
-## 📁 Folder Structure
+## Folder Structure
 
 Create these folders in `src/assets/`:
 
@@ -43,7 +43,7 @@ src/assets/
         └── tension.mp3
 ```
 
-## 🎨 Sprite Specifications
+## Sprite Specifications
 
 ### Character Base Sprites
 - **Dimensions:** 400x600 pixels (recommended)
@@ -60,7 +60,7 @@ src/assets/
 - **Format:** PNG with transparency
 - **Scale:** Design at 1x, will be CSS scaled as needed
 
-## 🔊 Audio Specifications
+## Audio Specifications
 
 ### Sound Effects
 - **Format:** WAV or MP3
@@ -72,7 +72,7 @@ src/assets/
 - **Quality:** 128-320 kbps
 - **Looping:** Ensure seamless loop points
 
-## 🔗 Connecting Assets to Code
+## Connecting Assets to Code
 
 After placing assets, update the paths in:
 
@@ -91,7 +91,7 @@ appearance: {
 
 2. **CSS files** for backgrounds and UI images
 
-## ✅ Asset Checklist
+## Asset Checklist
 
 ### MVP Characters
 - [ ] Alex (Tutorial Patient) - Base sprite

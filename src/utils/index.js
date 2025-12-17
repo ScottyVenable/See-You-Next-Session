@@ -11,6 +11,15 @@ export { saveManager, default as SaveManager } from './SaveManager.js';
 // Re-export for convenience
 export { soundManager, default as SoundManager } from './SoundManager.js';
 
+// Error handling
+export {
+    errorHandler,
+    ErrorLevel,
+    ErrorCategory,
+    useErrorHandler,
+    default as ErrorHandler
+} from './ErrorHandler.js';
+
 /**
  * Quick utility functions
  */

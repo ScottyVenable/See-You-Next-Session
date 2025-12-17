@@ -15,7 +15,7 @@
 
 ---
 
-## 🎮 Game Features
+## Game Features
 
 - **Token System**: Collect dialogue keywords and visual observations
 - **Focus Mode**: Use limited mental energy to observe patient details
@@ -23,7 +23,7 @@
 - **Handbook**: Reference disorders and their diagnostic criteria
 - **Scoring System**: Get ranked based on accurate diagnosis
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js 18+ 
@@ -52,7 +52,7 @@ npm run build
 npm run preview  # Preview production build
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/
@@ -85,7 +85,7 @@ src/
 └── main.jsx
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Technology | Purpose |
 |------------|---------|
@@ -95,7 +95,7 @@ src/
 | **Styled-Components** | Component-level styling |
 | **CSS Variables** | Theming & Design Tokens |
 
-## 🎨 Adding Content
+## Adding Content
 
 ### Adding a New Patient
 
@@ -120,7 +120,7 @@ Replace placeholder sprites by updating paths in patient data files:
 - `appearance.baseSprite` - Main character image
 - `appearance.symptomOverlays` - Transparent PNG overlays for symptoms
 
-## 📝 Disclaimer
+## Disclaimer
 
 The developers are not mental health professionals. All information in this game is for entertainment purposes only. If you or someone you know is struggling, please contact a professional.
 

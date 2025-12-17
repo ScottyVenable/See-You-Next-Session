@@ -79,7 +79,7 @@ This document evaluates options for integrating visual novel (VN) capabilities i
 | **Asset Heavy** | Expects traditional VN asset pipeline |
 | **Dual State Management** | Game state split between React and Monogatari |
 
-#### Integration Difficulty: 🔴 HIGH
+#### Integration Difficulty: HIGH
 Would essentially require embedding Monogatari within React or running alongside it, creating two separate applications.
 
 ---
@@ -108,7 +108,7 @@ Would essentially require embedding Monogatari within React or running alongside
 | **Overkill** | Full game engine when we need narrative scripting |
 | **Asset Format** | Different asset pipeline requirements |
 
-#### Integration Difficulty: 🔴 IMPOSSIBLE
+#### Integration Difficulty: IMPOSSIBLE
 Ren'Py cannot be integrated into an existing React app. Would require complete game rewrite.
 
 ---
@@ -139,7 +139,7 @@ Ren'Py cannot be integrated into an existing React app. Would require complete g
 | **Separate Compilation** | ink files must be compiled to JSON |
 | **No Visual Preview** | Writers see text, not final game |
 
-#### Integration Difficulty: 🟢 LOW
+#### Integration Difficulty: LOW
 inkjs is a library, not a framework. It handles narrative logic while React handles everything else.
 
 #### Sample Integration
@@ -190,7 +190,7 @@ function DialogueEngine({ storyContent }) {
 | **Maintenance** | Must maintain our own system |
 | **Reinventing Wheel** | Solved problems that ink already solves |
 
-#### Integration Difficulty: 🟡 MEDIUM
+#### Integration Difficulty: MEDIUM
 Technical implementation is straightforward but time-consuming.
 
 ---
@@ -203,7 +203,7 @@ Technical implementation is straightforward but time-consuming.
         ↑                          ↑
    Our game logic            VN scenes
 ```
-**Verdict:** ❌ Not viable. Requires two separate apps.
+**Verdict:** Not viable. Requires two separate apps.
 
 ### Approach B: Narrative Middleware (Ink)
 ```
@@ -215,7 +215,7 @@ Technical implementation is straightforward but time-consuming.
            │
            └── Narrative Logic
 ```
-**Verdict:** ✅ Clean separation of concerns.
+**Verdict:** Clean separation of concerns.
 
 ### Approach C: Custom Solution
 ```
@@ -225,7 +225,7 @@ Technical implementation is straightforward but time-consuming.
      ├── Game State
      └── Custom Dialogue System ← Enhanced JSON
 ```
-**Verdict:** ⚠️ Viable but time-consuming.
+**Verdict:** Viable but time-consuming.
 
 ---
 
@@ -269,17 +269,17 @@ WITH INK:
 
 | Feature | Monogatari | Ren'Py | Ink | Custom |
 |---------|------------|--------|-----|--------|
-| React Integration | ⚠️ Hard | ❌ No | ✅ Easy | ✅ Native |
-| Branching Dialogue | ✅ | ✅ | ✅ | 🔨 Build |
-| Conditional Logic | ✅ | ✅ | ✅ | 🔨 Build |
-| Variable Tracking | ✅ | ✅ | ✅ | 🔨 Build |
-| Save/Load | ✅ | ✅ | ✅ | 🔨 Build |
-| Writer-Friendly | ✅ | ✅ | ✅ | ❌ No |
-| Visual Editor | ✅ | ✅ | ✅ (Inky) | ❌ No |
-| Multimedia | ✅ | ✅ | ❌ Manual | ❌ Manual |
-| Bundle Size Impact | 🔴 Large | N/A | 🟢 ~50KB | 🟢 None |
-| Learning Curve | 🟡 Medium | 🔴 High | 🟢 Low | 🟡 Medium |
-| Commercial License | ✅ MIT | ✅ Free | ✅ MIT | ✅ N/A |
+| React Integration | Difficult | No | Easy | Native |
+| Branching Dialogue | Yes | Yes | Yes | Build |
+| Conditional Logic | Yes | Yes | Yes | Build |
+| Variable Tracking | Yes | Yes | Yes | Build |
+| Save/Load | Yes | Yes | Yes | Build |
+| Writer-Friendly | Yes | Yes | Yes | No |
+| Visual Editor | Yes | Yes | Yes (Inky) | No |
+| Multimedia | Yes | Yes | Manual | Manual |
+| Bundle Size Impact | Large | N/A | ~50KB | None |
+| Learning Curve | Medium | High | Low | Medium |
+| Commercial License | MIT | Free | MIT | N/A |
 
 ---
 

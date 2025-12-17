@@ -10,6 +10,34 @@
 
 import { parseDialogue } from './parser.js';
 
+// Lazy import error handler to avoid circular deps
+let errorHandler = null;
+function getErrorHandler() {
+    if (!errorHandler) {
+        try {
+            // Dynamic import for lazy loading
+            import('../utils/ErrorHandler.js').then(module => {
+                errorHandler = module.errorHandler;
+            }).catch(() => {
+                // Fallback if error handler not available
+                errorHandler = {
+                    sdns: (msg, level, details) => console.warn('[SDNS Engine]', msg, details),
+                    dialogue: (msg, level, details) => console.warn('[Dialogue]', msg, details),
+                };
+            });
+        } catch (e) {
+            errorHandler = {
+                sdns: (msg, level, details) => console.warn('[SDNS Engine]', msg, details),
+                dialogue: (msg, level, details) => console.warn('[Dialogue]', msg, details),
+            };
+        }
+    }
+    return errorHandler || {
+        sdns: (msg, level, details) => console.warn('[SDNS Engine]', msg, details),
+        dialogue: (msg, level, details) => console.warn('[Dialogue]', msg, details),
+    };
+}
+
 /**
  * DialogueEngine - Runs dialogue scripts with game state
  * 
@@ -54,9 +82,35 @@ export class DialogueEngine {
      */
     loadDialogue(source) {
         console.log('[SDNS Engine] Loading dialogue, source length:', source?.length);
-        this.dialogueData = parseDialogue(source);
-        console.log('[SDNS Engine] Parsed dialogue:', this.dialogueData);
-        console.log('[SDNS Engine] Available blocks:', Object.keys(this.dialogueData?.blocks || {}));
+
+        if (!source || typeof source !== 'string') {
+            getErrorHandler().sdns('Invalid dialogue source provided', 'error', {
+                sourceType: typeof source,
+                sourceLength: source?.length,
+            });
+            throw new Error('Invalid dialogue source: expected non-empty string');
+        }
+
+        try {
+            this.dialogueData = parseDialogue(source);
+            console.log('[SDNS Engine] Parsed dialogue:', this.dialogueData);
+            console.log('[SDNS Engine] Available blocks:', Object.keys(this.dialogueData?.blocks || {}));
+
+            // Validate parsed data
+            if (!this.dialogueData?.blocks || Object.keys(this.dialogueData.blocks).length === 0) {
+                getErrorHandler().sdns('Dialogue parsed but contains no blocks', 'warn', {
+                    sourceLength: source.length,
+                    sourcePreview: source.substring(0, 200),
+                });
+            }
+        } catch (parseError) {
+            getErrorHandler().sdns(`Failed to parse dialogue: ${parseError.message}`, 'error', {
+                stack: parseError.stack,
+                sourcePreview: source.substring(0, 500),
+            });
+            throw parseError;
+        }
+
         this.variables = {};
         this.currentBlock = null;
         this.currentLineIndex = 0;
@@ -86,12 +140,21 @@ export class DialogueEngine {
     startBlock(blockName = 'START') {
         console.log('[SDNS Engine] startBlock called with:', blockName);
         if (!this.dialogueData) {
-            throw new Error('No dialogue loaded');
+            const error = new Error('No dialogue loaded');
+            getErrorHandler().sdns('Attempted to start block without loaded dialogue', 'error', {
+                blockName,
+                stack: error.stack,
+            });
+            throw error;
         }
 
         const block = this.dialogueData.blocks[blockName];
         if (!block) {
             console.warn(`Block "${blockName}" not found`);
+            getErrorHandler().sdns(`Block not found: ${blockName}`, 'warn', {
+                blockName,
+                availableBlocks: Object.keys(this.dialogueData.blocks || {}),
+            });
             return null;
         }
 

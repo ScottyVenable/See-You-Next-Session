@@ -6,27 +6,27 @@ labels: bug
 assignees: ''
 ---
 
-## 🐛 Bug Description
+## Bug Description
 A clear description of what the bug is.
 
-## 📝 Steps to Reproduce
+## Steps to Reproduce
 1. Go to '...'
 2. Click on '...'
 3. See error
 
-## ✅ Expected Behavior
+## Expected Behavior
 What you expected to happen.
 
-## ❌ Actual Behavior
+## Actual Behavior
 What actually happened.
 
-## 📸 Screenshots
+## Screenshots
 If applicable, add screenshots.
 
-## 🖥️ Environment
+## Environment
 - **Browser:** [e.g., Chrome 120]
 - **OS:** [e.g., Windows 11]
 - **Game Version:** [e.g., v0.1.0]
 
-## 📋 Additional Context
+## Additional Context
 Any other relevant information.

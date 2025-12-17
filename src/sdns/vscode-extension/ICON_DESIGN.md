@@ -242,10 +242,10 @@ Document with response markers (`>`).
 
 ### Required Icons
 
-- [ ] `images/sdns-icon.png` (128×128) - Marketplace icon
-- [ ] `images/sdns-icon@2x.png` (256×256) - High-res marketplace
-- [ ] `images/sdns-file-dark.svg` - File icon (dark theme) ✅ Created
-- [ ] `images/sdns-file-light.svg` - File icon (light theme) ✅ Created
+- [ ] `images/sdns-icon.png` (128x128) - Marketplace icon
+- [ ] `images/sdns-icon@2x.png` (256x256) - High-res marketplace
+- [x] `images/sdns-file-dark.svg` - File icon (dark theme) - Created
+- [x] `images/sdns-file-light.svg` - File icon (light theme) - Created
 
 ### Optional Icons
 

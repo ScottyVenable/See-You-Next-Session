@@ -1,7 +1,34 @@
 {
     "files.associations": {
-        "*.syns": "syns"
+        "*.syns": "syns",
+        "*.session": "sdns"
     },
+    // ========================================
+    // PERFORMANCE OPTIMIZATIONS
+    // ========================================
+    "files.watcherExclude": {
+        "**/node_modules/**": true,
+        "**/src-tauri/target/**": true,
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/portal/node_modules/**": true,
+        "**/*.vsix": true
+    },
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/src-tauri/target": true,
+        "**/portal/node_modules": true,
+        "**/*.vsix": true,
+        "**/out/**": true
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true
+    },
+    // ========================================
+    // EDITOR CUSTOMIZATIONS
+    // ========================================
     "editor.tokenColorCustomizations": {
         "textMateRules": [
             {

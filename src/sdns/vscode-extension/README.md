@@ -4,7 +4,7 @@
 
 ## Features
 
-### 🎨 Syntax Highlighting
+### Syntax Highlighting
 
 Full syntax highlighting for SDNS dialogue files including:
 
@@ -17,7 +17,7 @@ Full syntax highlighting for SDNS dialogue files including:
 - **Goto statements** - `-> target-block`
 - **Comments** - `// single line` and `/* multi-line */`
 
-### 💡 IntelliSense
+### IntelliSense
 
 Smart completions for:
 
@@ -29,7 +29,7 @@ Smart completions for:
 - **Block References** - Auto-complete block names after `->`
 - **Metadata Types** - Suggestions for keyword metadata
 
-### 📝 Code Snippets
+### Code Snippets
 
 50+ snippets for rapid development:
 
@@ -48,20 +48,20 @@ Smart completions for:
 
 Type the prefix and press `Tab` to expand!
 
-### 🎭 Color Themes
+### Color Themes
 
 Two beautiful themes optimized for SDNS:
 
 - **SDNS Dark** - Dark theme with vibrant syntax colors
 - **SDNS Light** - Light theme for daytime coding
 
-### 🔍 Navigation
+### Navigation
 
 - **Go to Definition** - `Ctrl+Click` on `-> block-name` to jump to that block
 - **Document Outline** - See all blocks in the Outline view
 - **Folding** - Collapse blocks and conditional sections
 
-### ✅ Editor Features
+### Editor Features
 
 - Bracket matching and auto-closing
 - Comment toggling (`Ctrl+/`)

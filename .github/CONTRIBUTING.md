@@ -1,8 +1,8 @@
 # Contributing to See You Next Session
 
-Thank you for your interest in contributing to "See You Next Session"! 🎮
+Thank you for your interest in contributing to "See You Next Session"!
 
-## 📋 Table of Contents
+## Table of Contents
 - [Code of Conduct](#code-of-conduct)
 - [How Can I Contribute?](#how-can-i-contribute)
 - [Development Setup](#development-setup)
@@ -21,23 +21,23 @@ This project is built with respect and sensitivity toward mental health topics. 
 
 ## How Can I Contribute?
 
-### 🐛 Reporting Bugs
+### Reporting Bugs
 1. Check existing issues first
 2. Use the bug report template
 3. Include reproduction steps
 4. Attach screenshots if relevant
 
-### 💡 Suggesting Features
+### Suggesting Features
 1. Open a discussion first for major features
 2. Describe the use case and expected behavior
 3. Consider the scope (we're aiming for MVP!)
 
-### 🎨 Art Contributions
+### Art Contributions
 - Contact Kiki (Art Director) before starting work
 - Follow the established art style guide
 - Submit work in the required formats (PNG for sprites)
 
-### 💻 Code Contributions
+### Code Contributions
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
@@ -145,4 +145,4 @@ docs: update README with tech stack
 - Open a GitHub Discussion
 - Reach out to the maintainers
 
-Thank you for helping make this game a reality! 💙
+Thank you for helping make this game a reality!

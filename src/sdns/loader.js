@@ -9,6 +9,24 @@
  * @version 1.0.0
  */
 
+// Lazy import error handler to avoid circular deps
+let errorHandler = null;
+async function getErrorHandler() {
+    if (!errorHandler) {
+        try {
+            const module = await import('../utils/ErrorHandler.js');
+            errorHandler = module.errorHandler;
+        } catch (e) {
+            // Fallback if error handler not available
+            errorHandler = {
+                sdns: (msg, level, details) => console.warn('[SDNS]', msg, details),
+                patient: (msg, level, details) => console.warn('[Patient]', msg, details),
+            };
+        }
+    }
+    return errorHandler;
+}
+
 const isDev = import.meta.env?.DEV ?? false;
 
 // Cache for loaded session files
@@ -55,9 +73,17 @@ export async function loadSessionDialogue(patientId, turnNumber, forceReload = f
         }
 
         console.warn(`[SDNS Loader] File not found: ${filePath}`);
+        const eh = await getErrorHandler();
+        eh.sdns(`Session file not found: ${filePath}`, 'warn', { patientId, turnNumber });
         return null;
     } catch (err) {
         console.error(`[SDNS Loader] Failed to load turn ${turnNumber} for ${patientId}:`, err);
+        const eh = await getErrorHandler();
+        eh.sdns(`Failed to load session: ${err.message}`, 'error', {
+            patientId,
+            turnNumber,
+            stack: err.stack
+        });
         return null;
     }
 }
@@ -79,9 +105,16 @@ export async function loadDialogueConfig(patientId) {
         }
 
         console.warn(`[SDNS Loader] No config found for ${patientId}`);
+        const eh = await getErrorHandler();
+        eh.sdns(`Dialogue config not found for patient: ${patientId}`, 'warn', { patientId });
         return null;
     } catch (err) {
         console.error(`[SDNS Loader] Failed to load config for ${patientId}:`, err);
+        const eh = await getErrorHandler();
+        eh.sdns(`Failed to load dialogue config: ${err.message}`, 'error', {
+            patientId,
+            stack: err.stack
+        });
         return null;
     }
 }
@@ -103,9 +136,16 @@ export async function loadPatientConfig(patientId) {
         }
 
         console.warn(`[SDNS Loader] No patient config found for ${patientId}`);
+        const eh = await getErrorHandler();
+        eh.patient(`Patient config not found: ${patientId}`, 'warn', { patientId });
         return null;
     } catch (err) {
         console.error(`[SDNS Loader] Failed to load patient config for ${patientId}:`, err);
+        const eh = await getErrorHandler();
+        eh.patient(`Failed to load patient config: ${err.message}`, 'error', {
+            patientId,
+            stack: err.stack
+        });
         return null;
     }
 }
@@ -143,6 +183,10 @@ export async function getPatientList() {
         return patients;
     } catch (err) {
         console.error('[SDNS Loader] Failed to load patient list:', err);
+        const eh = await getErrorHandler();
+        eh.patient(`Failed to load patient list: ${err.message}`, 'error', {
+            stack: err.stack
+        });
         return [];
     }
 }

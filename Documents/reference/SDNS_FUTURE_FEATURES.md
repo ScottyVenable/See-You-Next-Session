@@ -1,6 +1,14 @@
 # SDNS Future Features & Enhancement Ideas
 
+> **Document Type:** Feature Proposals  
+> **Created:** December 15, 2025  
+> **Last Updated:** December 17, 2025  
+> **Status:** Ideas & Proposals (Post-MVP)
+
+---
+
 ## Overview
+
 This document outlines potential future enhancements to the Session Dialogue and Narration System (SDNS) that could improve the authoring experience, gameplay depth, and clinical accuracy of dialogue sessions.
 
 ---
@@ -22,96 +30,27 @@ A dedicated in-game or standalone GUI application for creating and editing `.ses
 │             │                                                   │
 │  BLOCKS     │    ┌──────────┐      ┌──────────┐                │
 │  ─────────  │    │  START   │ ───▶ │ greeting │                │
-│  📍 START   │    └──────────┘      └────┬─────┘                │
-│  💬 greeting│                           │                       │
-│  💬 opening │          ┌────────────────┼────────────────┐      │
-│  🎯 insight │          ▼                ▼                ▼      │
-│  ⚡ crisis  │    ┌──────────┐    ┌──────────┐    ┌──────────┐  │
+│  * START    │    └──────────┘      └────┬─────┘                │
+│  > greeting │                           │                       │
+│  > opening  │          ┌────────────────┼────────────────┐      │
+│  # insight  │          ▼                ▼                ▼      │
+│             │    ┌──────────┐    ┌──────────┐    ┌──────────┐  │
 │             │    │ response │    │ response │    │ response │  │
-│  RESPONSES  │    │ deflect  │    │  honest  │    │  deeper  │  │
-│  ─────────  │    └────┬─────┘    └────┬─────┘    └────┬─────┘  │
-│  🔄 deflect │         │               │               │        │
-│  🔄 honest  │         └───────────────┴───────────────┘        │
-│  🔄 deeper  │                         │                        │
-│             │                         ▼                        │
-│             │                   ┌──────────┐                   │
-│             │                   │ opening  │                   │
-│             │                   └──────────┘                   │
-│             │                                                   │
+│             │    │ deflect  │    │  honest  │    │  deeper  │  │
+│             │    └──────────┘    └──────────┘    └──────────┘  │
 └─────────────┴───────────────────────────────────────────────────┘
 ```
 
-#### 1.2 Dialogue Block Editor
+#### 1.2 Key GUI Features
 - **WYSIWYG dialogue editing** with speaker portraits
 - **Keyword insertion** via dropdown/autocomplete
 - **Mood/expression selector** with visual preview
 - **Real-time syntax validation**
 - **Drag-and-drop flow connections**
-
-#### 1.3 Keyword Manager
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  KEYWORD MANAGER                                                │
-├─────────────────────────────────────────────────────────────────┤
-│  [New Keyword] [Import] [Export] [Categories ▼]                 │
-├─────────────────────────────────────────────────────────────────┤
-│  🔍 Search keywords...                                          │
-├───────────────┬─────────────────────────────────────────────────┤
-│ ► time        │  KEYWORD: time.months                           │
-│   ├ months    │  ────────────────────────────────────────────── │
-│   ├ weeks     │  Display Text: "Months"                         │
-│   └ years     │  Description: Duration indicating months        │
-│ ► emotion     │  Importance: ● critical ○ high ○ medium ○ low   │
-│   ├ anxious   │  Category: time                                 │
-│   ├ worried   │  ────────────────────────────────────────────── │
-│   └ hopeless  │  EFFECTS:                                       │
-│ ► symptom     │  [+] reveals: time-awareness                    │
-│ ► behavior    │  [+] unlocks: follow-up-duration                │
-│ ► cognition   │  ────────────────────────────────────────────── │
-│ ► relationship│  MENU OPTIONS:                                  │
-│               │  ☑ note.add    ☑ ask.follow-up                  │
-│  [Gregory]    │  ☑ clinical.assess                              │
-│   ├ performing│  ────────────────────────────────────────────── │
-│   └ overreact │  PREVIEW:                                       │
-│               │  "It's been [Months](time.months), actually."   │
-└───────────────┴─────────────────────────────────────────────────┘
-```
-
-#### 1.4 Preview Mode
-- **Live dialogue preview** with actual game rendering
-- **Test player responses** without full game launch
+- **Live dialogue preview** with game rendering
 - **Variable inspector** showing state changes
-- **Timeline scrubbing** through conversation flow
 
-### Technical Implementation
-```javascript
-// Session Creator would generate structured JSON
-{
-  "meta": {
-    "patient": "gregory",
-    "session": 2,
-    "created": "2024-01-15",
-    "author": "designer"
-  },
-  "blocks": [
-    {
-      "id": "START",
-      "type": "entry",
-      "dialogue": [...],
-      "connections": ["greeting"]
-    }
-  ]
-}
-
-// Then export to .session format
-@meta
-  patient: gregory
-  session: 2
-  created: 2024-01-15
-
-=== START ===
-// generated dialogue...
-```
+### Implementation Priority: **P1 - High Impact**
 
 ---
 
@@ -147,11 +86,6 @@ Extend the condition system with more complex, real-time evaluations.
   PATIENT (defensive)
   "Why do you keep pushing?"
 @endif
-
-// Check response history
-@if player.responses.contains("ignored warning signs")
-  // Reference specific past choice
-@endif
 ```
 
 #### 2.3 Time-Based Conditions
@@ -161,12 +95,9 @@ Extend the condition system with more complex, real-time evaluations.
   SYSTEM
   "Session time is running low."
 @endif
-
-// Turn-based
-@if turn >= 8 AND NOT breakthrough.achieved
-  // Late-session no-breakthrough path
-@endif
 ```
+
+### Implementation Priority: **P2 - Medium Impact**
 
 ---
 
@@ -177,7 +108,6 @@ A more sophisticated patient emotional system that tracks multiple emotional dim
 
 ### Implementation
 ```javascript
-// Patient Emotional State
 {
   "emotional_state": {
     "valence": 0.3,      // -1 (negative) to 1 (positive)
@@ -202,17 +132,17 @@ A more sophisticated patient emotional system that tracks multiple emotional dim
 
 ### SDNS Integration
 ```sdns
-// Mood modifiers affect emotional state
 @mood valence:-0.1, anxiety:+0.2
 
 PATIENT (anxious, guarded)
 "I don't want to talk about that."
 
-// Automatic mood transitions based on state
 @if emotional.anxiety >= 0.9
   @jump crisis-intervention
 @endif
 ```
+
+### Implementation Priority: **P2 - High Impact**
 
 ---
 
@@ -243,22 +173,11 @@ const RESPONSE_ARCHETYPES = {
     template: "I notice you said {contradiction}. How do you reconcile that?",
     approach: "Cognitive",
     effect: { insight: +5, rapport: -2, anxiety: +2 }
-  },
-  "normalizing": {
-    template: "Many people experience {symptom} after {event}.",
-    approach: "Psychoeducational",
-    effect: { anxiety: -3, hope: +2 }
   }
 };
 ```
 
-### SDNS Usage
-```sdns
-// Response options using archetypes
-[1] @archetype:validating "Your feelings are completely understandable."
-[2] @archetype:probing "What happened next?"
-[3] @archetype:challenging "But earlier you said..."
-```
+### Implementation Priority: **P2 - Medium Impact**
 
 ---
 
@@ -274,19 +193,11 @@ Let players make non-verbal observations that add to clinical notes.
 NARRATOR
 Gregory enters the room slowly, avoiding eye contact.
 
-// Observable elements the player can note
 @observable body-language
   id: "avoiding-eye-contact"
   category: nonverbal
   note: "Avoided eye contact when entering"
   reveals: social-anxiety-indicator
-@end
-
-@observable behavior  
-  id: "slow-movement"
-  category: psychomotor
-  note: "Slow, hesitant movements"
-  reveals: depression-indicator
 @end
 
 PATIENT (reserved)
@@ -298,7 +209,6 @@ PATIENT (reserved)
 ┌─────────────────────────────────────────────────────────────────┐
 │  👁️ OBSERVATION MODE                                            │
 ├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
 │  You notice:                                                    │
 │  ┌─────────────────────────────────────────────────┐           │
 │  │ [Click to Note]  Avoiding eye contact           │           │
@@ -306,61 +216,18 @@ PATIENT (reserved)
 │  ┌─────────────────────────────────────────────────┐           │
 │  │ [Click to Note]  Moving slowly, hesitantly      │           │
 │  └─────────────────────────────────────────────────┘           │
-│                                                                 │
 │  [Continue without noting]                                      │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
-
-## 6. Session Templates
-
-### Concept
-Reusable session structures for common therapeutic patterns.
-
-### Templates
-```sdns
-// Template: Initial Assessment
-@template initial-assessment
-  required_blocks:
-    - introduction
-    - presenting-problem
-    - history-taking
-    - mental-status
-    - closing
-  
-  suggested_duration: 45-60 minutes
-  suggested_turns: 15-20
-  
-  structure:
-    introduction: 10%
-    presenting-problem: 30%
-    history-taking: 35%
-    mental-status: 15%
-    closing: 10%
-@end
-
-// Template: Crisis Intervention
-@template crisis-intervention
-  required_blocks:
-    - safety-assessment
-    - stabilization
-    - safety-planning
-    - follow-up
-  
-  must_include:
-    - suicidal-ideation-assessment
-    - safety-contract
-    - emergency-contacts
-@end
-```
+### Implementation Priority: **P1 - High Impact**
 
 ---
 
-## 7. Multi-Session Continuity
+## 6. Multi-Session Continuity
 
 ### Concept
-Track and reference information across multiple sessions.
+Track and reference information across multiple sessions with the same patient.
 
 ### Implementation
 ```sdns
@@ -378,11 +245,6 @@ Track and reference information across multiple sessions.
   context: "Patient revealed childhood emotional abuse"
   significance: critical
 @end
-
-// Reference in future sessions
-@if memory.has("disclosed-abuse")
-  // Adjusted dialogue paths
-@endif
 ```
 
 ### Save Data Structure
@@ -392,17 +254,13 @@ Track and reference information across multiple sessions.
   "sessions": [
     {
       "number": 1,
-      "date": "2024-01-08",
       "breakthroughs": [],
-      "memories": [...],
       "rapport_end": 35,
       "notes": [...]
     },
     {
       "number": 2,
-      "date": "2024-01-15",
       "breakthroughs": ["time-awareness"],
-      "memories": [...],
       "rapport_end": 52
     }
   ],
@@ -414,9 +272,11 @@ Track and reference information across multiple sessions.
 }
 ```
 
+### Implementation Priority: **P3 - High Impact (Post-MVP)**
+
 ---
 
-## 8. Dialogue Variations System
+## 7. Dialogue Variations System
 
 ### Concept
 Automatic variation in dialogue to prevent repetition.
@@ -443,9 +303,11 @@ PATIENT (reserved)
 @end
 ```
 
+### Implementation Priority: **P3 - Low Impact**
+
 ---
 
-## 9. Clinical Accuracy Validation
+## 8. Clinical Accuracy Validation
 
 ### Concept
 Built-in validation for clinical accuracy and therapeutic appropriateness.
@@ -453,27 +315,17 @@ Built-in validation for clinical accuracy and therapeutic appropriateness.
 ### Validators
 ```javascript
 const CLINICAL_VALIDATORS = {
-  // Ensure safety protocols
   "safety-check": {
     trigger: ["suicide", "self-harm", "SI", "SH"],
     requires: ["safety-assessment-block", "crisis-protocol-available"],
     error: "Session mentions safety concerns but lacks safety protocol"
   },
-  
-  // Therapeutic boundary checks
   "boundary-check": {
     forbidden_patterns: [
-      /THERAPIST.*\b(should|must|have to)\b/,  // Prescriptive language
-      /THERAPIST.*\b(I think you should)\b/    // Advice-giving
+      /THERAPIST.*\b(should|must|have to)\b/,
+      /THERAPIST.*\b(I think you should)\b/
     ],
     warning: "Therapist dialogue may violate person-centered boundaries"
-  },
-  
-  // Diagnosis accuracy
-  "dx-accuracy": {
-    if_mentions: "diagnosis",
-    requires: "proper-assessment-completed",
-    warning: "Diagnosis mentioned without proper assessment sequence"
   }
 };
 ```
@@ -481,56 +333,37 @@ const CLINICAL_VALIDATORS = {
 ### VS Code Integration
 ```
 ⚠️ Line 45: Safety concern keyword detected without crisis protocol
-   Add @crisis-protocol block or @safety-plan reference
-
 ⚠️ Line 78: Therapist uses prescriptive language "you should"
-   Consider: "What do you think about..." or "Some people find..."
 ```
+
+### Implementation Priority: **P2 - High Impact**
 
 ---
 
-## 10. Localization Support
+## 9. Localization Support
 
 ### Concept
-Multi-language support for international audiences and translation workflows.
+Multi-language support for international audiences.
 
 ### Structure
 ```
 src/data/
 ├── locales/
 │   ├── en/
-│   │   ├── keywords.json
-│   │   └── ui.json
 │   ├── es/
-│   │   ├── keywords.json
-│   │   └── ui.json
 │   └── ja/
-│       ├── keywords.json
-│       └── ui.json
 └── sessions/
-    ├── gregory/
-    │   ├── session-1.en.session
-    │   ├── session-1.es.session
-    │   └── session-1.ja.session
+    └── gregory/
+        ├── session-1.en.session
+        ├── session-1.es.session
+        └── session-1.ja.session
 ```
 
-### SDNS Localization Tags
-```sdns
-@locale en
-
-PATIENT (anxious)
-"I've been feeling really [anxious](emotion.anxious) lately."
-
-// Localized version (es)
-@locale es
-
-PATIENT (anxious)
-"Últimamente me he sentido muy [ansioso](emotion.anxious)."
-```
+### Implementation Priority: **P4 - Post-MVP**
 
 ---
 
-## Implementation Priority
+## Implementation Priority Summary
 
 | Feature | Complexity | Impact | Priority |
 |---------|------------|--------|----------|
@@ -539,10 +372,9 @@ PATIENT (anxious)
 | Dynamic Conditions | Medium | Medium | P2 |
 | Emotional State Machine | High | High | P2 |
 | Response Archetypes | Low | Medium | P2 |
-| Session Templates | Low | Medium | P3 |
+| Clinical Validation | Medium | High | P2 |
 | Multi-Session Continuity | High | High | P3 |
 | Dialogue Variations | Medium | Low | P3 |
-| Clinical Validation | Medium | High | P2 |
 | Localization | High | Medium | P4 |
 
 ---
@@ -550,13 +382,14 @@ PATIENT (anxious)
 ## Next Steps
 
 1. **Prototype Session Creator** - Start with basic node editor
-2. **Implement Observation System** - Integrate with existing keyword/note system
+2. **Implement Observation System** - Integrate with existing keyword system
 3. **Extend Condition Parser** - Add compound condition support
 4. **Design Emotional State UI** - Visual representation of patient state
-5. **Create Template Library** - Build common session patterns
 
 ---
 
-*Document Version: 1.0*
-*Last Updated: Session Development Phase*
-*Status: Ideas & Proposals*
+## Related Documents
+
+- [SDNS Reference](../../src/sdns/SDNS_REFERENCE.md)
+- [Technical Architecture](../technical/TECHNICAL_ARCHITECTURE.md)
+- [TODO & Roadmap](../planning/TODO.md)

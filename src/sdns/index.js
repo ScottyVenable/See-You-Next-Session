@@ -31,13 +31,11 @@
  * }
  */
 
-// Core modules
-export { parseDialogue, parseDialogueFile, Lexer, Parser, TokenType } from './parser.js';
-export { DialogueEngine, createDialogueEngine } from './engine.js';
-export { useDialogue } from './useDialogue.js';
-
-// Loader utilities
-export {
+// Core modules - import for local use AND re-export
+import { parseDialogue, parseDialogueFile, Lexer, Parser, TokenType } from './parser.js';
+import { DialogueEngine, createDialogueEngine } from './engine.js';
+import { useDialogue } from './useDialogue.js';
+import {
     loadSessionDialogue,
     loadDialogueConfig,
     loadPatientConfig,
@@ -46,8 +44,18 @@ export {
     clearSessionCache,
 } from './loader.js';
 
-// Re-export default engine
-export { default as DialogueEngine } from './engine.js';
+// Re-export all modules
+export { parseDialogue, parseDialogueFile, Lexer, Parser, TokenType };
+export { DialogueEngine, createDialogueEngine };
+export { useDialogue };
+export {
+    loadSessionDialogue,
+    loadDialogueConfig,
+    loadPatientConfig,
+    getPatientList,
+    preloadPatientDialogue,
+    clearSessionCache,
+};
 
 // Patient ID to folder mapping (for backwards compatibility)
 const PATIENT_ALIASES = {

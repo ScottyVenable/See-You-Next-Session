@@ -35,12 +35,12 @@ The **Session Dialogue and Narration System (SDNS)** is a custom scripting langu
 
 ### Key Features
 
-- 🎭 **Character-driven dialogue** with mood indicators
-- 🔀 **Conditional branching** based on rapport, focus, and custom variables
-- 🔑 **Keyword extraction** for evidence collection mechanics
-- 💫 **Breakthrough system** for dramatic narrative moments
-- 🎮 **Deep game integration** with automatic state management
-- 📝 **Clean, readable syntax** that's easy to write and maintain
+- **Character-driven dialogue** with mood indicators
+- **Conditional branching** based on rapport, focus, and custom variables
+- **Keyword extraction** for evidence collection mechanics
+- **Breakthrough system** for dramatic narrative moments
+- **Deep game integration** with automatic state management
+- **Clean, readable syntax** that's easy to write and maintain
 
 ### File Extension
 

@@ -4,7 +4,7 @@ Full language support for the **SYNS Dialogue Language** used in "See You Next S
 
 ## Features
 
-### 🎨 Syntax Highlighting
+### Syntax Highlighting
 Full TextMate grammar with semantic coloring for:
 - Block headers (`=== name ===`)
 - Speakers (PATIENT, THERAPIST, NARRATOR, SYSTEM)
@@ -13,7 +13,7 @@ Full TextMate grammar with semantic coloring for:
 - Keywords (`[highlighted text]`)
 - Strings, comments, numbers, and operators
 
-### 🧠 IntelliSense
+### IntelliSense
 Smart completions for:
 - **Directives** - Type `@` for directive suggestions with snippets
 - **Speakers** - Full dialogue line templates
@@ -24,17 +24,17 @@ Smart completions for:
 - **Topics** - Response handler topic suggestions
 - **Symptoms** - `@reveal`/`@unlock` target suggestions
 
-### 🔍 Diagnostics
+### Diagnostics
 Real-time error checking for:
-- ❌ Undefined goto targets
-- ❌ Duplicate block definitions
-- ❌ Unclosed `@if`/`@endif` blocks
-- ❌ Orphan `@else`/`@elseif` without `@if`
-- ❌ Invalid directive syntax
-- ❌ Malformed `@rapport`/`@focus`/`@pause` values
-- ⚠️ Unused blocks (configurable severity)
-- ⚠️ Unclosed string literals
-- 💡 Potentially undefined variables
+- [ERROR] Undefined goto targets
+- [ERROR] Duplicate block definitions
+- [ERROR] Unclosed `@if`/`@endif` blocks
+- [ERROR] Orphan `@else`/`@elseif` without `@if`
+- [ERROR] Invalid directive syntax
+- [ERROR] Malformed `@rapport`/`@focus`/`@pause` values
+- [WARN] Unused blocks (configurable severity)
+- [WARN] Unclosed string literals
+- [INFO] Potentially undefined variables
 
 ### 📖 Hover Documentation
 Hover over any element for documentation:
@@ -44,12 +44,12 @@ Hover over any element for documentation:
 - Block reference counts
 - Variable definition locations
 
-### 🔗 Go to Definition
+### Go to Definition
 - **F12** or **Ctrl+Click** on goto targets to jump to block definitions
 - Works on `-> blockname` statements
 - Jump to variable definitions (`$varname`)
 
-### 📋 Outline View
+### Outline View
 Document structure in the Explorer sidebar:
 - **Dialogue Blocks** - Normal flow blocks
 - **Response Handlers** - `@response:` blocks
@@ -57,7 +57,7 @@ Document structure in the Explorer sidebar:
 - **Variables** - All `@set` definitions
 - Nested goto references within blocks
 
-### ⌨️ Snippets
+### Snippets
 16+ code snippets for rapid development:
 
 | Prefix | Description |
@@ -76,7 +76,7 @@ Document structure in the Explorer sidebar:
 | `when` | Event trigger |
 | `dialoguefile` | Full file template |
 
-### ⚙️ Commands
+### Commands
 - **SYNS: Validate Document** - Manual validation
 - **SYNS: Go to Block** - Jump to block under cursor
 - **SYNS: List All Blocks** - Quick pick navigation

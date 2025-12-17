@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO Manager - See You Next Session</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-primary: #0d0d1a;
+            --bg-secondary: #1a1a2e;
+            --bg-tertiary: #16213e;
+            --accent-primary: #4a90a4;
+            --accent-success: #27ae60;
+            --accent-warning: #f39c12;
+            --accent-danger: #e74c3c;
+            --text-primary: #ecf0f1;
+            --text-secondary: #95a5a6;
+            --text-muted: #7f8c8d;
+            --border-color: #34495e;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-primary);
+        }
+
+        button.primary {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        button.primary:hover {
+            background: #5ba0b4;
+        }
+
+        button.danger {
+            background: var(--accent-danger);
+            border-color: var(--accent-danger);
+        }
+
+        .file-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .file-selector select {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .stat-dot.completed {
+            background: var(--accent-success);
+        }
+
+        .stat-dot.in-progress {
+            background: var(--accent-warning);
+        }
+
+        .stat-dot.pending {
+            background: var(--text-muted);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .stat-count {
+            font-weight: 600;
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .todo-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .todo-item:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .todo-item.completed {
+            opacity: 0.6;
+        }
+
+        .todo-item.completed .todo-text {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .todo-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            margin-top: 2px;
+        }
+
+        .todo-checkbox:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .todo-checkbox.checked {
+            background: var(--accent-success);
+            border-color: var(--accent-success);
+        }
+
+        .todo-checkbox.in-progress {
+            background: var(--accent-warning);
+            border-color: var(--accent-warning);
+        }
+
+        .todo-checkbox::after {
+            content: '';
+            display: none;
+        }
+
+        .todo-checkbox.checked::after {
+            content: '\\2713';
+            display: block;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .todo-checkbox.in-progress::after {
+            content: '\\2022';
+            display: block;
+            color: white;
+            font-size: 18px;
+        }
+
+        .todo-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .todo-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .todo-text strong {
+            color: var(--accent-primary);
+        }
+
+        .todo-actions {
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .todo-item:hover .todo-actions {
+            opacity: 1;
+        }
+
+        .todo-action {
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .todo-action:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .add-todo {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .add-todo input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .add-todo input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .add-todo input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .filter-tab {
+            padding: 6px 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+
+        .filter-tab:hover {
+            background: var(--bg-secondary);
+        }
+
+        .filter-tab.active {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .markdown-output {
+            margin-top: 24px;
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .markdown-output h3 {
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .markdown-output pre {
+            background: var(--bg-primary);
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: var(--accent-success);
+            color: white;
+            border-radius: 8px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .context-menu {
+            position: fixed;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 4px;
+            z-index: 1000;
+            min-width: 150px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .context-menu-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+
+        .context-menu-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .edit-input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--accent-primary);
+            border-radius: 4px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .drag-handle {
+            cursor: grab;
+            color: var(--text-muted);
+            padding: 0 4px;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .todo-item.dragging {
+            opacity: 0.5;
+        }
+
+        .drop-indicator {
+            height: 2px;
+            background: var(--accent-primary);
+            margin: 4px 0;
+        }
+
+        @media (max-width: 600px) {
+            .stats-bar {
+                flex-wrap: wrap;
+            }
+
+            .header-actions {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>TODO Manager</h1>
+            <div class="header-actions">
+                <button onclick="copyToClipboard()">Copy Markdown</button>
+                <button onclick="downloadMarkdown()">Download</button>
+                <button class="primary" onclick="saveToLocalStorage()">Save</button>
+            </div>
+        </header>
+
+        <div class="file-selector">
+            <select id="file-select" onchange="loadSelectedFile()">
+                <option value="custom">Custom TODO List</option>
+                <option value="todo">Documents/TODO.md</option>
+            </select>
+            <button onclick="document.getElementById('file-input').click()">Load File</button>
+            <input type="file" id="file-input" accept=".md,.txt" style="display:none"
+                onchange="handleFileUpload(event)">
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat">
+                <span class="stat-dot completed"></span>
+                <span class="stat-label">Completed:</span>
+                <span class="stat-count" id="completed-count">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-dot in-progress"></span>
+                <span class="stat-label">In Progress:</span>
+                <span class="stat-count" id="progress-count">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-dot pending"></span>
+                <span class="stat-label">Pending:</span>
+                <span class="stat-count" id="pending-count">0</span>
+            </div>
+        </div>
+
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all" onclick="setFilter('all')">All</button>
+            <button class="filter-tab" data-filter="pending" onclick="setFilter('pending')">Pending</button>
+            <button class="filter-tab" data-filter="in-progress" onclick="setFilter('in-progress')">In Progress</button>
+            <button class="filter-tab" data-filter="completed" onclick="setFilter('completed')">Completed</button>
+        </div>
+
+        <div id="todo-container"></div>
+
+        <div class="add-todo">
+            <input type="text" id="new-todo-input" placeholder="Add new todo item... (Enter to add)"
+                onkeypress="handleNewTodoKeypress(event)">
+            <button class="primary" onclick="addNewTodo()">Add</button>
+        </div>
+
+        <div class="markdown-output">
+            <h3>Markdown Preview</h3>
+            <pre id="markdown-preview"></pre>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+    <div class="context-menu" id="context-menu" style="display:none"></div>
+
+    <script>
+        // State
+        let todos = [];
+        let sections = [];
+        let currentFilter = 'all';
+        let editingId = null;
+        let currentFileName = 'custom';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFromLocalStorage();
+            render();
+
+            // Close context menu on click outside
+            document.addEventListener('click', () => {
+                document.getElementById('context-menu').style.display = 'none';
+            });
+        });
+
+        // Parse markdown checklist
+        function parseMarkdown(content) {
+            const lines = content.split('\n');
+            const parsedTodos = [];
+            const parsedSections = [];
+            let currentSection = null;
+            let id = 1;
+
+            for (const line of lines) {
+                // Section header
+                const sectionMatch = line.match(/^##\s+(.+)$/);
+                if (sectionMatch) {
+                    currentSection = sectionMatch[1].replace(/[^a-zA-Z0-9\s-]/g, '').trim();
+                    parsedSections.push(currentSection);
+                    continue;
+                }
+
+                // Checklist item
+                const todoMatch = line.match(/^[-*]\s*\[([ xX~])\]\s*(.+)$/);
+                if (todoMatch) {
+                    const status = todoMatch[1].toLowerCase();
+                    const text = todoMatch[2].trim();
+
+                    let state = 'pending';
+                    if (status === 'x') state = 'completed';
+                    else if (status === '~') state = 'in-progress';
+
+                    parsedTodos.push({
+                        id: id++,
+                        text,
+                        state,
+                        section: currentSection
+                    });
+                }
+
+                // Numbered list item (treat as pending)
+                const numberedMatch = line.match(/^\d+\.\s+(.+)$/);
+                if (numberedMatch && !line.includes('[')) {
+                    parsedTodos.push({
+                        id: id++,
+                        text: numberedMatch[1].trim(),
+                        state: 'pending',
+                        section: currentSection
+                    });
+                }
+            }
+
+            return { todos: parsedTodos, sections: parsedSections };
+        }
+
+        // Generate markdown from todos
+        function generateMarkdown() {
+            let md = '# TODO List\n\n';
+
+            const bySection = {};
+            for (const todo of todos) {
+                const section = todo.section || 'General';
+                if (!bySection[section]) bySection[section] = [];
+                bySection[section].push(todo);
+            }
+
+            for (const [section, items] of Object.entries(bySection)) {
+                md += `## ${section}\n\n`;
+                for (const item of items) {
+                    const checkbox = item.state === 'completed' ? 'x' :
+                        item.state === 'in-progress' ? '~' : ' ';
+                    md += `- [${checkbox}] ${item.text}\n`;
+                }
+                md += '\n';
+            }
+
+            return md.trim();
+        }
+
+        // Render todos
+        function render() {
+            const container = document.getElementById('todo-container');
+
+            const filtered = todos.filter(todo => {
+                if (currentFilter === 'all') return true;
+                if (currentFilter === 'pending') return todo.state === 'pending';
+                if (currentFilter === 'in-progress') return todo.state === 'in-progress';
+                if (currentFilter === 'completed') return todo.state === 'completed';
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty-state">No items to display</div>';
+            } else {
+                // Group by section
+                const bySection = {};
+                for (const todo of filtered) {
+                    const section = todo.section || 'General';
+                    if (!bySection[section]) bySection[section] = [];
+                    bySection[section].push(todo);
+                }
+
+                let html = '';
+                for (const [section, items] of Object.entries(bySection)) {
+                    html += `
+                        <div class="section">
+                            <div class="section-header">
+                                <span class="section-title">${escapeHtml(section)}</span>
+                            </div>
+                            <div class="todo-list">
+                                ${items.map(todo => renderTodoItem(todo)).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                container.innerHTML = html;
+            }
+
+            // Update stats
+            document.getElementById('completed-count').textContent =
+                todos.filter(t => t.state === 'completed').length;
+            document.getElementById('progress-count').textContent =
+                todos.filter(t => t.state === 'in-progress').length;
+            document.getElementById('pending-count').textContent =
+                todos.filter(t => t.state === 'pending').length;
+
+            // Update markdown preview
+            document.getElementById('markdown-preview').textContent = generateMarkdown();
+        }
+
+        function renderTodoItem(todo) {
+            const checkboxClass = todo.state === 'completed' ? 'checked' :
+                todo.state === 'in-progress' ? 'in-progress' : '';
+            const itemClass = todo.state === 'completed' ? 'completed' : '';
+
+            if (editingId === todo.id) {
+                return `
+                    <div class="todo-item ${itemClass}">
+                        <div class="todo-checkbox ${checkboxClass}"></div>
+                        <div class="todo-content">
+                            <input type="text" class="edit-input" value="${escapeHtml(todo.text)}" 
+                                   onkeypress="handleEditKeypress(event, ${todo.id})"
+                                   onblur="saveEdit(${todo.id}, this.value)"
+                                   autofocus>
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="todo-item ${itemClass}" 
+                     oncontextmenu="showContextMenu(event, ${todo.id})"
+                     draggable="true"
+                     ondragstart="handleDragStart(event, ${todo.id})"
+                     ondragover="handleDragOver(event)"
+                     ondrop="handleDrop(event, ${todo.id})">
+                    <span class="drag-handle">&#8942;&#8942;</span>
+                    <div class="todo-checkbox ${checkboxClass}" onclick="cycleState(${todo.id})"></div>
+                    <div class="todo-content">
+                        <div class="todo-text">${formatTodoText(todo.text)}</div>
+                    </div>
+                    <div class="todo-actions">
+                        <button class="todo-action" onclick="startEdit(${todo.id})" title="Edit">&#9998;</button>
+                        <button class="todo-action" onclick="deleteTodo(${todo.id})" title="Delete">&#10005;</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatTodoText(text) {
+            // Convert **bold** to <strong>
+            let formatted = escapeHtml(text);
+            formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            return formatted;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // State management
+        function cycleState(id) {
+            const todo = todos.find(t => t.id === id);
+            if (!todo) return;
+
+            // Cycle: pending -> in-progress -> completed -> pending
+            if (todo.state === 'pending') todo.state = 'in-progress';
+            else if (todo.state === 'in-progress') todo.state = 'completed';
+            else todo.state = 'pending';
+
+            render();
+            showNotification('Status updated');
+        }
+
+        function startEdit(id) {
+            editingId = id;
+            render();
+            // Focus the input
+            setTimeout(() => {
+                const input = document.querySelector('.edit-input');
+                if (input) {
+                    input.focus();
+                    input.select();
+                }
+            }, 0);
+        }
+
+        function saveEdit(id, newText) {
+            const todo = todos.find(t => t.id === id);
+            if (todo && newText.trim()) {
+                todo.text = newText.trim();
+            }
+            editingId = null;
+            render();
+        }
+
+        function handleEditKeypress(event, id) {
+            if (event.key === 'Enter') {
+                saveEdit(id, event.target.value);
+            } else if (event.key === 'Escape') {
+                editingId = null;
+                render();
+            }
+        }
+
+        function deleteTodo(id) {
+            todos = todos.filter(t => t.id !== id);
+            render();
+            showNotification('Item deleted');
+        }
+
+        function addNewTodo() {
+            const input = document.getElementById('new-todo-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const maxId = todos.reduce((max, t) => Math.max(max, t.id), 0);
+            todos.push({
+                id: maxId + 1,
+                text,
+                state: 'pending',
+                section: 'General'
+            });
+
+            input.value = '';
+            render();
+            showNotification('Item added');
+        }
+
+        function handleNewTodoKeypress(event) {
+            if (event.key === 'Enter') {
+                addNewTodo();
+            }
+        }
+
+        // Filter
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.filter === filter);
+            });
+            render();
+        }
+
+        // Context menu
+        function showContextMenu(event, id) {
+            event.preventDefault();
+            const menu = document.getElementById('context-menu');
+            const todo = todos.find(t => t.id === id);
+
+            menu.innerHTML = `
+                <div class="context-menu-item" onclick="setTodoState(${id}, 'pending')">
+                    Set Pending
+                </div>
+                <div class="context-menu-item" onclick="setTodoState(${id}, 'in-progress')">
+                    Set In Progress
+                </div>
+                <div class="context-menu-item" onclick="setTodoState(${id}, 'completed')">
+                    Set Completed
+                </div>
+                <div class="context-menu-item" onclick="startEdit(${id})">
+                    Edit
+                </div>
+                <div class="context-menu-item" onclick="deleteTodo(${id})">
+                    Delete
+                </div>
+            `;
+
+            menu.style.left = event.clientX + 'px';
+            menu.style.top = event.clientY + 'px';
+            menu.style.display = 'block';
+
+            event.stopPropagation();
+        }
+
+        function setTodoState(id, state) {
+            const todo = todos.find(t => t.id === id);
+            if (todo) {
+                todo.state = state;
+                render();
+                showNotification('Status updated');
+            }
+            document.getElementById('context-menu').style.display = 'none';
+        }
+
+        // Drag and drop
+        let draggedId = null;
+
+        function handleDragStart(event, id) {
+            draggedId = id;
+            event.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDrop(event, targetId) {
+            event.preventDefault();
+            if (draggedId === targetId) return;
+
+            const draggedIndex = todos.findIndex(t => t.id === draggedId);
+            const targetIndex = todos.findIndex(t => t.id === targetId);
+
+            if (draggedIndex === -1 || targetIndex === -1) return;
+
+            const [dragged] = todos.splice(draggedIndex, 1);
+            todos.splice(targetIndex, 0, dragged);
+
+            draggedId = null;
+            render();
+        }
+
+        // File operations
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const content = e.target.result;
+                const parsed = parseMarkdown(content);
+                todos = parsed.todos;
+                sections = parsed.sections;
+                currentFileName = file.name;
+                render();
+                showNotification(`Loaded ${todos.length} items from ${file.name}`);
+            };
+            reader.readAsText(file);
+        }
+
+        function loadSelectedFile() {
+            const select = document.getElementById('file-select');
+            if (select.value === 'custom') {
+                // Load from localStorage
+                loadFromLocalStorage();
+            }
+            // Note: Can't directly load files from filesystem in browser
+            // This would require a backend or file system API
+        }
+
+        // Storage
+        function saveToLocalStorage() {
+            localStorage.setItem('syns-todos', JSON.stringify(todos));
+            localStorage.setItem('syns-sections', JSON.stringify(sections));
+            showNotification('Saved to browser storage');
+        }
+
+        function loadFromLocalStorage() {
+            const savedTodos = localStorage.getItem('syns-todos');
+            const savedSections = localStorage.getItem('syns-sections');
+
+            if (savedTodos) {
+                todos = JSON.parse(savedTodos);
+            } else {
+                // Default todos
+                todos = [
+                    { id: 1, text: 'Welcome to TODO Manager!', state: 'completed', section: 'Getting Started' },
+                    { id: 2, text: 'Click checkbox to cycle: pending -> in-progress -> completed', state: 'pending', section: 'Getting Started' },
+                    { id: 3, text: 'Right-click items for more options', state: 'pending', section: 'Getting Started' },
+                    { id: 4, text: 'Drag items to reorder', state: 'pending', section: 'Getting Started' },
+                    { id: 5, text: 'Load a markdown file with checklists', state: 'pending', section: 'Getting Started' },
+                ];
+            }
+
+            if (savedSections) {
+                sections = JSON.parse(savedSections);
+            }
+        }
+
+        // Export
+        function copyToClipboard() {
+            const markdown = generateMarkdown();
+            navigator.clipboard.writeText(markdown).then(() => {
+                showNotification('Copied to clipboard!');
+            });
+        }
+
+        function downloadMarkdown() {
+            const markdown = generateMarkdown();
+            const blob = new Blob([markdown], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'todo.md';
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification('Download started');
+        }
+
+        // Notification
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+    </script>
+</body>
+
+</html>
