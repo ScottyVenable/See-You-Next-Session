@@ -169,6 +169,7 @@
     
     LeftSidePanel = the left side panel containing patient info, session history, mood tracker, Notes, etc.
 16. The PatientView panel should take up the entire screen minus the fixed height BottomPanel and the variable width LeftSidePanel and RightSidePanel. The PatientView should NOT resize dynamically based on the size of these other panels. Other panels should appear OVER the Patient View panel (if that makes sense).
+17. Transition from emojis to Phospher/Material icons but make sure they are still viewable
 
 
 ## [BUILD] Requirements

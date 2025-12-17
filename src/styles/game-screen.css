@@ -339,7 +339,7 @@
 
 /* Position: Center Float (default) */
 .dialogue-floating.position-center-float {
-    width: 750px;
+    width: 600px;
     max-width: 70%;
 }
 
@@ -359,8 +359,10 @@
 }
 
 .dialogue-header {
+    height: 53.2px;
     display: flex;
     align-items: center;
+    gap: 8px;
     justify-content: space-between;
     padding: 8px 14px;
     background: rgba(0, 0, 0, 0.3);
