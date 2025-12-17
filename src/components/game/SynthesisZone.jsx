@@ -91,7 +91,7 @@ function SynthesisZone({ draggedToken, clipboardTokens, onSynthesisAttempt }) {
 
     return (
         <div className="synthesis-zone">
-            <h3 className="zone-title">⚗️ Synthesis Zone</h3>
+            <h3 className="zone-title">Synthesis Zone</h3>
             <p className="zone-hint">Drag a statement and an observation to find contradictions</p>
 
             <div className="synthesis-slots">
@@ -103,7 +103,7 @@ function SynthesisZone({ draggedToken, clipboardTokens, onSynthesisAttempt }) {
                 >
                     {slot1 ? (
                         <>
-                            <span className="slot-icon">{slot1.type === 'text' ? '📝' : '👁️'}</span>
+                            <span className="slot-icon">{slot1.type === 'text' ? '[T]' : '[V]'}</span>
                             <span className="slot-content">{slot1.content}</span>
                             <button className="clear-slot" onClick={() => clearSlot(1)}>×</button>
                         </>
@@ -124,13 +124,13 @@ function SynthesisZone({ draggedToken, clipboardTokens, onSynthesisAttempt }) {
                 >
                     {slot2 ? (
                         <>
-                            <span className="slot-icon">{slot2.type === 'text' ? '📝' : '👁️'}</span>
+                            <span className="slot-icon">{slot2.type === 'text' ? '[T]' : '[V]'}</span>
                             <span className="slot-content">{slot2.content}</span>
                             <button className="clear-slot" onClick={() => clearSlot(2)}>×</button>
                         </>
                     ) : (
                         <span className="slot-placeholder">
-                            <span className="slot-placeholder-icon">📥</span>
+                            <span className="slot-placeholder-icon">[+]</span>
                             <span className="slot-placeholder-text">Drop Here</span>
                         </span>
                     )}
@@ -167,7 +167,7 @@ function SynthesisZone({ draggedToken, clipboardTokens, onSynthesisAttempt }) {
                         </>
                     ) : (
                         <>
-                            <div className="result-icon">🤔</div>
+                            <div className="result-icon">[?]</div>
                             <div className="result-content">
                                 <p className="result-message">{result.message}</p>
                             </div>

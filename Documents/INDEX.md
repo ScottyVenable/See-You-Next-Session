@@ -5,29 +5,35 @@
 
 ---
 
-## 📁 Document Structure
+## Document Structure
 
 ```
 Documents/
-├── 📄 INDEX.md                    ◀─ You are here
+├── INDEX.md                       <-- You are here
 │
-├── 📂 design/                     # Game Design
+├── archive/                       # Legacy Documents
+│   ├── README.md                  # Archive description
+│   └── psychology-game-notes.txt  # Early planning notes
+│
+├── design/                        # Game Design
 │   └── GAME_DESIGN_DOCUMENT.md    # Core GDD, mechanics, features
 │
-├── 📂 technical/                  # Technical Documentation
+├── technical/                     # Technical Documentation
 │   ├── TECHNICAL_ARCHITECTURE.md  # Tech stack, structure, systems
 │   └── UI_COMPONENTS.md           # Component reference
 │
-├── 📂 content/                    # Game Content
+├── content/                       # Game Content
 │   ├── PATIENT_ROSTER.md          # All patients overview
 │   └── patients/
 │       └── gregory.md             # Gregory character sheet
 │
-├── 📂 planning/                   # Project Planning
+├── planning/                      # Project Planning
 │   ├── TODO.md                    # Task tracker & bugs
-│   └── DEVELOPMENT_ROADMAP.md     # Phase-based roadmap
+│   ├── DEVELOPMENT_ROADMAP.md     # Phase-based roadmap
+│   ├── FEATURE_TRACKING.md        # Feature lifecycle & impact
+│   └── LAYOUT_OPTIMIZATION_TODO.md # UI layout specifications
 │
-└── 📂 reference/                  # Reference Materials
+└── reference/                     # Reference Materials
     ├── ASSET_LIST.md              # Art & audio requirements
     ├── UI_SKELETON.md             # Wireframes & layouts
     └── SDNS_FUTURE_FEATURES.md    # Future SDNS enhancements
@@ -35,7 +41,7 @@ Documents/
 
 ---
 
-## 🔗 Quick Links
+## Quick Links
 
 ### Core Documents
 | Document | Description |
@@ -54,6 +60,7 @@ Documents/
 | Document | Description |
 |----------|-------------|
 | [Development Roadmap](planning/DEVELOPMENT_ROADMAP.md) | MVP phases and timeline |
+| [Feature Tracking](planning/FEATURE_TRACKING.md) | Feature lifecycle and impact tracking |
 
 ### Reference
 | Document | Description |
@@ -64,7 +71,7 @@ Documents/
 
 ---
 
-## 📍 Code Documentation
+## Code Documentation
 
 | Document | Location | Description |
 |----------|----------|-------------|
@@ -122,7 +129,7 @@ Documents/
 
 ---
 
-## 👥 Team
+## Team
 
 - **Scott** - Lead Developer, Co-Creative Director
 - **Kiki** - Art Director, Writer

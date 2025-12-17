@@ -222,7 +222,7 @@ function PatientView({ patient, isFocusMode, onSymptomFound, onDragStart, onDrag
                                                     >
                                                         <span className="tooltip-action">Click to observe</span>
                                                         <span className="tooltip-cost">
-                                                            <span className="cost-icon">👁️</span>
+                                                            <span className="cost-icon">[O]</span>
                                                             -{cost} Focus
                                                         </span>
                                                     </motion.div>
@@ -287,7 +287,7 @@ function PatientView({ patient, isFocusMode, onSymptomFound, onDragStart, onDrag
                     >
                         <div className="observations-header">
                             <h4>
-                                <span className="header-icon">👁️</span>
+                                <span className="header-icon">[O]</span>
                                 Observations
                             </h4>
                             <span className="observation-count">{revealedCount}{totalHotspots > 0 ? `/${totalHotspots}` : ''}</span>

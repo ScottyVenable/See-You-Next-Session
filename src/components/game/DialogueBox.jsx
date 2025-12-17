@@ -412,7 +412,7 @@ function DialogueBox({
                 animate={{ opacity: 1 }}
             >
                 <div className="empty-dialogue-content">
-                    <span className="empty-icon">💭</span>
+                    <span className="empty-icon">[...]</span>
                     <p>The patient sits quietly, gathering their thoughts...</p>
                 </div>
             </motion.div>
@@ -440,7 +440,7 @@ function DialogueBox({
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 }}
                 >
-                    <span className="speaker-avatar">👤</span>
+                    <span className="speaker-avatar">[P]</span>
                     <span className="speaker-name">{patientName}</span>
                 </motion.div>
 
@@ -480,7 +480,7 @@ function DialogueBox({
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 0.2, type: "spring" }}
                         >
-                            <span className="counter-icon">🔑</span>
+                            <span className="counter-icon">[K]</span>
                             <span className="counter-text">{collectedCount}/{totalKeywords}</span>
                         </motion.div>
                     )}
@@ -523,7 +523,7 @@ function DialogueBox({
                                         className="context-menu-item"
                                         onClick={() => handleContextMenuAction('collect', contextMenu.keyword)}
                                     >
-                                        <span className="menu-icon">📝</span>
+                                        <span className="menu-icon">[T]</span>
                                         <span className="menu-label">Create Text Token</span>
                                     </button>
                                 </li>
@@ -533,7 +533,7 @@ function DialogueBox({
                                     className="context-menu-item"
                                     onClick={() => handleContextMenuAction('ask', contextMenu.keyword)}
                                 >
-                                    <span className="menu-icon">💬</span>
+                                    <span className="menu-icon">[D]</span>
                                     <span className="menu-label">Ask About This</span>
                                 </button>
                             </li>
@@ -542,7 +542,7 @@ function DialogueBox({
                                     className="context-menu-item"
                                     onClick={() => handleContextMenuAction('highlight', contextMenu.keyword)}
                                 >
-                                    <span className="menu-icon">📖</span>
+                                    <span className="menu-icon">[H]</span>
                                     <span className="menu-label">Highlight in Handbook</span>
                                 </button>
                             </li>
@@ -620,17 +620,17 @@ function DialogueBox({
 
 function getMoodEmoji(mood) {
     const moods = {
-        nervous: '😰',
-        anxious: '😟',
-        defensive: '😤',
-        stressed: '😣',
-        frustrated: '😠',
-        dismissive: '🙄',
-        sad: '😢',
-        vulnerable: '🥺',
-        hopeful: '🙂',
-        relieved: '😌',
-        neutral: '😐',
+        nervous: '[N]',
+        anxious: '[A]',
+        defensive: '[D]',
+        stressed: '[S]',
+        frustrated: '[!]',
+        dismissive: '[X]',
+        sad: '[-]',
+        vulnerable: '[V]',
+        hopeful: '[+]',
+        relieved: '[R]',
+        neutral: '[=]',
     };
     return moods[mood] || moods.neutral;
 }

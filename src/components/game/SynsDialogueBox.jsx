@@ -65,21 +65,21 @@ const tooltipVariants = {
 
 // Mood display configurations
 const MOOD_CONFIG = {
-    nervous: { emoji: '😰', color: '#ffd93d', label: 'Nervous' },
-    anxious: { emoji: '😟', color: '#ff6b6b', label: 'Anxious' },
-    defensive: { emoji: '🛡️', color: '#4ecdc4', label: 'Defensive' },
-    guarded: { emoji: '😐', color: '#95a5a6', label: 'Guarded' },
-    hesitant: { emoji: '🤔', color: '#a29bfe', label: 'Hesitant' },
-    vulnerable: { emoji: '💔', color: '#fd79a8', label: 'Vulnerable' },
-    relieved: { emoji: '😌', color: '#55efc4', label: 'Relieved' },
-    hopeful: { emoji: '🌟', color: '#ffeaa7', label: 'Hopeful' },
-    angry: { emoji: '😠', color: '#e74c3c', label: 'Angry' },
-    sad: { emoji: '😢', color: '#74b9ff', label: 'Sad' },
-    contemplative: { emoji: '🤔', color: '#6c5ce7', label: 'Contemplative' },
-    defeated: { emoji: '😔', color: '#636e72', label: 'Defeated' },
-    opening_up: { emoji: '🌱', color: '#00b894', label: 'Opening Up' },
-    trusting: { emoji: '🤝', color: '#00cec9', label: 'Trusting' },
-    neutral: { emoji: '😐', color: '#dfe6e9', label: 'Neutral' },
+    nervous: { emoji: '[N]', color: '#ffd93d', label: 'Nervous' },
+    anxious: { emoji: '[A]', color: '#ff6b6b', label: 'Anxious' },
+    defensive: { emoji: '[D]', color: '#4ecdc4', label: 'Defensive' },
+    guarded: { emoji: '[G]', color: '#95a5a6', label: 'Guarded' },
+    hesitant: { emoji: '[H]', color: '#a29bfe', label: 'Hesitant' },
+    vulnerable: { emoji: '[V]', color: '#fd79a8', label: 'Vulnerable' },
+    relieved: { emoji: '[R]', color: '#55efc4', label: 'Relieved' },
+    hopeful: { emoji: '[+]', color: '#ffeaa7', label: 'Hopeful' },
+    angry: { emoji: '[!]', color: '#e74c3c', label: 'Angry' },
+    sad: { emoji: '[-]', color: '#74b9ff', label: 'Sad' },
+    contemplative: { emoji: '[?]', color: '#6c5ce7', label: 'Contemplative' },
+    defeated: { emoji: '[X]', color: '#636e72', label: 'Defeated' },
+    opening_up: { emoji: '[*]', color: '#00b894', label: 'Opening Up' },
+    trusting: { emoji: '[T]', color: '#00cec9', label: 'Trusting' },
+    neutral: { emoji: '[=]', color: '#dfe6e9', label: 'Neutral' },
 };
 
 // Helper function to get keyword type
@@ -415,7 +415,7 @@ function SynsDialogueBox({
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 }}
                 >
-                    <span className="speaker-avatar">{isNarrator ? '📖' : '👤'}</span>
+                    <span className="speaker-avatar">{isNarrator ? '[N]' : '[P]'}</span>
                     <span className="speaker-name">{speakerDisplay || 'Narrator'}</span>
                 </motion.div>
 
@@ -460,7 +460,7 @@ function SynsDialogueBox({
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 0.2, type: "spring" }}
                         >
-                            <span className="counter-icon">🔑</span>
+                            <span className="counter-icon">[K]</span>
                             <span className="counter-text">{collectedCount}/{totalKeywords}</span>
                         </motion.div>
                     )}
@@ -674,7 +674,7 @@ function ResponsePanel({ responses, onSelectResponse, patientId, currentRapport 
             transition={{ delay: 0.3 }}
         >
             <div className="response-panel-header">
-                <span className="response-icon">💬</span>
+                <span className="response-icon">[D]</span>
                 <span>Topics to explore</span>
             </div>
 
@@ -736,18 +736,18 @@ function ResponsePanel({ responses, onSelectResponse, patientId, currentRapport 
 // Helper: Get default topic icon
 function getDefaultTopicIcon(topic) {
     const icons = {
-        family: '👨‍👩‍👧',
-        work: '💼',
-        emotions: '💭',
-        relationships: '💕',
-        sleep: '😴',
-        physical: '🏃',
-        self: '🪞',
-        coping: '🛡️',
-        history: '📖',
-        therapy: '🗣️'
+        family: '[F]',
+        work: '[W]',
+        emotions: '[E]',
+        relationships: '[R]',
+        sleep: '[S]',
+        physical: '[P]',
+        self: '[M]',
+        coping: '[C]',
+        history: '[H]',
+        therapy: '[T]'
     };
-    return icons[topic] || '❓';
+    return icons[topic] || '[?]';
 }
 
 // Helper: Get default subtopic label

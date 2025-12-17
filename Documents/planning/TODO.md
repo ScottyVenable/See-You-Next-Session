@@ -142,7 +142,7 @@ See [LAYOUT_OPTIMIZATION_TODO.md](./LAYOUT_OPTIMIZATION_TODO.md) for detailed sp
 
 ---
 
-## 📅 Development History
+## Development History
 
 ### December 2025
 - **Dec 14:** Initial GDD and documentation
