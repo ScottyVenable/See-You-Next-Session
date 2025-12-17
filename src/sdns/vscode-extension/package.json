@@ -1,0 +1,130 @@
+{
+    "name": "sdns-language",
+    "displayName": "SDNS - Session Dialogue and Narration System",
+    "description": "Full language support for .session dialogue files - syntax highlighting, snippets, themes, and IntelliSense",
+    "version": "1.0.0",
+    "publisher": "see-you-next-session",
+    "engines": {
+        "vscode": "^1.85.0"
+    },
+    "categories": [
+        "Programming Languages",
+        "Snippets",
+        "Themes"
+    ],
+    "keywords": [
+        "dialogue",
+        "narrative",
+        "visual novel",
+        "game development",
+        "session",
+        "sdns"
+    ],
+    "activationEvents": [
+        "onLanguage:sdns"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "languages": [
+            {
+                "id": "sdns",
+                "aliases": [
+                    "SDNS",
+                    "Session Dialogue",
+                    "Session Dialogue and Narration System"
+                ],
+                "extensions": [
+                    ".session"
+                ],
+                "configuration": "./language-configuration.json",
+                "icon": {
+                    "light": "./images/sdns-file-light.svg",
+                    "dark": "./images/sdns-file-dark.svg"
+                }
+            }
+        ],
+        "grammars": [
+            {
+                "language": "sdns",
+                "scopeName": "source.sdns",
+                "path": "./syntaxes/sdns.tmLanguage.json"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "sdns",
+                "path": "./snippets/sdns.snippets.json"
+            }
+        ],
+        "themes": [
+            {
+                "label": "SDNS Dark",
+                "uiTheme": "vs-dark",
+                "path": "./themes/sdns-dark-theme.json"
+            },
+            {
+                "label": "SDNS Light",
+                "uiTheme": "vs",
+                "path": "./themes/sdns-light-theme.json"
+            }
+        ],
+        "configurationDefaults": {
+            "[sdns]": {
+                "editor.wordWrap": "on",
+                "editor.tabSize": 4,
+                "editor.insertSpaces": true,
+                "editor.autoIndent": "full",
+                "editor.formatOnType": true,
+                "editor.suggest.showSnippets": true,
+                "editor.quickSuggestions": {
+                    "other": true,
+                    "comments": false,
+                    "strings": true
+                }
+            }
+        },
+        "configuration": {
+            "title": "SDNS",
+            "properties": {
+                "sdns.validation.enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/disable SDNS file validation"
+                },
+                "sdns.validation.checkBlockReferences": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Validate that goto statements reference existing blocks"
+                },
+                "sdns.validation.checkKeywordUsage": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Track and validate keyword usage across files"
+                },
+                "sdns.suggestions.showMoods": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Show mood suggestions after speaker names"
+                },
+                "sdns.suggestions.showDirectives": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Show directive suggestions after @ symbol"
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "package": "vsce package",
+        "publish": "vsce publish"
+    },
+    "devDependencies": {
+        "@types/node": "^20.10.0",
+        "@types/vscode": "^1.85.0",
+        "typescript": "^5.3.0",
+        "@vscode/vsce": "^2.22.0"
+    }
+}

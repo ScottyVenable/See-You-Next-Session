@@ -1,10 +1,13 @@
 /**
- * SYNS Dialogue Parser
- * Parses .syns dialogue files into an AST for the dialogue engine
+ * SDNS Parser - Session Dialogue and Narration System
+ * Parses .session dialogue files into an AST for the dialogue engine
+ * 
+ * @module sdns/parser
+ * @version 1.0.0
  */
 
-// Token types
-const TokenType = {
+// Token types used by the lexer and parser
+export const TokenType = {
     // Structure
     BLOCK_START: 'BLOCK_START',       // === name ===
     BLOCK_END: 'BLOCK_END',
@@ -51,8 +54,11 @@ const TokenType = {
     EOF: 'EOF',
 };
 
-// Lexer - tokenizes raw text
-class Lexer {
+/**
+ * Lexer - Tokenizes raw SDNS source text
+ * Converts source code into a stream of tokens for the parser
+ */
+export class Lexer {
     constructor(source) {
         this.source = source;
         this.pos = 0;
@@ -82,6 +88,9 @@ class Lexer {
         }
     }
 
+    /**
+     * Read a string literal (handles multi-line strings)
+     */
     readString(quote) {
         let value = '';
         this.advance(); // Skip opening quote
@@ -137,6 +146,9 @@ class Lexer {
         return parseFloat(value);
     }
 
+    /**
+     * Tokenize the source into a token array
+     */
     tokenize() {
         while (this.pos < this.source.length) {
             this.skipWhitespace();
@@ -154,7 +166,7 @@ class Lexer {
                 continue;
             }
 
-            // Comments
+            // Comments: // single line or /* multi-line */
             if (char === '/' && this.peek(1) === '/') {
                 while (this.peek() !== '\n' && this.peek() !== '\0') this.advance();
                 continue;
@@ -344,8 +356,10 @@ class Lexer {
         return this.tokens;
     }
 
+    /**
+     * Read a condition expression (for @if, @elseif, @when)
+     */
     readCondition() {
-        // Read until newline, collecting condition tokens
         while (this.peek() !== '\n' && this.peek() !== '\0') {
             this.skipWhitespace();
             const char = this.peek();
@@ -421,8 +435,10 @@ class Lexer {
         }
     }
 
+    /**
+     * Read an assignment expression (for @set)
+     */
     readAssignment() {
-        // variable = value
         const varName = this.readIdentifier();
         this.tokens.push({ type: TokenType.IDENTIFIER, value: varName, line: this.line });
         this.skipWhitespace();
@@ -446,8 +462,10 @@ class Lexer {
         }
     }
 
+    /**
+     * Read a trigger expression (for @trigger)
+     */
     readTrigger() {
-        // keyword-id + symptom-id
         const keyword = this.readIdentifier();
         this.tokens.push({ type: TokenType.IDENTIFIER, value: keyword, line: this.line });
         this.skipWhitespace();
@@ -461,8 +479,11 @@ class Lexer {
     }
 }
 
-// Parser - builds AST from tokens
-class Parser {
+/**
+ * Parser - Builds AST from tokens
+ * Converts token stream into an Abstract Syntax Tree for execution
+ */
+export class Parser {
     constructor(tokens) {
         this.tokens = tokens.filter(t => t.type !== TokenType.NEWLINE);
         this.pos = 0;
@@ -489,6 +510,9 @@ class Parser {
         return token;
     }
 
+    /**
+     * Parse the entire token stream
+     */
     parse() {
         while (this.peek().type !== TokenType.EOF) {
             this.parseBlock();
@@ -496,6 +520,9 @@ class Parser {
         return this.ast;
     }
 
+    /**
+     * Parse a dialogue block
+     */
     parseBlock() {
         if (this.peek().type !== TokenType.BLOCK_START) {
             this.advance(); // Skip unexpected tokens
@@ -528,6 +555,9 @@ class Parser {
         }
     }
 
+    /**
+     * Parse a single statement
+     */
     parseStatement() {
         const token = this.peek();
 
@@ -560,6 +590,9 @@ class Parser {
         }
     }
 
+    /**
+     * Parse speech line
+     */
     parseSpeech() {
         const speakerToken = this.advance();
         const speaker = speakerToken.value;
@@ -594,6 +627,10 @@ class Parser {
         };
     }
 
+    /**
+     * Extract keywords from speech text
+     * Keywords are marked with [brackets] and may have <metadata>
+     */
     extractKeywords(text) {
         const keywords = [];
         const regex = /\[([^\]]+)\](<([^>]+)>)?/g;
@@ -623,6 +660,9 @@ class Parser {
         return 'kw-' + text.toLowerCase().replace(/[^a-z0-9]+/g, '-').substring(0, 30);
     }
 
+    /**
+     * Parse if/elseif/else conditional
+     */
     parseIf() {
         this.advance(); // Skip @if
         const condition = this.parseCondition();
@@ -666,6 +706,9 @@ class Parser {
         };
     }
 
+    /**
+     * Parse condition tokens
+     */
     parseCondition() {
         const conditions = [];
 
@@ -682,6 +725,9 @@ class Parser {
         return conditions;
     }
 
+    /**
+     * Parse when block (response handler)
+     */
     parseWhen() {
         this.advance(); // Skip @when
         const condition = this.parseCondition();
@@ -796,7 +842,7 @@ class Parser {
 }
 
 /**
- * Parse a .syns dialogue file
+ * Parse a .session dialogue file
  * @param {string} source - The source code
  * @returns {object} - The AST
  */
@@ -809,7 +855,7 @@ export function parseDialogue(source) {
 
 /**
  * Parse dialogue from a file path (for use with fetch)
- * @param {string} path - Path to the .syns file
+ * @param {string} path - Path to the .session file
  * @returns {Promise<object>} - The AST
  */
 export async function parseDialogueFile(path) {
@@ -818,5 +864,4 @@ export async function parseDialogueFile(path) {
     return parseDialogue(source);
 }
 
-export { Lexer, Parser, TokenType };
 export default parseDialogue;

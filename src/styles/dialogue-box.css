@@ -932,67 +932,62 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-md);
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: var(--spacing-sm);
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
     font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .response-panel-header .response-icon {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
 }
 
 .response-topics {
     display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .response-topic-group {
-    border-radius: var(--radius-md);
-    overflow: hidden;
+    position: relative;
 }
 
+/* Compact chip-style topic buttons */
 .response-topic-btn {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: var(--spacing-sm);
-    width: 100%;
-    padding: var(--spacing-sm) var(--spacing-md);
-    background: linear-gradient(135deg, rgba(40, 50, 70, 0.6), rgba(30, 40, 60, 0.7));
-    border: 1px solid rgba(108, 92, 231, 0.2);
-    border-radius: var(--radius-md);
+    gap: 6px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, rgba(40, 50, 70, 0.7), rgba(30, 40, 60, 0.8));
+    border: 1px solid rgba(108, 92, 231, 0.25);
+    border-radius: 20px;
     color: var(--color-text);
     font-family: var(--font-body);
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: 0.8rem;
+    font-weight: 500;
     cursor: pointer;
     transition: all var(--transition-fast);
-    text-align: left;
+    white-space: nowrap;
 }
 
 .response-topic-btn:hover {
-    background: linear-gradient(135deg, rgba(50, 60, 80, 0.7), rgba(40, 50, 70, 0.8));
-    border-color: rgba(108, 92, 231, 0.4);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.4), rgba(90, 76, 200, 0.5));
+    border-color: rgba(108, 92, 231, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(108, 92, 231, 0.25);
 }
 
 .response-topic-btn.expanded {
-    background: linear-gradient(135deg, rgba(108, 92, 231, 0.2), rgba(108, 92, 231, 0.1));
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.35), rgba(90, 76, 200, 0.45));
     border-color: rgba(108, 92, 231, 0.5);
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+    border-radius: 20px 20px 4px 4px;
 }
 
 .response-topic-btn .topic-icon {
-    font-size: 1.1rem;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    opacity: 0.9;
 }
 
 .response-topic-btn .topic-label {
@@ -1000,15 +995,15 @@
 }
 
 .response-topic-btn .topic-count {
-    font-size: 0.75rem;
-    padding: 2px 8px;
-    background: rgba(108, 92, 231, 0.3);
-    border-radius: 10px;
-    color: #c4b8ff;
+    font-size: 0.65rem;
+    padding: 1px 5px;
+    background: rgba(108, 92, 231, 0.35);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.85);
 }
 
 .response-topic-btn .topic-arrow {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     transition: transform 0.2s ease;
     opacity: 0.6;
 }
@@ -1017,14 +1012,20 @@
     transform: rotate(180deg);
 }
 
-/* Subtopic List */
+/* Subtopic List - Dropdown below chip */
 .subtopic-list {
-    background: rgba(20, 30, 50, 0.8);
-    border: 1px solid rgba(108, 92, 231, 0.3);
-    border-top: none;
-    border-bottom-left-radius: var(--radius-md);
-    border-bottom-right-radius: var(--radius-md);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 180px;
+    max-width: 280px;
+    margin-top: 4px;
+    background: rgba(25, 30, 45, 0.98);
+    border: 1px solid rgba(108, 92, 231, 0.4);
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     overflow: hidden;
+    z-index: 100;
 }
 
 .subtopic-btn {
@@ -1032,31 +1033,41 @@
     align-items: center;
     gap: var(--spacing-sm);
     width: 100%;
-    padding: var(--spacing-sm) var(--spacing-md);
-    padding-left: var(--spacing-xl);
+    padding: 8px 12px;
     background: transparent;
     border: none;
     color: rgba(255, 255, 255, 0.85);
     font-family: var(--font-body);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     cursor: pointer;
     transition: all var(--transition-fast);
     text-align: left;
 }
 
 .subtopic-btn:hover {
-    background: rgba(108, 92, 231, 0.15);
+    background: rgba(108, 92, 231, 0.2);
     color: #fff;
 }
 
+.subtopic-btn .subtopic-label {
+    flex: 1;
+}
+
+.subtopic-btn .subtopic-asked {
+    font-size: 0.65rem;
+    padding: 1px 5px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
 .subtopic-btn:active {
-    background: rgba(108, 92, 231, 0.25);
+    background: rgba(108, 92, 231, 0.3);
 }
 
 .subtopic-btn .subtopic-bullet {
-    color: rgba(108, 92, 231, 0.7);
-    font-size: 1.2rem;
-    line-height: 1;
+    color: rgba(108, 92, 231, 0.8);
+    font-size: 0.5rem;
 }
 
 .subtopic-btn .subtopic-label {
@@ -1067,28 +1078,28 @@
 .quick-responses {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-sm);
-    margin-top: var(--spacing-md);
+    gap: 8px;
+    margin-top: var(--spacing-sm);
 }
 
 .quick-response-btn {
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: 6px 12px;
     background: linear-gradient(135deg, rgba(108, 92, 231, 0.2), rgba(108, 92, 231, 0.1));
     border: 1px solid rgba(108, 92, 231, 0.3);
     border-radius: 20px;
     color: #c4b8ff;
     font-family: var(--font-body);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 500;
     cursor: pointer;
     transition: all var(--transition-fast);
 }
 
 .quick-response-btn:hover {
-    background: linear-gradient(135deg, rgba(108, 92, 231, 0.35), rgba(108, 92, 231, 0.2));
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.4), rgba(108, 92, 231, 0.25));
     border-color: rgba(108, 92, 231, 0.5);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.2);
+    box-shadow: 0 3px 10px rgba(108, 92, 231, 0.25);
 }
 
 .quick-response-btn:active {

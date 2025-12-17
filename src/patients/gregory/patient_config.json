@@ -1,0 +1,324 @@
+{
+    "id": "gregory",
+    "version": "1.0.0",
+    "profile": {
+        "name": "Gregory Vigil",
+        "firstName": "Gregory",
+        "lastName": "Vigil",
+        "nameEtymology": "Gregory (watchful/alert) Vigil (watchful, awake)",
+        "age": 27,
+        "pronouns": "he/him",
+        "height": "6'1",
+        "occupation": "Unknown",
+        "avatar": "gregory_neutral.png",
+        "background": "A guarded young man who presents as meticulously put-together but struggles with constant vigilance and self-doubt. He hedges everything he says, unsure of even his own experiences. First time seeking therapy after months of accumulating difficulties."
+    },
+    "clinical": {
+        "primaryDiagnosis": "generalized-anxiety-disorder",
+        "differentialDiagnoses": [
+            "social-anxiety",
+            "perfectionism"
+        ],
+        "severity": "moderate",
+        "phase": "assessment",
+        "sessionCount": 0,
+        "riskLevel": "low"
+    },
+    "presentation": {
+        "initialMood": "guarded",
+        "initialRapport": 20,
+        "guardedness": 80,
+        "openness": 20,
+        "defenseTriggers": [
+            "appearance",
+            "judgment",
+            "mistakes",
+            "sleep"
+        ],
+        "speechPattern": "Hedges everything, over-explains, seeks validation, second-guesses himself",
+        "attitude": "Comes across as guarded and careful when revealing things—as if unsure of even his own experience. Constantly qualifies statements and seeks reassurance."
+    },
+    "appearance": {
+        "description": "Tall young man with striking orange-red hair and meticulously maintained appearance. Dressed in black, looking sophisticated but guarded. Dark circles under his eyes betray his put-together facade.",
+        "physicalTraits": [
+            {
+                "id": "red-hair",
+                "label": "Orange-red hair",
+                "psychology": "Signals his sense of danger and caution; makes him stand out and feel out of place"
+            },
+            {
+                "id": "tall-height",
+                "label": "Tall stature (6'1)",
+                "psychology": "Feels like eyes are always on him; stands out no matter what he does"
+            },
+            {
+                "id": "black-clothing",
+                "label": "All black clothing",
+                "psychology": "Signals power, sophistication, authority—covering what he wants people to believe. Implies seriousness and high value"
+            },
+            {
+                "id": "triangle-pattern",
+                "label": "Triangle shape pattern on clothing",
+                "psychology": "Represents a sharp gaze and caution signs"
+            },
+            {
+                "id": "freckles",
+                "label": "Freckles",
+                "psychology": "Despite managing a perfect appearance, riddled in 'imperfections'—symbolic of what lies beneath"
+            }
+        ],
+        "observableSymptoms": [
+            {
+                "id": "bags-under-eyes",
+                "label": "Dark circles under eyes",
+                "category": "physical",
+                "psychology": "Suggests difficulty sleeping",
+                "contradictsClaimOf": "sleeping-fine",
+                "revealCondition": {
+                    "rapport": 0
+                }
+            },
+            {
+                "id": "bitten-nails",
+                "label": "Bitten fingernails",
+                "category": "behavioral",
+                "psychology": "Contradicts his perfect appearance; anxious habit that shows through despite efforts to appear put-together",
+                "revealCondition": {
+                    "rapport": 0
+                }
+            },
+            {
+                "id": "tidy-appearance",
+                "label": "Meticulously tidy hair and clothes",
+                "category": "behavioral",
+                "psychology": "Maintained to appear pleasing and valuable; always feels eyes on him so tries to appease them",
+                "revealCondition": {
+                    "rapport": 0
+                }
+            },
+            {
+                "id": "erratic-eye-movement",
+                "label": "Erratic eye movement",
+                "category": "behavioral",
+                "psychology": "Anxious about everything around him; constantly scanning",
+                "revealCondition": {
+                    "rapport": 0
+                }
+            },
+            {
+                "id": "fidgeting",
+                "label": "Fidgeting fingers and bouncing leg",
+                "category": "behavioral",
+                "psychology": "Jittery movements that show anxious energy despite trying to appear calm",
+                "revealCondition": {
+                    "rapport": 0
+                }
+            },
+            {
+                "id": "shaky-hands",
+                "label": "Shaky hands",
+                "category": "physical",
+                "psychology": "Already stepping out of comfort zone; discomfort despite put-together appearance",
+                "revealCondition": {
+                    "rapport": 20
+                }
+            }
+        ]
+    },
+    "symptoms": {
+        "core": [
+            {
+                "id": "chronic-worry",
+                "label": "Chronic excessive worry",
+                "category": "cognitive",
+                "severity": "high",
+                "keywords": [
+                    "worry",
+                    "anxious",
+                    "nervous",
+                    "concerned",
+                    "what if"
+                ]
+            },
+            {
+                "id": "insomnia",
+                "label": "Difficulty sleeping",
+                "category": "somatic",
+                "severity": "high",
+                "keywords": [
+                    "sleep",
+                    "tired",
+                    "exhausted",
+                    "awake",
+                    "rest"
+                ]
+            },
+            {
+                "id": "self-doubt",
+                "label": "Constant self-doubt",
+                "category": "cognitive",
+                "severity": "high",
+                "keywords": [
+                    "unsure",
+                    "maybe",
+                    "I think",
+                    "unless",
+                    "probably"
+                ]
+            },
+            {
+                "id": "hypervigilance",
+                "label": "Hypervigilance",
+                "category": "cognitive",
+                "severity": "moderate",
+                "keywords": [
+                    "watching",
+                    "notice",
+                    "aware",
+                    "attention",
+                    "eyes"
+                ]
+            },
+            {
+                "id": "reassurance-seeking",
+                "label": "Reassurance seeking",
+                "category": "behavioral",
+                "severity": "moderate",
+                "keywords": [
+                    "right",
+                    "correct",
+                    "you think",
+                    "should I",
+                    "is that"
+                ]
+            }
+        ],
+        "hidden": [
+            {
+                "id": "perfectionism",
+                "label": "Perfectionism",
+                "category": "behavioral",
+                "revealThrough": [
+                    "appearance.judgment",
+                    "work.performance",
+                    "self.expectations"
+                ],
+                "keywords": [
+                    "perfect",
+                    "mistake",
+                    "correct",
+                    "right",
+                    "wrong"
+                ]
+            },
+            {
+                "id": "fear-of-judgment",
+                "label": "Fear of judgment",
+                "category": "cognitive",
+                "revealThrough": [
+                    "self.identity",
+                    "relationships.trust",
+                    "appearance"
+                ],
+                "keywords": [
+                    "think of me",
+                    "judge",
+                    "watching",
+                    "eyes",
+                    "notice"
+                ]
+            },
+            {
+                "id": "imposter-feelings",
+                "label": "Feeling like a fraud",
+                "category": "cognitive",
+                "revealThrough": [
+                    "work.performance",
+                    "self.identity"
+                ],
+                "keywords": [
+                    "fake",
+                    "pretend",
+                    "found out",
+                    "not really"
+                ]
+            }
+        ]
+    },
+    "intakeEmail": {
+        "subject": "New Intake Form",
+        "body": "I hope this message finds you well. My name is Gregory Vigil, and I am writing to inquire about the possibility of becoming a client under your care, should you currently be accepting new patients.\n\nI want to be respectful of your time, so I will try to be as clear and thorough as possible regarding my reason for reaching out. Over the past several months, I have noticed a number of ongoing difficulties that, while not immediately disruptive in isolation, have begun to accumulate in ways that feel increasingly unsustainable for me. I believe it may be appropriate, and responsible, to speak with a professional rather than continue attempting to address these concerns independently.\n\nThank you very much for your time and consideration. I understand that this is a detailed message, but I felt it was important to be as precise as possible. I look forward to hearing from you at your convenience.\n\nSincerely,\nGregory Vigil",
+        "notes": "Very formal, no errors—as if looked over and corrected a hundred times. Over-explains. Does not mention anxiety directly, only symptoms like sleep difficulties."
+    },
+    "breakthroughs": [
+        {
+            "id": "appearance-facade",
+            "label": "The Perfect Facade",
+            "description": "Gregory admits his put-together appearance is a defense mechanism",
+            "requiredReveals": [
+                "perfectionism-appearance",
+                "fear-of-judgment"
+            ],
+            "rapportBonus": 15,
+            "unlocks": [
+                "deep_appearance_discussion"
+            ]
+        },
+        {
+            "id": "sleep-admission",
+            "label": "Sleep Struggles",
+            "description": "Gregory admits he hasn't been sleeping properly despite initial denial",
+            "requiredReveals": [
+                "insomnia",
+                "racing-thoughts-night"
+            ],
+            "rapportBonus": 10,
+            "unlocks": [
+                "sleep_intervention_options"
+            ]
+        },
+        {
+            "id": "validation-seeking",
+            "label": "Seeking Permission",
+            "description": "Gregory recognizes his pattern of seeking validation for his own experiences",
+            "requiredReveals": [
+                "reassurance-pattern",
+                "self-doubt-origin"
+            ],
+            "rapportBonus": 20,
+            "unlocks": [
+                "autonomy_work"
+            ]
+        }
+    ],
+    "scoring": {
+        "maxScore": 1000,
+        "rankThresholds": {
+            "S": 900,
+            "A": 750,
+            "B": 600,
+            "C": 450,
+            "D": 300
+        },
+        "bonuses": {
+            "allSymptomsFound": 100,
+            "correctDiagnosis": 200,
+            "allBreakthroughs": 150,
+            "noRapportLoss": 50,
+            "efficientSession": 100
+        }
+    },
+    "dialogue": {
+        "turnFiles": [
+            "turn1.syns",
+            "turn2.syns",
+            "turn3.syns"
+        ],
+        "currentTurn": 1,
+        "maxTurns": 3
+    },
+    "unlockRequirements": {
+        "type": "none",
+        "description": "Tutorial patient - always available"
+    }
+}

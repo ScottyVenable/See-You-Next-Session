@@ -29,10 +29,16 @@ export default defineConfig({
         port: 3001,          // Use 3001 to avoid conflicts
         strictPort: false,   // Fall back to next free port if 3001 is taken
         open: false,         // Tauri opens its own window
+        watch: {
+            // Watch .session files for hot reload
+            include: ['**/*.session', '**/*.json'],
+        },
     },
     // Prevent vite from obscuring Rust errors
     clearScreen: false,
     define: {
         __GAME_VERSION__: JSON.stringify(getGitVersion()),
     },
+    // Treat .session files as raw text
+    assetsInclude: ['**/*.session'],
 });

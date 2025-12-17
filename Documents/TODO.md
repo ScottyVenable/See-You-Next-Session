@@ -103,6 +103,9 @@
 
 1. Can't drag keywords to clinical handbook from dialogue box/notebook
 2. ~~Typewriter animation shows brackets [keyword] before fully displayed~~ ✅ Fixed
+3. ===TAG=== blocks not recognized in .session files or just not styled correctly.
+4. -> goto tag not recognized in .session files or just not styled correctly.
+5. 
 
 ---
 

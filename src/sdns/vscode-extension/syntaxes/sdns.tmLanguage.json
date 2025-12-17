@@ -1,0 +1,222 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "SDNS",
+    "scopeName": "source.sdns",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#blocks"
+        },
+        {
+            "include": "#speakers"
+        },
+        {
+            "include": "#directives"
+        },
+        {
+            "include": "#goto"
+        },
+        {
+            "include": "#strings"
+        },
+        {
+            "include": "#actions"
+        },
+        {
+            "include": "#keywords"
+        },
+        {
+            "include": "#conditions"
+        },
+        {
+            "include": "#numbers"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line.double-slash.sdns",
+                    "match": "//.*$"
+                },
+                {
+                    "name": "comment.block.sdns",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                }
+            ]
+        },
+        "blocks": {
+            "patterns": [
+                {
+                    "name": "entity.name.section.sdns",
+                    "match": "^\\s*(===)\\s*(@?[\\w\\.:_-]+)\\s*(===)\\s*$",
+                    "captures": {
+                        "1": {
+                            "name": "punctuation.definition.section.begin.sdns"
+                        },
+                        "2": {
+                            "name": "entity.name.section.sdns"
+                        },
+                        "3": {
+                            "name": "punctuation.definition.section.end.sdns"
+                        }
+                    }
+                }
+            ]
+        },
+        "speakers": {
+            "patterns": [
+                {
+                    "name": "entity.name.tag.speaker.sdns",
+                    "match": "^\\s*(PATIENT|THERAPIST|NARRATOR|SYSTEM)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.tag.speaker.sdns"
+                        }
+                    }
+                },
+                {
+                    "name": "entity.other.attribute-name.mood.sdns",
+                    "match": "\\(([\\w\\s]+)\\)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.other.attribute-name.mood.sdns"
+                        }
+                    }
+                }
+            ]
+        },
+        "directives": {
+            "patterns": [
+                {
+                    "name": "keyword.control.directive.sdns",
+                    "match": "@(if|elseif|else|endif|when|end)\\b"
+                },
+                {
+                    "name": "keyword.other.directive.sdns",
+                    "match": "@(reveal|rapport|focus|unlock|set|pause|trigger)\\b"
+                },
+                {
+                    "name": "constant.numeric.sdns",
+                    "match": "@(rapport|focus|pause)\\s+([+-]?\\d+\\.?\\d*)",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.other.directive.sdns"
+                        },
+                        "2": {
+                            "name": "constant.numeric.sdns"
+                        }
+                    }
+                }
+            ]
+        },
+        "goto": {
+            "patterns": [
+                {
+                    "name": "keyword.control.goto.sdns",
+                    "match": "->\\s*([\\w_-]+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.label.sdns"
+                        }
+                    }
+                }
+            ]
+        },
+        "strings": {
+            "patterns": [
+                {
+                    "name": "string.quoted.double.sdns",
+                    "begin": "\"",
+                    "end": "\"",
+                    "patterns": [
+                        {
+                            "include": "#keywords"
+                        },
+                        {
+                            "include": "#keyword-metadata"
+                        },
+                        {
+                            "name": "constant.character.escape.sdns",
+                            "match": "\\\\."
+                        }
+                    ]
+                }
+            ]
+        },
+        "actions": {
+            "patterns": [
+                {
+                    "name": "string.other.action.sdns",
+                    "begin": "\\*",
+                    "end": "\\*",
+                    "patterns": [
+                        {
+                            "include": "#keywords"
+                        }
+                    ]
+                }
+            ]
+        },
+        "keywords": {
+            "patterns": [
+                {
+                    "name": "markup.bold.keyword.sdns",
+                    "match": "\\[([^\\]]+)\\]",
+                    "captures": {
+                        "1": {
+                            "name": "markup.bold.keyword.text.sdns"
+                        }
+                    }
+                }
+            ]
+        },
+        "keyword-metadata": {
+            "patterns": [
+                {
+                    "name": "entity.other.attribute-name.metadata.sdns",
+                    "match": "<([\\w-]+):([\\w-]+)>",
+                    "captures": {
+                        "1": {
+                            "name": "entity.other.attribute-name.type.sdns"
+                        },
+                        "2": {
+                            "name": "string.unquoted.id.sdns"
+                        }
+                    }
+                }
+            ]
+        },
+        "conditions": {
+            "patterns": [
+                {
+                    "name": "keyword.operator.comparison.sdns",
+                    "match": "(>=|<=|==|!=|>|<)"
+                },
+                {
+                    "name": "keyword.operator.logical.sdns",
+                    "match": "(&&|\\|\\||!)"
+                },
+                {
+                    "name": "support.function.sdns",
+                    "match": "\\b(has_symptom|has_keyword|has_breakthrough|asked_about)\\b"
+                },
+                {
+                    "name": "variable.other.sdns",
+                    "match": "\\b(rapport|focus|turn|breakthroughs)\\b"
+                }
+            ]
+        },
+        "numbers": {
+            "patterns": [
+                {
+                    "name": "constant.numeric.sdns",
+                    "match": "[+-]?\\b\\d+\\.?\\d*\\b"
+                }
+            ]
+        }
+    }
+}

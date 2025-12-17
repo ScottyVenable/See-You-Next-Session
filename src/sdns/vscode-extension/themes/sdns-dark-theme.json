@@ -1,0 +1,158 @@
+{
+    "name": "sdns-dark",
+    "displayName": "SDNS Dark Theme",
+    "type": "dark",
+    "colors": {
+        "editor.background": "#1a1a2e",
+        "editor.foreground": "#eaeaea",
+        "editorLineNumber.foreground": "#5a5a7a",
+        "editorLineNumber.activeForeground": "#a5b4fc",
+        "editor.selectionBackground": "#3d3d5c",
+        "editor.lineHighlightBackground": "#252542"
+    },
+    "tokenColors": [
+        {
+            "name": "Comments",
+            "scope": [
+                "comment",
+                "comment.line",
+                "comment.block"
+            ],
+            "settings": {
+                "foreground": "#6b7280",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "Block Definitions",
+            "scope": [
+                "entity.name.section.sdns",
+                "punctuation.definition.section"
+            ],
+            "settings": {
+                "foreground": "#f472b6",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Speakers - Patient",
+            "scope": "entity.name.tag.speaker.sdns",
+            "settings": {
+                "foreground": "#60a5fa",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Mood Modifiers",
+            "scope": "entity.other.attribute-name.mood.sdns",
+            "settings": {
+                "foreground": "#a78bfa",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "Control Directives",
+            "scope": "keyword.control.directive.sdns",
+            "settings": {
+                "foreground": "#f97316",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Other Directives",
+            "scope": "keyword.other.directive.sdns",
+            "settings": {
+                "foreground": "#fb923c"
+            }
+        },
+        {
+            "name": "Goto Statements",
+            "scope": [
+                "keyword.control.goto.sdns",
+                "entity.name.label.sdns"
+            ],
+            "settings": {
+                "foreground": "#22d3ee"
+            }
+        },
+        {
+            "name": "Strings - Dialogue",
+            "scope": "string.quoted.double.sdns",
+            "settings": {
+                "foreground": "#86efac"
+            }
+        },
+        {
+            "name": "Actions",
+            "scope": "string.other.action.sdns",
+            "settings": {
+                "foreground": "#fde047",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "Tagged Keywords",
+            "scope": [
+                "markup.bold.keyword.sdns",
+                "markup.bold.keyword.text.sdns"
+            ],
+            "settings": {
+                "foreground": "#f87171",
+                "fontStyle": "bold underline"
+            }
+        },
+        {
+            "name": "Keyword Metadata",
+            "scope": [
+                "entity.other.attribute-name.metadata.sdns",
+                "entity.other.attribute-name.type.sdns"
+            ],
+            "settings": {
+                "foreground": "#c084fc"
+            }
+        },
+        {
+            "name": "Comparison Operators",
+            "scope": "keyword.operator.comparison.sdns",
+            "settings": {
+                "foreground": "#94a3b8"
+            }
+        },
+        {
+            "name": "Logical Operators",
+            "scope": "keyword.operator.logical.sdns",
+            "settings": {
+                "foreground": "#f97316"
+            }
+        },
+        {
+            "name": "Built-in Functions",
+            "scope": "support.function.sdns",
+            "settings": {
+                "foreground": "#2dd4bf"
+            }
+        },
+        {
+            "name": "Variables",
+            "scope": "variable.other.sdns",
+            "settings": {
+                "foreground": "#818cf8"
+            }
+        },
+        {
+            "name": "Numbers",
+            "scope": "constant.numeric.sdns",
+            "settings": {
+                "foreground": "#fbbf24"
+            }
+        },
+        {
+            "name": "Escape Characters",
+            "scope": "constant.character.escape.sdns",
+            "settings": {
+                "foreground": "#fb7185"
+            }
+        }
+    ],
+    "semanticHighlighting": true
+}

@@ -1,0 +1,448 @@
+{
+    "version": "1.0.0",
+    "patientId": "gregory",
+    "topics": {
+        "therapy": {
+            "label": "About Therapy",
+            "icon": "🗣️",
+            "description": "Discuss the therapeutic process and his reasons for coming",
+            "unlockCondition": null,
+            "subtopics": {
+                "reason": {
+                    "label": "What brings you here today?",
+                    "shortLabel": "Reason for Visit",
+                    "rapportRequired": 0,
+                    "cooldown": 0,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "opener",
+                        "engagement"
+                    ]
+                },
+                "expectations": {
+                    "label": "What do you expect from therapy?",
+                    "shortLabel": "Expectations",
+                    "rapportRequired": 15,
+                    "cooldown": 0,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "meta",
+                        "engagement"
+                    ]
+                },
+                "concerns": {
+                    "label": "Any concerns about being here?",
+                    "shortLabel": "Concerns",
+                    "rapportRequired": 20,
+                    "cooldown": 0,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "meta",
+                        "anxiety-related"
+                    ]
+                }
+            }
+        },
+        "sleep": {
+            "label": "Sleep",
+            "icon": "😴",
+            "description": "Discuss sleep patterns and rest",
+            "unlockCondition": null,
+            "subtopics": {
+                "quality": {
+                    "label": "How have you been sleeping?",
+                    "shortLabel": "Sleep Quality",
+                    "rapportRequired": 15,
+                    "cooldown": 1,
+                    "timesAsked": 0,
+                    "maxAsks": 3,
+                    "tags": [
+                        "core-symptom",
+                        "somatic"
+                    ]
+                },
+                "routine": {
+                    "label": "What's your sleep routine like?",
+                    "shortLabel": "Routine",
+                    "rapportRequired": 30,
+                    "cooldown": 1,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "behavioral"
+                    ]
+                },
+                "thoughts": {
+                    "label": "What goes through your mind at night?",
+                    "shortLabel": "Nighttime Thoughts",
+                    "rapportRequired": 45,
+                    "cooldown": 2,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "deep-exploration",
+                        "cognitive"
+                    ]
+                }
+            }
+        },
+        "social": {
+            "label": "Social Life",
+            "icon": "👥",
+            "description": "Explore social connections and interactions",
+            "unlockCondition": null,
+            "subtopics": {
+                "friends": {
+                    "label": "Tell me about your social life",
+                    "shortLabel": "Friends",
+                    "rapportRequired": 25,
+                    "cooldown": 0,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "relationships",
+                        "support-system"
+                    ]
+                },
+                "interactions": {
+                    "label": "How do you feel around others?",
+                    "shortLabel": "Around Others",
+                    "rapportRequired": 35,
+                    "cooldown": 1,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "anxiety-related",
+                        "social"
+                    ]
+                },
+                "avoidance": {
+                    "label": "Do you avoid social situations?",
+                    "shortLabel": "Avoidance",
+                    "rapportRequired": 50,
+                    "cooldown": 2,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "behavioral",
+                        "anxiety-related"
+                    ]
+                }
+            }
+        },
+        "work": {
+            "label": "Work",
+            "icon": "💼",
+            "description": "Discuss career and daily responsibilities",
+            "unlockCondition": null,
+            "subtopics": {
+                "job": {
+                    "label": "What do you do for work?",
+                    "shortLabel": "Your Job",
+                    "rapportRequired": 10,
+                    "cooldown": 0,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "daily-life"
+                    ]
+                },
+                "performance": {
+                    "label": "How do you feel about your performance?",
+                    "shortLabel": "Performance",
+                    "rapportRequired": 35,
+                    "cooldown": 1,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "self-esteem",
+                        "perfectionism"
+                    ]
+                },
+                "stress": {
+                    "label": "Is work stressful for you?",
+                    "shortLabel": "Work Stress",
+                    "rapportRequired": 30,
+                    "cooldown": 1,
+                    "timesAsked": 0,
+                    "maxAsks": 3,
+                    "tags": [
+                        "anxiety-related"
+                    ]
+                }
+            }
+        },
+        "emotions": {
+            "label": "Feelings",
+            "icon": "💭",
+            "description": "Explore emotional state and inner experience",
+            "unlockCondition": null,
+            "subtopics": {
+                "general": {
+                    "label": "How have you been feeling lately?",
+                    "shortLabel": "General Mood",
+                    "rapportRequired": 20,
+                    "cooldown": 0,
+                    "timesAsked": 0,
+                    "maxAsks": 3,
+                    "tags": [
+                        "core-symptom"
+                    ]
+                },
+                "worry": {
+                    "label": "What do you find yourself worrying about?",
+                    "shortLabel": "Worries",
+                    "rapportRequired": 30,
+                    "cooldown": 1,
+                    "timesAsked": 0,
+                    "maxAsks": 3,
+                    "tags": [
+                        "core-symptom",
+                        "anxiety-related"
+                    ]
+                },
+                "calm": {
+                    "label": "When do you feel most at ease?",
+                    "shortLabel": "Feeling Calm",
+                    "rapportRequired": 40,
+                    "cooldown": 1,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "coping",
+                        "positive"
+                    ]
+                }
+            }
+        },
+        "appearance": {
+            "label": "Appearance",
+            "icon": "👔",
+            "description": "Discuss self-presentation and how he sees himself",
+            "unlockCondition": {
+                "rapport": 35
+            },
+            "subtopics": {
+                "presentation": {
+                    "label": "You seem very put-together today",
+                    "shortLabel": "Put-Together",
+                    "rapportRequired": 35,
+                    "cooldown": 2,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "observation",
+                        "perfectionism"
+                    ]
+                },
+                "effort": {
+                    "label": "How much effort goes into your appearance?",
+                    "shortLabel": "Effort",
+                    "rapportRequired": 45,
+                    "cooldown": 2,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "behavioral",
+                        "perfectionism"
+                    ]
+                },
+                "judgment": {
+                    "label": "Do you worry about how others see you?",
+                    "shortLabel": "Others' Views",
+                    "rapportRequired": 50,
+                    "cooldown": 2,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "deep-exploration",
+                        "fear-of-judgment"
+                    ]
+                }
+            }
+        },
+        "self": {
+            "label": "Self & Identity",
+            "icon": "🪞",
+            "description": "Explore sense of self and self-perception",
+            "unlockCondition": {
+                "rapport": 45
+            },
+            "subtopics": {
+                "identity": {
+                    "label": "How would you describe yourself?",
+                    "shortLabel": "Self-Description",
+                    "rapportRequired": 45,
+                    "cooldown": 2,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "deep-exploration",
+                        "self-esteem"
+                    ]
+                },
+                "expectations": {
+                    "label": "What do you expect of yourself?",
+                    "shortLabel": "Self-Expectations",
+                    "rapportRequired": 55,
+                    "cooldown": 2,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "perfectionism",
+                        "deep-exploration"
+                    ]
+                },
+                "confidence": {
+                    "label": "How confident do you feel in your own judgment?",
+                    "shortLabel": "Self-Trust",
+                    "rapportRequired": 60,
+                    "cooldown": 2,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "deep-exploration",
+                        "self-doubt"
+                    ]
+                }
+            }
+        },
+        "family": {
+            "label": "Family",
+            "icon": "👨‍👩‍👧",
+            "description": "Explore family background and relationships",
+            "unlockCondition": {
+                "rapport": 40
+            },
+            "subtopics": {
+                "background": {
+                    "label": "Tell me about your family",
+                    "shortLabel": "Background",
+                    "rapportRequired": 40,
+                    "cooldown": 1,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "early-life",
+                        "relationships"
+                    ]
+                },
+                "childhood": {
+                    "label": "What was growing up like?",
+                    "shortLabel": "Childhood",
+                    "rapportRequired": 55,
+                    "cooldown": 2,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "early-life",
+                        "deep-exploration"
+                    ]
+                },
+                "expectations": {
+                    "label": "What did your family expect of you?",
+                    "shortLabel": "Family Expectations",
+                    "rapportRequired": 60,
+                    "cooldown": 2,
+                    "timesAsked": 0,
+                    "maxAsks": 2,
+                    "tags": [
+                        "deep-exploration",
+                        "perfectionism"
+                    ]
+                }
+            }
+        }
+    },
+    "specialResponses": {
+        "reflect": {
+            "label": "Reflect back",
+            "icon": "🪞",
+            "description": "Mirror what Gregory said to show understanding",
+            "rapportGain": 4,
+            "cooldown": 2,
+            "notes": "Gregory responds well to being understood"
+        },
+        "validate": {
+            "label": "Validate feelings",
+            "icon": "💚",
+            "description": "Acknowledge his emotional experience as valid",
+            "rapportGain": 6,
+            "cooldown": 3,
+            "notes": "Important for someone who doubts his own experiences"
+        },
+        "normalize": {
+            "label": "Normalize experience",
+            "icon": "🤝",
+            "description": "Help him see his struggles are understandable",
+            "rapportGain": 5,
+            "cooldown": 3,
+            "notes": "Counters his tendency to minimize or doubt"
+        },
+        "givePermission": {
+            "label": "Give permission",
+            "icon": "✅",
+            "description": "Explicitly affirm it's okay to feel/think/do something",
+            "rapportGain": 7,
+            "cooldown": 4,
+            "notes": "Addresses his reassurance-seeking pattern"
+        },
+        "silence": {
+            "label": "Thoughtful silence",
+            "icon": "⏸️",
+            "description": "Allow space for reflection",
+            "effect": "May prompt Gregory to elaborate or backtrack",
+            "cooldown": 4,
+            "notes": "Can cause anxiety but also breakthroughs"
+        },
+        "confrontContradiction": {
+            "label": "Point out contradiction",
+            "icon": "🔍",
+            "description": "Gently note an inconsistency (e.g., bags under eyes vs. 'sleeping fine')",
+            "rapportCost": 5,
+            "potentialRapportGain": 15,
+            "requiresEvidence": true,
+            "notes": "Use carefully—can build or damage trust"
+        }
+    },
+    "responseModifiers": {
+        "pushGently": {
+            "label": "Explore further",
+            "description": "Encourage him to say more about this",
+            "rapportEffect": -2,
+            "opennessEffect": 5
+        },
+        "backOff": {
+            "label": "Respect boundaries",
+            "description": "Acknowledge this is difficult and move on",
+            "rapportEffect": 4,
+            "opennessEffect": -3
+        },
+        "reframe": {
+            "label": "Offer perspective",
+            "description": "Suggest a different way to view this",
+            "rapportEffect": 0,
+            "insightBonus": true
+        },
+        "askPermission": {
+            "label": "Ask if it's okay to continue",
+            "description": "Check in before going deeper",
+            "rapportEffect": 3,
+            "opennessEffect": 2,
+            "notes": "Models healthy boundary-setting for Gregory"
+        }
+    },
+    "hedgingPatterns": [
+        "Well, maybe not compared to some people",
+        "I don't think... unless of course you think",
+        "I'm not sure if this is normal, but",
+        "It's probably nothing, but",
+        "I could be wrong about this",
+        "Does that make sense? I'm not explaining it well",
+        "I don't know if I should even mention this",
+        "This might sound stupid, but"
+    ]
+}

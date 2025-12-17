@@ -1,0 +1,504 @@
+{
+    "Block Definition": {
+        "prefix": [
+            "block",
+            "==="
+        ],
+        "body": [
+            "=== ${1:block-name} ===",
+            "${2:NARRATOR}",
+            "${3:*Description of the scene.*}",
+            "",
+            "$0"
+        ],
+        "description": "Create a new dialogue block"
+    },
+    "Response Handler Block": {
+        "prefix": [
+            "response",
+            "@response"
+        ],
+        "body": [
+            "=== @response:${1:topic}.${2:subtopic} ===",
+            "@if rapport >= ${3:50}",
+            "    PATIENT (${4:vulnerable})",
+            "    \"${5:High rapport response}\"",
+            "    ",
+            "    @rapport +${6:5}",
+            "@else",
+            "    PATIENT (guarded)",
+            "    \"${7:Low rapport response}\"",
+            "    ",
+            "    @rapport +2",
+            "@endif",
+            "$0"
+        ],
+        "description": "Create a response handler block with rapport conditions"
+    },
+    "Breakthrough Block": {
+        "prefix": [
+            "breakthrough",
+            "@breakthrough"
+        ],
+        "body": [
+            "=== @breakthrough:${1:breakthrough-id} ===",
+            "NARRATOR",
+            "*${2:A significant moment of realization.}*",
+            "",
+            "PATIENT (${3:emotional})",
+            "\"${4:Breakthrough dialogue}\"",
+            "",
+            "@reveal ${5:symptom-id}",
+            "@rapport +${6:15}",
+            "$0"
+        ],
+        "description": "Create a breakthrough moment block"
+    },
+    "Patient Line": {
+        "prefix": [
+            "patient",
+            "PATIENT"
+        ],
+        "body": [
+            "PATIENT (${1|neutral,nervous,anxious,guarded,hesitant,vulnerable,defensive,thoughtful,sad,angry,relieved,confused,hopeful|})",
+            "\"${2:dialogue}\"",
+            "$0"
+        ],
+        "description": "Patient dialogue line with mood"
+    },
+    "Patient Line Simple": {
+        "prefix": [
+            "p"
+        ],
+        "body": [
+            "PATIENT",
+            "\"${1:dialogue}\"",
+            "$0"
+        ],
+        "description": "Simple patient dialogue line"
+    },
+    "Narrator Action": {
+        "prefix": [
+            "narrator",
+            "NARRATOR",
+            "narr"
+        ],
+        "body": [
+            "NARRATOR",
+            "*${1:Description of action or scene}*",
+            "$0"
+        ],
+        "description": "Narrator description/action"
+    },
+    "Therapist Line": {
+        "prefix": [
+            "therapist",
+            "THERAPIST"
+        ],
+        "body": [
+            "THERAPIST",
+            "\"${1:dialogue}\"",
+            "$0"
+        ],
+        "description": "Therapist dialogue line"
+    },
+    "System Message": {
+        "prefix": [
+            "system",
+            "SYSTEM"
+        ],
+        "body": [
+            "SYSTEM",
+            "[${1:System message or instruction}]",
+            "$0"
+        ],
+        "description": "System message or game instruction"
+    },
+    "If Statement": {
+        "prefix": [
+            "if",
+            "@if"
+        ],
+        "body": [
+            "@if ${1:rapport} ${2|>=,<=,>,<,==,!=|} ${3:50}",
+            "    ${0}",
+            "@endif"
+        ],
+        "description": "Conditional if statement"
+    },
+    "If-Else Statement": {
+        "prefix": [
+            "ifelse",
+            "@ifelse"
+        ],
+        "body": [
+            "@if ${1:rapport} ${2|>=,<=,>,<,==,!=|} ${3:50}",
+            "    ${4:// High condition content}",
+            "@else",
+            "    ${5:// Low condition content}",
+            "@endif",
+            "$0"
+        ],
+        "description": "Conditional if-else statement"
+    },
+    "If-Elseif-Else Statement": {
+        "prefix": [
+            "ifelseif",
+            "@ifelseif"
+        ],
+        "body": [
+            "@if ${1:rapport} >= ${2:60}",
+            "    ${3:// High rapport}",
+            "@elseif ${1:rapport} >= ${4:40}",
+            "    ${5:// Medium rapport}",
+            "@else",
+            "    ${6:// Low rapport}",
+            "@endif",
+            "$0"
+        ],
+        "description": "Multi-branch conditional statement"
+    },
+    "When Handler": {
+        "prefix": [
+            "when",
+            "@when"
+        ],
+        "body": [
+            "@when ${1|has_keyword,has_symptom,has_breakthrough,asked_about|}(\"${2:id}\")",
+            "    ${0}",
+            "@end"
+        ],
+        "description": "When condition handler"
+    },
+    "Reveal Directive": {
+        "prefix": [
+            "reveal",
+            "@reveal"
+        ],
+        "body": [
+            "@reveal ${1|symptom,keyword,breakthrough,observation|}:${2:id}",
+            "$0"
+        ],
+        "description": "Reveal a symptom, keyword, or breakthrough"
+    },
+    "Rapport Directive": {
+        "prefix": [
+            "rapport",
+            "@rapport"
+        ],
+        "body": [
+            "@rapport ${1|+,-|}${2:5}",
+            "$0"
+        ],
+        "description": "Modify rapport value"
+    },
+    "Focus Directive": {
+        "prefix": [
+            "focus",
+            "@focus"
+        ],
+        "body": [
+            "@focus ${1|+,-|}${2:10}",
+            "$0"
+        ],
+        "description": "Modify focus/attention value"
+    },
+    "Pause Directive": {
+        "prefix": [
+            "pause",
+            "@pause"
+        ],
+        "body": [
+            "@pause ${1:1}",
+            "$0"
+        ],
+        "description": "Pause for dramatic effect (seconds)"
+    },
+    "Set Variable": {
+        "prefix": [
+            "set",
+            "@set"
+        ],
+        "body": [
+            "@set ${1:variable_name} = ${2:value}",
+            "$0"
+        ],
+        "description": "Set a game state variable"
+    },
+    "Unlock Directive": {
+        "prefix": [
+            "unlock",
+            "@unlock"
+        ],
+        "body": [
+            "@unlock ${1|topic,response,breakthrough|}:${2:id}",
+            "$0"
+        ],
+        "description": "Unlock a topic, response, or breakthrough"
+    },
+    "Trigger Directive": {
+        "prefix": [
+            "trigger",
+            "@trigger"
+        ],
+        "body": [
+            "@trigger ${1:event-name}",
+            "$0"
+        ],
+        "description": "Trigger a game event"
+    },
+    "Goto Statement": {
+        "prefix": [
+            "goto",
+            "->"
+        ],
+        "body": [
+            "-> ${1:block-name}",
+            "$0"
+        ],
+        "description": "Jump to another block"
+    },
+    "Tagged Keyword": {
+        "prefix": [
+            "keyword",
+            "tag",
+            "["
+        ],
+        "body": [
+            "[${1:keyword text}]$0"
+        ],
+        "description": "Tag a keyword for tracking"
+    },
+    "Keyword with Metadata": {
+        "prefix": [
+            "keywordmeta",
+            "tagmeta"
+        ],
+        "body": [
+            "[${1:keyword text}]<${2|symptom,contradicts,reveals,links|}:${3:id}>$0"
+        ],
+        "description": "Keyword with metadata tag"
+    },
+    "Response Choice": {
+        "prefix": [
+            "choice",
+            ">"
+        ],
+        "body": [
+            "> \"${1:Response option text}\"",
+            "    ${2:// Response consequences}",
+            "    @rapport ${3:+5}",
+            "    -> ${4:next-block}",
+            "$0"
+        ],
+        "description": "Player response choice"
+    },
+    "Response Choice Simple": {
+        "prefix": [
+            "choicesimple",
+            ">>"
+        ],
+        "body": [
+            "> \"${1:Response text}\"",
+            "    -> ${2:next-block}",
+            "$0"
+        ],
+        "description": "Simple response choice with goto"
+    },
+    "Multiple Choices": {
+        "prefix": [
+            "choices",
+            "options"
+        ],
+        "body": [
+            "> \"${1:First option}\"",
+            "    @rapport +${2:3}",
+            "    -> ${3:block1}",
+            "",
+            "> \"${4:Second option}\"",
+            "    @rapport +${5:5}",
+            "    -> ${6:block2}",
+            "",
+            "> \"${7:Third option}\"",
+            "    @rapport +${8:2}",
+            "    -> ${9:block3}",
+            "$0"
+        ],
+        "description": "Multiple response choices"
+    },
+    "Contradiction": {
+        "prefix": [
+            "contradiction",
+            "contradicts"
+        ],
+        "body": [
+            "[${1:statement}]<contradicts:${2:previous-statement-id}>$0"
+        ],
+        "description": "Mark dialogue that contradicts earlier statement"
+    },
+    "Comment Section": {
+        "prefix": [
+            "section",
+            "//---"
+        ],
+        "body": [
+            "// -------------------------------------------",
+            "// ${1:SECTION NAME}",
+            "// -------------------------------------------",
+            "",
+            "$0"
+        ],
+        "description": "Comment section divider"
+    },
+    "File Header": {
+        "prefix": [
+            "header",
+            "fileheader"
+        ],
+        "body": [
+            "// ============================================================================",
+            "// Patient: ${1:Patient Name}",
+            "// Diagnosis: ${2:Diagnosis}",
+            "// Phase: Turn ${3:1} - ${4:Phase Description}",
+            "// ",
+            "// ${5:Character description and background}",
+            "//",
+            "// Key Characteristics:",
+            "// - ${6:Characteristic 1}",
+            "// - ${7:Characteristic 2}",
+            "// - ${8:Characteristic 3}",
+            "//",
+            "// Key Symptoms to Discover:",
+            "// - ${9:Symptom 1}",
+            "// - ${10:Symptom 2}",
+            "// ============================================================================",
+            "",
+            "$0"
+        ],
+        "description": "Session file header with patient info"
+    },
+    "Mood Change": {
+        "prefix": [
+            "mood"
+        ],
+        "body": [
+            "(${1|neutral,nervous,anxious,guarded,hesitant,vulnerable,defensive,thoughtful,sad,angry,relieved,confused,hopeful,embarrassed,frustrated,exhausted,desperate,intense,quietly,honest|})"
+        ],
+        "description": "Mood/emotion modifier"
+    },
+    "Action Text": {
+        "prefix": [
+            "action",
+            "*"
+        ],
+        "body": [
+            "*${1:Action description}*$0"
+        ],
+        "description": "Inline action description"
+    },
+    "Dialogue with Pause": {
+        "prefix": [
+            "dialoguepause"
+        ],
+        "body": [
+            "PATIENT (${1:hesitant})",
+            "\"${2:First part of dialogue}\"",
+            "",
+            "@pause ${3:1}",
+            "",
+            "PATIENT",
+            "\"${4:Second part after pause}\"",
+            "$0"
+        ],
+        "description": "Dialogue with dramatic pause"
+    },
+    "Emotional Escalation": {
+        "prefix": [
+            "escalate",
+            "emotional"
+        ],
+        "body": [
+            "PATIENT (${1:hesitant})",
+            "\"${2:Initial statement}\"",
+            "",
+            "@pause 0.5",
+            "",
+            "PATIENT (${3:vulnerable})",
+            "\"${4:Deeper revelation}\"",
+            "",
+            "@pause 1",
+            "",
+            "PATIENT (${5:emotional})",
+            "\"${6:Emotional climax}\"",
+            "",
+            "@rapport +${7:10}",
+            "@reveal ${8:symptom-id}",
+            "$0"
+        ],
+        "description": "Emotional escalation sequence"
+    },
+    "Rapport Check Function": {
+        "prefix": [
+            "rapportcheck"
+        ],
+        "body": [
+            "rapport ${1|>=,>,<=,<,==,!=|} ${2:50}"
+        ],
+        "description": "Rapport comparison condition"
+    },
+    "Has Keyword Check": {
+        "prefix": [
+            "haskeyword"
+        ],
+        "body": [
+            "has_keyword(\"${1:keyword-id}\")"
+        ],
+        "description": "Check if keyword was discovered"
+    },
+    "Has Symptom Check": {
+        "prefix": [
+            "hassymptom"
+        ],
+        "body": [
+            "has_symptom(\"${1:symptom-id}\")"
+        ],
+        "description": "Check if symptom was revealed"
+    },
+    "Has Breakthrough Check": {
+        "prefix": [
+            "hasbreakthrough"
+        ],
+        "body": [
+            "has_breakthrough(\"${1:breakthrough-id}\")"
+        ],
+        "description": "Check if breakthrough occurred"
+    },
+    "Complex Condition": {
+        "prefix": [
+            "complexif"
+        ],
+        "body": [
+            "@if rapport >= ${1:50} && has_keyword(\"${2:keyword-id}\")",
+            "    ${0}",
+            "@endif"
+        ],
+        "description": "Complex conditional with multiple checks"
+    },
+    "Turn Start Block": {
+        "prefix": [
+            "turnstart",
+            "start"
+        ],
+        "body": [
+            "=== START ===",
+            "NARRATOR",
+            "*${1:Opening scene description}*",
+            "",
+            "PATIENT (${2:initial mood})",
+            "\"${3:Opening line}\"",
+            "",
+            "$0"
+        ],
+        "description": "Starting block for a turn"
+    }
+}

@@ -1,0 +1,158 @@
+{
+    "name": "sdns-light",
+    "displayName": "SDNS Light Theme",
+    "type": "light",
+    "colors": {
+        "editor.background": "#fefefe",
+        "editor.foreground": "#1f2937",
+        "editorLineNumber.foreground": "#9ca3af",
+        "editorLineNumber.activeForeground": "#4f46e5",
+        "editor.selectionBackground": "#ddd6fe",
+        "editor.lineHighlightBackground": "#f5f3ff"
+    },
+    "tokenColors": [
+        {
+            "name": "Comments",
+            "scope": [
+                "comment",
+                "comment.line",
+                "comment.block"
+            ],
+            "settings": {
+                "foreground": "#9ca3af",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "Block Definitions",
+            "scope": [
+                "entity.name.section.sdns",
+                "punctuation.definition.section"
+            ],
+            "settings": {
+                "foreground": "#be185d",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Speakers",
+            "scope": "entity.name.tag.speaker.sdns",
+            "settings": {
+                "foreground": "#1d4ed8",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Mood Modifiers",
+            "scope": "entity.other.attribute-name.mood.sdns",
+            "settings": {
+                "foreground": "#7c3aed",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "Control Directives",
+            "scope": "keyword.control.directive.sdns",
+            "settings": {
+                "foreground": "#c2410c",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Other Directives",
+            "scope": "keyword.other.directive.sdns",
+            "settings": {
+                "foreground": "#ea580c"
+            }
+        },
+        {
+            "name": "Goto Statements",
+            "scope": [
+                "keyword.control.goto.sdns",
+                "entity.name.label.sdns"
+            ],
+            "settings": {
+                "foreground": "#0891b2"
+            }
+        },
+        {
+            "name": "Strings - Dialogue",
+            "scope": "string.quoted.double.sdns",
+            "settings": {
+                "foreground": "#15803d"
+            }
+        },
+        {
+            "name": "Actions",
+            "scope": "string.other.action.sdns",
+            "settings": {
+                "foreground": "#a16207",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "Tagged Keywords",
+            "scope": [
+                "markup.bold.keyword.sdns",
+                "markup.bold.keyword.text.sdns"
+            ],
+            "settings": {
+                "foreground": "#dc2626",
+                "fontStyle": "bold underline"
+            }
+        },
+        {
+            "name": "Keyword Metadata",
+            "scope": [
+                "entity.other.attribute-name.metadata.sdns",
+                "entity.other.attribute-name.type.sdns"
+            ],
+            "settings": {
+                "foreground": "#9333ea"
+            }
+        },
+        {
+            "name": "Comparison Operators",
+            "scope": "keyword.operator.comparison.sdns",
+            "settings": {
+                "foreground": "#475569"
+            }
+        },
+        {
+            "name": "Logical Operators",
+            "scope": "keyword.operator.logical.sdns",
+            "settings": {
+                "foreground": "#c2410c"
+            }
+        },
+        {
+            "name": "Built-in Functions",
+            "scope": "support.function.sdns",
+            "settings": {
+                "foreground": "#0d9488"
+            }
+        },
+        {
+            "name": "Variables",
+            "scope": "variable.other.sdns",
+            "settings": {
+                "foreground": "#4f46e5"
+            }
+        },
+        {
+            "name": "Numbers",
+            "scope": "constant.numeric.sdns",
+            "settings": {
+                "foreground": "#b45309"
+            }
+        },
+        {
+            "name": "Escape Characters",
+            "scope": "constant.character.escape.sdns",
+            "settings": {
+                "foreground": "#e11d48"
+            }
+        }
+    ],
+    "semanticHighlighting": true
+}

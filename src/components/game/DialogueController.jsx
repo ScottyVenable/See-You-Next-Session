@@ -1,12 +1,12 @@
 /**
- * DialogueController - Manages dialogue flow using SYNS dialogue system
+ * DialogueController - Manages dialogue flow using SDNS dialogue system
  * Bridges the dialogue engine with the UI components
  */
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import styled from 'styled-components';
-import { useDialogue } from '../../dialogue/useDialogue.js';
+import { useDialogue } from '../../sdns/index.js';
 
 // Styled components for dialogue display
 const DialogueContainer = styled.div`
