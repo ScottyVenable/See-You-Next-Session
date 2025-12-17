@@ -457,7 +457,7 @@ function GameScreen() {
                             <span className="meter-value">{focus.current}</span>
                         </div>
                         <div className="tray-meter rapport-mini">
-                            <span className="meter-icon">💚</span>
+                            <span className="meter-icon">[R]</span>
                             <div className="meter-bar">
                                 <div
                                     className="meter-fill rapport-fill"
@@ -472,7 +472,7 @@ function GameScreen() {
                         onClick={actions.toggleFocusMode}
                         title="Toggle Focus Mode"
                     >
-                        <span className="focus-icon">{isFocusMode ? '👁️' : '👁️‍🗨️'}</span>
+                        <span className="focus-icon">{isFocusMode ? '[O]' : '[F]'}</span>
                         <span className="focus-label">{isFocusMode ? 'Exit Focus' : 'Focus'}</span>
                     </button>
                 </div>
@@ -573,10 +573,10 @@ function GameScreen() {
                                 </motion.p>
                             </div>
                             <div className="breakthrough-reward">
-                                <span className="reward-icon">✨</span>
+                                <span className="reward-icon">[+]</span>
                                 <span className="reward-text">+40 Focus Restored</span>
                                 <span className="reward-divider">•</span>
-                                <span className="reward-icon">💚</span>
+                                <span className="reward-icon">[R]</span>
                                 <span className="reward-text">+15 Rapport</span>
                             </div>
                             <motion.button

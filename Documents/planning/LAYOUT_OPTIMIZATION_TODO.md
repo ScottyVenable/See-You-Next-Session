@@ -156,34 +156,34 @@ To ensure the Patient View stays consistent even when other UI changes:
 ```
 WORKSTATION PANEL (Collapsed):
 ┌───────────────────────────┐
-│ 🕐 Turn 2/4        [+]    │  <- Collapsed header
+│ [Turn] Turn 2/4    [+]    │  <- Collapsed header
 ├───────────────────────────┤
-│ 🧠 Focus: 60/100   [+]    │
+│ [Focus] 60/100     [+]    │
 ├───────────────────────────┤
-│ 💚 Rapport: 45     [+]    │
+│ [Rapport] 45       [+]    │
 ├───────────────────────────┤
-│ 📋 Clipboard (3)   [+]    │  <- Expand to show tokens
+│ [Clipboard] (3)    [+]    │  <- Expand to show tokens
 ├───────────────────────────┤
-│ 📖 Handbook        [+]    │
+│ [Handbook]         [+]    │
 └───────────────────────────┘
 
 WORKSTATION PANEL (Clipboard Expanded):
 ┌───────────────────────────┐
-│ 🕐 Turn 2/4        [-]    │
-│ 🧠 Focus: 60/100   [-]    │
-│ 💚 Rapport: 45     [-]    │
+│ [Turn] Turn 2/4    [-]    │
+│ [Focus] 60/100     [-]    │
+│ [Rapport] 45       [-]    │
 ├───────────────────────────┤
-│ 📋 CLIPBOARD       [−]    │
+│ [CLIPBOARD]        [−]    │
 │ ┌───────────────────────┐ │
 │ │ Token 1               │ │
 │ │ Token 2               │ │
 │ │ Token 3               │ │
 │ ├───────────────────────┤ │
-│ │ ⚗️ SYNTHESIS ZONE     │ │  <- Inside clipboard!
+│ │ [SYNTHESIS ZONE]      │ │  <- Inside clipboard!
 │ │ [Drop tokens here]    │ │
 │ └───────────────────────┘ │
 ├───────────────────────────┤
-│ 📖 Handbook        [+]    │
+│ [Handbook]         [+]    │
 └───────────────────────────┘
 ```
 

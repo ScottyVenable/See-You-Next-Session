@@ -128,15 +128,15 @@ The developers are not mental health professionals. All information in this game
 - [988 Suicide & Crisis Lifeline](https://988lifeline.org/)
 - [NAMI](https://www.nami.org/)
 
-## 👥 Credits
+## Credits
 
 - **Scott** - Programming & Design
 - **Kiki** - Art Direction & Writing
 
-## 🤝 Contributing
+## Contributing
 
 See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for guidelines.
 
-## 📄 License
+## License
 
 MIT License - See [LICENSE](LICENSE) file for details

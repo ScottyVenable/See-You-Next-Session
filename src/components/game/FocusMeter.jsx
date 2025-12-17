@@ -13,9 +13,9 @@ function FocusMeter({ current, max, onToggleFocus, isFocusMode }) {
     };
 
     const getFocusStatus = () => {
-        if (percentage > 60) return { label: 'Sharp', icon: '🧠' };
-        if (percentage > 30) return { label: 'Focused', icon: '👁️' };
-        return { label: 'Fatigued', icon: '😵' };
+        if (percentage > 60) return { label: 'Sharp', icon: '[+]' };
+        if (percentage > 30) return { label: 'Focused', icon: '[=]' };
+        return { label: 'Fatigued', icon: '[-]' };
     };
 
     const status = getFocusStatus();

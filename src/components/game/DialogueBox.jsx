@@ -542,7 +542,7 @@ function DialogueBox({
                                     className="context-menu-item"
                                     onClick={() => handleContextMenuAction('highlight', contextMenu.keyword)}
                                 >
-                                    <span className="menu-icon">📖</span>
+                                    <span className="menu-icon">[H]</span>
                                     <span className="menu-label">Highlight in Handbook</span>
                                 </button>
                             </li>

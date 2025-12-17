@@ -415,7 +415,7 @@ function SynsDialogueBox({
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 }}
                 >
-                    <span className="speaker-avatar">{isNarrator ? '📖' : '👤'}</span>
+                    <span className="speaker-avatar">{isNarrator ? '[N]' : '[P]'}</span>
                     <span className="speaker-name">{speakerDisplay || 'Narrator'}</span>
                 </motion.div>
 
@@ -736,18 +736,18 @@ function ResponsePanel({ responses, onSelectResponse, patientId, currentRapport 
 // Helper: Get default topic icon
 function getDefaultTopicIcon(topic) {
     const icons = {
-        family: '👨‍👩‍👧',
-        work: '💼',
-        emotions: '💭',
-        relationships: '💕',
-        sleep: '😴',
-        physical: '🏃',
-        self: '🪞',
-        coping: '🛡️',
-        history: '📖',
-        therapy: '🗣️'
+        family: '[F]',
+        work: '[W]',
+        emotions: '[E]',
+        relationships: '[R]',
+        sleep: '[S]',
+        physical: '[P]',
+        self: '[M]',
+        coping: '[C]',
+        history: '[H]',
+        therapy: '[T]'
     };
-    return icons[topic] || '❓';
+    return icons[topic] || '[?]';
 }
 
 // Helper: Get default subtopic label

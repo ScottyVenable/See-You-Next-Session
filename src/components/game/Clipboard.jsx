@@ -166,7 +166,7 @@ function Clipboard({
             transition={{ delay: 0.2 }}
         >
             <div className="synthesis-header">
-                <span className="synthesis-icon">⚗️</span>
+                <span className="synthesis-icon">[S]</span>
                 <span className="synthesis-title">Synthesis</span>
                 <span className="synthesis-hint">Combine evidence to find contradictions</span>
             </div>
@@ -239,7 +239,7 @@ function Clipboard({
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.8 }}
                             >
-                                <span className="slot-type-indicator visual">👁️</span>
+                                <span className="slot-type-indicator visual">[V]</span>
                                 <span className="slot-content" title={visualSlot.content}>{visualSlot.content}</span>
                                 <motion.button
                                     className="clear-slot"
@@ -365,7 +365,7 @@ function Clipboard({
                         exit="exit"
                     >
                         <div className="clipboard-expanded-header">
-                            <h3>📋 Clipboard & Synthesis</h3>
+                            <h3>Clipboard & Synthesis</h3>
                             <motion.button
                                 className="collapse-btn"
                                 onClick={() => setIsExpanded(false)}
@@ -423,7 +423,7 @@ function Clipboard({
                                 </div>
 
                                 <div className="token-column">
-                                    <h4>👁️ Observations ({visualTokens.length})</h4>
+                                    <h4>[O] Observations ({visualTokens.length})</h4>
                                     <div className="token-list-expanded">
                                         {visualTokens.length === 0 ? (
                                             <p className="empty-hint">Use Focus Mode to observe the patient</p>
@@ -482,7 +482,7 @@ function Clipboard({
                         exit={{ opacity: 0, x: 20 }}
                     >
                         <div className="clipboard-header">
-                            <h3 className="clipboard-title">📋 Clipboard</h3>
+                            <h3 className="clipboard-title">Clipboard</h3>
                             <motion.button
                                 className="expand-btn"
                                 onClick={() => setIsExpanded(true)}
@@ -536,7 +536,7 @@ function Clipboard({
                         </div>
 
                         <div className="token-section">
-                            <h4>👁️ Observations</h4>
+                            <h4>[O] Observations</h4>
                             <div className="token-list visual-tokens">
                                 {visualTokens.length === 0 ? (
                                     <p className="empty-hint">Use Focus Mode</p>

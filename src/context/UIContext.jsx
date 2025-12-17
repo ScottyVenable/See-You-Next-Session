@@ -3,12 +3,12 @@ import React, { createContext, useContext, useState, useCallback } from 'react';
 // Drawer definitions - what drawers exist and their default states
 export const DRAWERS = {
     // Left side drawers
-    handbook: { id: 'handbook', side: 'left', label: 'Handbook', icon: '📖', width: 360 },
-    notes: { id: 'notes', side: 'left', label: 'Notes', icon: '📝', width: 320 },
+    handbook: { id: 'handbook', side: 'left', label: 'Handbook', icon: '[H]', width: 360 },
+    notes: { id: 'notes', side: 'left', label: 'Notes', icon: '[N]', width: 320 },
     // Right side drawers
-    clipboard: { id: 'clipboard', side: 'right', label: 'Evidence', icon: '📋', width: 340 },
-    synthesis: { id: 'synthesis', side: 'right', label: 'Synthesis', icon: '🧩', width: 360 },
-    stats: { id: 'stats', side: 'right', label: 'Session Stats', icon: '📊', width: 300 },
+    clipboard: { id: 'clipboard', side: 'right', label: 'Evidence', icon: '[E]', width: 340 },
+    synthesis: { id: 'synthesis', side: 'right', label: 'Synthesis', icon: '[S]', width: 360 },
+    stats: { id: 'stats', side: 'right', label: 'Session Stats', icon: '[I]', width: 300 },
 };
 
 // Dialogue position presets for the drawer layout
