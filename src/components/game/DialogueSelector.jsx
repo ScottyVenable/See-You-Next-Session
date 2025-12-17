@@ -101,31 +101,34 @@ const DIALOGUE_TOPICS = {
 // ============================================
 
 const SelectorWrapper = styled.div`
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
-    padding: 16px 20px;
+    gap: 8px;
+    padding: 10px 16px;
     background: linear-gradient(
         135deg,
         rgba(15, 23, 42, 0.9) 0%,
         rgba(30, 41, 59, 0.85) 100%
     );
     backdrop-filter: blur(12px);
-    border-radius: 16px;
+    border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 
         0 4px 24px rgba(0, 0, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    min-height: 70px;
+    max-height: 70px;
+    overflow: visible;
 `;
 
 const SectionLabel = styled.div`
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 1.2px;
     color: rgba(255, 255, 255, 0.4);
-    margin-bottom: -4px;
 `;
 
 const TopicsRow = styled.div`
@@ -263,8 +266,8 @@ const TopicButton = styled.button`
         width: 100%;
         height: 100%;
         background: rgba(0, 0, 0, 0.4);
-        border-radius: 14px;
-        transform: translateY(3px);
+        border-radius: 10px;
+        transform: translateY(2px);
         transition: transform 0.5s cubic-bezier(0.3, 0.7, 0.4, 1);
     }
 
@@ -274,7 +277,7 @@ const TopicButton = styled.button`
         left: 0;
         width: 100%;
         height: 100%;
-        border-radius: 14px;
+        border-radius: 10px;
         background: linear-gradient(
             to bottom,
             ${props => props.$edgeLight} 0%,
@@ -287,27 +290,27 @@ const TopicButton = styled.button`
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 52px;
-        height: 52px;
+        width: 42px;
+        height: 42px;
         color: white;
         background: linear-gradient(
             145deg,
             ${props => props.$bgColor} 0%,
             ${props => props.$bgDark} 100%
         );
-        border-radius: 14px;
-        transform: translateY(-4px);
+        border-radius: 10px;
+        transform: translateY(-3px);
         transition: transform 0.5s cubic-bezier(0.3, 0.7, 0.4, 1);
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
 
     &:hover .shadow {
-        transform: translateY(5px);
+        transform: translateY(4px);
         transition: transform 0.2s cubic-bezier(0.3, 0.7, 0.4, 1.5);
     }
 
     &:hover .front {
-        transform: translateY(-6px);
+        transform: translateY(-5px);
         transition: transform 0.2s cubic-bezier(0.3, 0.7, 0.4, 1.5);
     }
 
@@ -317,7 +320,7 @@ const TopicButton = styled.button`
     }
 
     &:active .front {
-        transform: translateY(-2px);
+        transform: translateY(-1px);
         transition: transform 0.05s;
     }
 
@@ -330,24 +333,36 @@ const TopicButton = styled.button`
         box-shadow: 
             inset 0 1px 0 rgba(255, 255, 255, 0.2),
             0 0 0 2px rgba(255, 255, 255, 0.9),
-            0 0 20px ${props => props.$bgColor}80;
+            0 0 16px ${props => props.$bgColor}80;
     }
 `;
 
+// Floating options panel - appears above the selector
 const OptionsContainer = styled(motion.div)`
-    width: 100%;
-    overflow: hidden;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    min-width: 300px;
+    max-width: 500px;
 `;
 
 const OptionsPanel = styled(motion.div)`
     display: flex;
-    gap: 10px;
+    gap: 8px;
     justify-content: center;
     flex-wrap: wrap;
-    padding: 12px 8px;
-    background: rgba(0, 0, 0, 0.25);
+    padding: 12px 14px;
+    background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.95) 0%,
+        rgba(30, 41, 59, 0.95) 100%
+    );
+    backdrop-filter: blur(12px);
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 `;
 
 const OptionButton = styled(motion.button)`
@@ -597,7 +612,7 @@ function DialogueSelector({ onSelectPrompt, disabledTopics = [], currentFocus = 
                                 <span className="shadow" />
                                 <span className="edge" />
                                 <div className="front">
-                                    <Icon size={24} weight="duotone" />
+                                    <Icon size={20} weight="duotone" />
                                 </div>
                             </TopicButton>
                         </TopicButtonWrapper>

@@ -1,0 +1,43 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "npm",
+            "script": "dev",
+            "problemMatcher": [],
+            "label": "npm: dev",
+            "detail": "vite",
+            "isBackground": true,
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "group": "dev"
+            }
+        },
+        {
+            "type": "npm",
+            "script": "build",
+            "problemMatcher": [],
+            "label": "npm: build",
+            "detail": "vite build",
+            "group": "build"
+        },
+        {
+            "type": "npm",
+            "script": "tauri dev",
+            "problemMatcher": [],
+            "label": "npm: tauri dev",
+            "detail": "tauri dev",
+            "isBackground": true,
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "group": "dev"
+            }
+        }
+    ]
+}
