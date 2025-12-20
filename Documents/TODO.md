@@ -185,12 +185,19 @@
 - [x] Turn off dragging when resizing the `draggable-dialogue` component to prevent accidental movement.
 - [x] Improve padding for dialogue text.
 - [x] Remove justified text alignment for better readability.
-- [ ] Add markdown support for dialogue text (bold, italics, etc.) and make sure keywords with `[brackets]` are not rendered with the brackets.
-- [ ] Markdown formatting does not wait until typewriter effect is finished to render properly.
+- [x] Add markdown support for dialogue text (bold, italics, etc.) and make sure keywords with `[brackets]` are not rendered with the brackets.
+- [x] Markdown formatting does not wait until typewriter effect is finished to render properly.
 
 ### Bugs
 - [x] Resizing the dialogue box from the bottom or left side causes it to resize from the opposite side instead of the intended side.
 - [x] The "click to continue" overflows when dialogue box is resized to small widths. It should not be hidden when we switch to the scrolling mode.
+
+
+## Debug Optimizations
+- [ ] Rename the Dev Errors tab to "Degug Logs"
+- [ ] Add an option to "copy all" in the debug logs based on current filters.
+- [ ] Expand on the functionality of the Debug Logs to include more detailed information about game state, errors, warnings, and other useful debugging information.
+
 
 ## [BUILD] Requirements
 

@@ -35,6 +35,62 @@ function getKeywordType(keyword) {
     return 'general';
 }
 
+// Remove bracket markers from keyworded text so the UI never shows [keyword]
+function sanitizeDialogueText(rawText = '') {
+    return rawText.replace(/\[([^\]]+)\]/g, '$1');
+}
+
+// Minimal inline markdown renderer (bold, italics, code, newlines)
+function renderInlineMarkdown(text, keyPrefix = 'md') {
+    const nodes = [];
+    const pattern = /(\*\*|__)(.+?)\1|(\*|_)(.+?)\3|(`)(.+?)\5|(\n)/gs;
+    let lastIndex = 0;
+    let match;
+    let partIndex = 0;
+
+    try {
+        while ((match = pattern.exec(text)) !== null) {
+            if (match.index > lastIndex) {
+                nodes.push(text.slice(lastIndex, match.index));
+            }
+
+            if (match[1]) {
+                nodes.push(
+                    <strong key={`${keyPrefix}-b-${partIndex}`}>
+                        {renderInlineMarkdown(match[2], `${keyPrefix}-b-${partIndex}`)}
+                    </strong>
+                );
+            } else if (match[3]) {
+                nodes.push(
+                    <em key={`${keyPrefix}-i-${partIndex}`}>
+                        {renderInlineMarkdown(match[4], `${keyPrefix}-i-${partIndex}`)}
+                    </em>
+                );
+            } else if (match[5]) {
+                nodes.push(
+                    <code key={`${keyPrefix}-c-${partIndex}`}>
+                        {match[6]}
+                    </code>
+                );
+            } else if (match[7]) {
+                nodes.push(<br key={`${keyPrefix}-br-${partIndex}`} />);
+            }
+
+            partIndex += 1;
+            lastIndex = pattern.lastIndex;
+        }
+    } catch (error) {
+        console.error('Failed to render markdown inline:', error);
+        return [text];
+    }
+
+    if (lastIndex < text.length) {
+        nodes.push(text.slice(lastIndex));
+    }
+
+    return nodes;
+}
+
 // Parse text with keywords into renderable segments
 function parseDialogueText(text, keywords = []) {
     if (!keywords || keywords.length === 0) {
@@ -145,14 +201,19 @@ function FloatingDialogue({
         return currentSpeech;
     }, [useFallback, fallbackDialogue, fallbackIndex, currentSpeech]);
 
+    const sanitizedContentText = useMemo(
+        () => sanitizeDialogueText(currentContent?.text || ''),
+        [currentContent?.text]
+    );
+
     // Typewriter effect
     useEffect(() => {
-        if (!currentContent?.text) {
+        if (!sanitizedContentText) {
             setDisplayedText('');
             return;
         }
 
-        const fullText = currentContent.text;
+        const fullText = sanitizedContentText;
         setDisplayedText('');
         setIsTyping(true);
 
@@ -172,13 +233,13 @@ function FloatingDialogue({
         return () => {
             if (typingRef.current) clearInterval(typingRef.current);
         };
-    }, [currentContent?.text, currentContent?.id]);
+    }, [sanitizedContentText, currentContent?.id]);
 
     // Handle click to advance dialogue
     const handleClick = useCallback(() => {
         if (isTyping) {
             if (typingRef.current) clearInterval(typingRef.current);
-            setDisplayedText(currentContent?.text || '');
+            setDisplayedText(sanitizedContentText || '');
             setIsTyping(false);
             return;
         }
@@ -197,7 +258,7 @@ function FloatingDialogue({
                 }
             }
         }
-    }, [isTyping, useFallback, fallbackIndex, fallbackDialogue.length, advance, currentContent, onDialogueEnd]);
+    }, [isTyping, useFallback, fallbackIndex, fallbackDialogue.length, advance, currentContent, onDialogueEnd, sanitizedContentText]);
 
     // Handle keyword collection
     const handleKeywordClick = useCallback((keyword, event) => {
@@ -228,9 +289,9 @@ function FloatingDialogue({
 
     // Parse text segments
     const textSegments = useMemo(() => {
-        if (!currentContent?.text) return [];
-        return parseDialogueText(displayedText, currentContent.keywords || []);
-    }, [displayedText, currentContent?.keywords]);
+        if (!sanitizedContentText) return [];
+        return parseDialogueText(displayedText, currentContent?.keywords || []);
+    }, [displayedText, currentContent?.keywords, sanitizedContentText]);
 
     // Loading state
     if (!isLoaded) {
@@ -261,7 +322,7 @@ function FloatingDialogue({
         <div className="dialogue-content-container" onClick={handleClick}>
             <div className="dialogue-text">
                 {isNarrator || isAction ? (
-                    <em>{displayedText}</em>
+                    <em>{renderInlineMarkdown(displayedText)}</em>
                 ) : (
                     <>
                         <span className="dialogue-quote">"</span>
@@ -279,12 +340,16 @@ function FloatingDialogue({
                                         whileHover={!isCollected ? { scale: 1.02 } : undefined}
                                         whileTap={!isCollected ? { scale: 0.98 } : undefined}
                                     >
-                                        {segment.content}
+                                        {renderInlineMarkdown(segment.content, `kw-${keyword.id || idx}`)}
                                         {!isCollected && <span className="keyword-hint">+</span>}
                                     </motion.span>
                                 );
                             }
-                            return <span key={idx}>{segment.content}</span>;
+                            return (
+                                <span key={idx}>
+                                    {renderInlineMarkdown(segment.content, `txt-${idx}`)}
+                                </span>
+                            );
                         })}
                         <span className="dialogue-quote">"</span>
                     </>
