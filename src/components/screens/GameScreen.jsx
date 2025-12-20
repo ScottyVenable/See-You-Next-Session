@@ -87,7 +87,7 @@ function GameScreen() {
                 newWidth = startPosRef.current.width - deltaX;
                 newLeft = startPosRef.current.left + deltaX;
             }
-            
+
             // Handle vertical resizing
             if (edge.includes('s')) {
                 newHeight = startPosRef.current.height + deltaY;
@@ -100,7 +100,7 @@ function GameScreen() {
             // Constrain width to viewport minus sidebar margins (100px each side)
             const maxWidth = window.innerWidth - 200;
             const constrainedWidth = Math.max(300, Math.min(maxWidth, newWidth));
-            
+
             // Adjust left if width was constrained and resizing from west
             if (edge.includes('w') && constrainedWidth !== newWidth) {
                 newLeft = startPosRef.current.left + (startPosRef.current.width - constrainedWidth);
@@ -109,7 +109,7 @@ function GameScreen() {
             // Constrain height to viewport minus interaction tray (70px) and top margin (80px)
             const maxHeight = window.innerHeight - 150;
             const constrainedHeight = Math.max(120, Math.min(maxHeight, newHeight));
-            
+
             // Adjust bottom if height was constrained and resizing from south
             if (edge.includes('s') && constrainedHeight !== newHeight) {
                 newBottom = startPosRef.current.bottom - (constrainedHeight - startPosRef.current.height);
