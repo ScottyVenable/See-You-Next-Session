@@ -187,6 +187,7 @@
 - [ ] Remove justified text alignment for better readability.
 - [ ] Add markdown support for dialogue text (bold, italics, etc.) and make sure keywords with `[brackets]` are not rendered with the brackets.
 - [ ] Markdown formatting does not wait until typewriter effect is finished to render properly.
+
 ### Bugs
 - [ ] Resizing the dialogue box from the bottom or left side causes it to resize from the opposite side instead of the intended side.
 
