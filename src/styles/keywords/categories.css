@@ -1,0 +1,228 @@
+/*
+ * Keyword Category Colors
+ * Each category has a distinct color palette
+ * Colors are accessible and work on dark backgrounds
+ */
+
+/* ============================================
+   BEHAVIOR - Actions, habits, patterns
+   Color: Coral Red
+   ============================================ */
+.keyword-category-behavior {
+    --keyword-color: #e74c3c;
+    --keyword-bg: rgba(231, 76, 60, 0.15);
+    --keyword-border-color: rgba(231, 76, 60, 0.4);
+    --keyword-glow-color: rgba(231, 76, 60, 0.4);
+}
+
+/* Behavior sub-styles */
+.keyword-style-behavior-red {
+    --keyword-color: #e74c3c;
+    --keyword-bg: rgba(231, 76, 60, 0.15);
+}
+
+.keyword-style-behavior-warning {
+    --keyword-color: #f39c12;
+    --keyword-bg: rgba(243, 156, 18, 0.15);
+    --keyword-border-color: rgba(243, 156, 18, 0.4);
+}
+
+.keyword-style-behavior-avoidance {
+    --keyword-color: #d35400;
+    --keyword-bg: rgba(211, 84, 0, 0.15);
+}
+
+/* ============================================
+   EMOTION - Feelings, affect, mood
+   Color: Purple
+   ============================================ */
+.keyword-category-emotion {
+    --keyword-color: #9b59b6;
+    --keyword-bg: rgba(155, 89, 182, 0.15);
+    --keyword-border-color: rgba(155, 89, 182, 0.4);
+    --keyword-glow-color: rgba(155, 89, 182, 0.4);
+}
+
+/* Emotion sub-styles */
+.keyword-style-emotion-purple {
+    --keyword-color: #9b59b6;
+    --keyword-bg: rgba(155, 89, 182, 0.15);
+}
+
+.keyword-style-emotion-sad {
+    --keyword-color: #34495e;
+    --keyword-bg: rgba(52, 73, 94, 0.2);
+    --keyword-border-color: rgba(52, 73, 94, 0.5);
+}
+
+.keyword-style-emotion-anxious {
+    --keyword-color: #e67e22;
+    --keyword-bg: rgba(230, 126, 34, 0.15);
+}
+
+.keyword-style-emotion-positive {
+    --keyword-color: #27ae60;
+    --keyword-bg: rgba(39, 174, 96, 0.15);
+}
+
+/* ============================================
+   COGNITION - Thoughts, beliefs, patterns
+   Color: Blue
+   ============================================ */
+.keyword-category-cognition {
+    --keyword-color: #3498db;
+    --keyword-bg: rgba(52, 152, 219, 0.15);
+    --keyword-border-color: rgba(52, 152, 219, 0.4);
+    --keyword-glow-color: rgba(52, 152, 219, 0.4);
+}
+
+/* Cognition sub-styles */
+.keyword-style-cognition-blue {
+    --keyword-color: #3498db;
+    --keyword-bg: rgba(52, 152, 219, 0.15);
+}
+
+.keyword-style-cognition-distortion {
+    --keyword-color: #8e44ad;
+    --keyword-bg: rgba(142, 68, 173, 0.15);
+}
+
+.keyword-style-cognition-belief {
+    --keyword-color: #2980b9;
+    --keyword-bg: rgba(41, 128, 185, 0.15);
+}
+
+/* ============================================
+   SYMPTOM - Clinical signs, presentations
+   Color: Orange
+   ============================================ */
+.keyword-category-symptom {
+    --keyword-color: #e67e22;
+    --keyword-bg: rgba(230, 126, 34, 0.15);
+    --keyword-border-color: rgba(230, 126, 34, 0.4);
+    --keyword-glow-color: rgba(230, 126, 34, 0.4);
+}
+
+/* Symptom sub-styles */
+.keyword-style-symptom-orange {
+    --keyword-color: #e67e22;
+    --keyword-bg: rgba(230, 126, 34, 0.15);
+}
+
+.keyword-style-symptom-critical {
+    --keyword-color: #c0392b;
+    --keyword-bg: rgba(192, 57, 43, 0.2);
+    --keyword-border-color: rgba(192, 57, 43, 0.5);
+}
+
+.keyword-style-symptom-physical {
+    --keyword-color: #16a085;
+    --keyword-bg: rgba(22, 160, 133, 0.15);
+}
+
+/* ============================================
+   RELATIONSHIP - Social, family, connections
+   Color: Teal
+   ============================================ */
+.keyword-category-relationship {
+    --keyword-color: #1abc9c;
+    --keyword-bg: rgba(26, 188, 156, 0.15);
+    --keyword-border-color: rgba(26, 188, 156, 0.4);
+    --keyword-glow-color: rgba(26, 188, 156, 0.4);
+}
+
+/* Relationship sub-styles */
+.keyword-style-relationship-teal {
+    --keyword-color: #1abc9c;
+    --keyword-bg: rgba(26, 188, 156, 0.15);
+}
+
+.keyword-style-relationship-conflict {
+    --keyword-color: #e74c3c;
+    --keyword-bg: rgba(231, 76, 60, 0.12);
+}
+
+.keyword-style-relationship-support {
+    --keyword-color: #27ae60;
+    --keyword-bg: rgba(39, 174, 96, 0.15);
+}
+
+.keyword-style-relationship-loss {
+    --keyword-color: #7f8c8d;
+    --keyword-bg: rgba(127, 140, 141, 0.15);
+}
+
+/* ============================================
+   TIME - Duration, frequency, temporal
+   Color: Gray/Silver
+   ============================================ */
+.keyword-category-time {
+    --keyword-color: #95a5a6;
+    --keyword-bg: rgba(149, 165, 166, 0.15);
+    --keyword-border-color: rgba(149, 165, 166, 0.4);
+    --keyword-glow-color: rgba(149, 165, 166, 0.4);
+}
+
+/* Time sub-styles */
+.keyword-style-time-silver {
+    --keyword-color: #95a5a6;
+    --keyword-bg: rgba(149, 165, 166, 0.15);
+}
+
+.keyword-style-time-recent {
+    --keyword-color: #3498db;
+    --keyword-bg: rgba(52, 152, 219, 0.1);
+}
+
+.keyword-style-time-chronic {
+    --keyword-color: #e67e22;
+    --keyword-bg: rgba(230, 126, 34, 0.1);
+}
+
+/* ============================================
+   BACKGROUND - History, context, personal
+   Color: Warm Brown/Tan
+   ============================================ */
+.keyword-category-background {
+    --keyword-color: #d35400;
+    --keyword-bg: rgba(211, 84, 0, 0.12);
+    --keyword-border-color: rgba(211, 84, 0, 0.35);
+    --keyword-glow-color: rgba(211, 84, 0, 0.35);
+}
+
+/* ============================================
+   GENERIC - Uncategorized, general
+   Color: Default Purple
+   ============================================ */
+.keyword-category-generic {
+    --keyword-color: #6c5ce7;
+    --keyword-bg: rgba(108, 92, 231, 0.15);
+    --keyword-border-color: rgba(108, 92, 231, 0.4);
+    --keyword-glow-color: rgba(108, 92, 231, 0.4);
+}
+
+/* ============================================
+   SPECIAL STATES
+   ============================================ */
+
+/* Contradiction - overlays any category */
+.keyword-category-contradiction {
+    --keyword-color: #e74c3c;
+    --keyword-border-color: rgba(231, 76, 60, 0.6);
+    border-style: dashed;
+}
+
+/* Breakthrough trigger */
+.keyword-category-breakthrough {
+    --keyword-color: #f1c40f;
+    --keyword-bg: rgba(241, 196, 15, 0.15);
+    --keyword-border-color: rgba(241, 196, 15, 0.5);
+    --keyword-glow-color: rgba(241, 196, 15, 0.4);
+}
+
+/* Safety concern */
+.keyword-category-safety {
+    --keyword-color: #c0392b;
+    --keyword-bg: rgba(192, 57, 43, 0.2);
+    --keyword-border-color: rgba(192, 57, 43, 0.6);
+}

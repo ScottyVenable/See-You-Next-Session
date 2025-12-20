@@ -8,16 +8,56 @@
  * @version 1.0.0
  */
 
-// Import keyword categories
-import { TIME_KEYWORDS } from './categories/time.js';
-import { EMOTION_KEYWORDS } from './categories/emotions.js';
-import { BEHAVIOR_KEYWORDS } from './categories/behaviors.js';
-import { SYMPTOM_KEYWORDS } from './categories/symptoms.js';
-import { RELATIONSHIP_KEYWORDS } from './categories/relationships.js';
-import { COGNITION_KEYWORDS } from './categories/cognition.js';
-
-// Import patient-specific keywords
+// Import patient-specific keywords (legacy JS format)
 import { GREGORY_KEYWORDS } from './patients/gregory.js';
+
+// Import JSON keyword definitions
+import timeKeywords from './definitions/time.keywords.json';
+import emotionKeywords from './definitions/emotion.keywords.json';
+import behaviorKeywords from './definitions/behavior.keywords.json';
+import symptomKeywords from './definitions/symptom.keywords.json';
+import relationshipKeywords from './definitions/relationship.keywords.json';
+import cognitionKeywords from './definitions/cognition.keywords.json';
+
+/**
+ * Convert JSON keyword file format to flat keyword map
+ * @param {Object} keywordFile - JSON keyword file
+ * @returns {Object} Flat map of keyword ID to keyword definition
+ */
+function flattenKeywordFile(keywordFile) {
+    const result = {};
+    if (!keywordFile?.keywords) return result;
+
+    for (const [categoryId, category] of Object.entries(keywordFile.keywords)) {
+        if (!category || typeof category !== 'object') continue;
+
+        // Skip _category metadata
+        if (categoryId === '_category') continue;
+
+        for (const [keywordId, keyword] of Object.entries(category)) {
+            // Skip _category metadata within categories
+            if (keywordId === '_category') continue;
+            if (!keyword || typeof keyword !== 'object') continue;
+
+            const fullId = keyword.id || `${keywordFile.source}.${categoryId}.${keywordId}`;
+            result[fullId] = {
+                ...keyword,
+                id: fullId,
+                category: categoryId,
+                source: keywordFile.source
+            };
+        }
+    }
+    return result;
+}
+
+// Convert JSON files to flat keyword maps
+const TIME_KEYWORDS = flattenKeywordFile(timeKeywords);
+const EMOTION_KEYWORDS = flattenKeywordFile(emotionKeywords);
+const BEHAVIOR_KEYWORDS = flattenKeywordFile(behaviorKeywords);
+const SYMPTOM_KEYWORDS = flattenKeywordFile(symptomKeywords);
+const RELATIONSHIP_KEYWORDS = flattenKeywordFile(relationshipKeywords);
+const COGNITION_KEYWORDS = flattenKeywordFile(cognitionKeywords);
 
 // ============================================================================
 // KEYWORD SCHEMA

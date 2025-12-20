@@ -408,6 +408,10 @@ function validateSdnsDocument(document: vscode.TextDocument, problems: vscode.Di
     let ifDepth = 0;
     let whenDepth = 0;
 
+    // Track multi-line string state
+    let inMultiLineString = false;
+    let multiLineStringStart = 0;
+
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         const trimmed = line.trim();
@@ -451,17 +455,14 @@ function validateSdnsDocument(document: vscode.TextDocument, problems: vscode.Di
             }
         }
 
-        // Check for unclosed strings in dialogue
-        const quoteCount = (line.match(/"/g) || []).length;
-        if (quoteCount % 2 !== 0) {
-            // Check if it's actually unclosed (not escaped)
-            const unescapedQuotes = (line.match(/(?<!\\)"/g) || []).length;
-            if (unescapedQuotes % 2 !== 0) {
-                problems.push(new vscode.Diagnostic(
-                    new vscode.Range(i, 0, i, line.length),
-                    'Unclosed string literal',
-                    vscode.DiagnosticSeverity.Warning
-                ));
+        // Track multi-line string state
+        // Count unescaped quotes to track if we're inside a string
+        for (let j = 0; j < line.length; j++) {
+            if (line[j] === '"' && (j === 0 || line[j - 1] !== '\\')) {
+                inMultiLineString = !inMultiLineString;
+                if (inMultiLineString) {
+                    multiLineStringStart = i;
+                }
             }
         }
 
@@ -481,7 +482,7 @@ function validateSdnsDocument(document: vscode.TextDocument, problems: vscode.Di
 
         // Validate animation references
         const animRefs = line.matchAll(/<anim:([^>]+)>/g);
-        const validAnims = ['shake', 'pulse', 'glow', 'fade', 'highlight', 'wiggle', 'wave', 'typewriter', 'glitch', 'bounce'];
+        const validAnims = ['none', 'highlight', 'pulse', 'glow', 'shimmer', 'shake', 'pop', 'float', 'wiggle', 'wave', 'typewriter', 'glitch', 'bounce', 'fade'];
         for (const match of animRefs) {
             const animId = match[1];
             if (!validAnims.includes(animId)) {
@@ -489,6 +490,29 @@ function validateSdnsDocument(document: vscode.TextDocument, problems: vscode.Di
                 problems.push(new vscode.Diagnostic(
                     new vscode.Range(i, startCol, i, startCol + match[0].length),
                     `Unknown animation: ${animId}. Valid animations: ${validAnims.join(', ')}`,
+                    vscode.DiagnosticSeverity.Warning
+                ));
+            }
+        }
+
+        // Validate style references
+        const styleRefs = line.matchAll(/<style:([^>]+)>/g);
+        const validStyleCategories = ['behavior', 'emotion', 'cognition', 'symptom', 'relationship', 'time', 'background', 'generic'];
+        for (const match of styleRefs) {
+            const styleRef = match[1];
+            const styleParts = styleRef.split('.');
+            if (styleParts.length !== 2) {
+                const startCol = line.indexOf(match[0]);
+                problems.push(new vscode.Diagnostic(
+                    new vscode.Range(i, startCol, i, startCol + match[0].length),
+                    `Style reference should be in format 'category.preset' (e.g., behavior.red)`,
+                    vscode.DiagnosticSeverity.Warning
+                ));
+            } else if (!validStyleCategories.includes(styleParts[0])) {
+                const startCol = line.indexOf(match[0]);
+                problems.push(new vscode.Diagnostic(
+                    new vscode.Range(i, startCol, i, startCol + match[0].length),
+                    `Unknown style category: ${styleParts[0]}. Valid: ${validStyleCategories.join(', ')}`,
                     vscode.DiagnosticSeverity.Warning
                 ));
             }
@@ -524,6 +548,15 @@ function validateSdnsDocument(document: vscode.TextDocument, problems: vscode.Di
         problems.push(new vscode.Diagnostic(
             new vscode.Range(0, 0, 0, 1),
             `${whenDepth} unclosed @when block(s) - missing @end`,
+            vscode.DiagnosticSeverity.Error
+        ));
+    }
+
+    // Report unclosed multi-line strings
+    if (inMultiLineString) {
+        problems.push(new vscode.Diagnostic(
+            new vscode.Range(multiLineStringStart, 0, multiLineStringStart, lines[multiLineStringStart].length),
+            'Unclosed string literal - missing closing quote',
             vscode.DiagnosticSeverity.Error
         ));
     }
@@ -808,6 +841,121 @@ class SDNSCompletionProvider implements vscode.CompletionItemProvider {
                 item.detail = 'Metadata Type';
                 item.insertText = new vscode.SnippetString(`${type}:\${1:id}>`);
                 item.documentation = `Keyword metadata type: ${type}`;
+                items.push(item);
+            });
+
+            // Add style and anim as tag completions
+            const styleItem = new vscode.CompletionItem('style', vscode.CompletionItemKind.Color);
+            styleItem.detail = 'Style Preset';
+            styleItem.insertText = new vscode.SnippetString('style:${1:category}.${2:preset}>');
+            styleItem.documentation = 'Apply a CSS style preset (e.g., behavior.red, emotion.sad)';
+            items.push(styleItem);
+
+            const animItem = new vscode.CompletionItem('anim', vscode.CompletionItemKind.Event);
+            animItem.detail = 'Animation';
+            animItem.insertText = new vscode.SnippetString('anim:${1|pulse,glow,shake,shimmer,highlight,pop,float,none|}>');
+            animItem.documentation = 'Apply an animation effect to the keyword';
+            items.push(animItem);
+        }
+
+        // ================================================================
+        // STYLE COMPLETIONS - <style:category.preset>
+        // ================================================================
+
+        // After <style: - suggest categories
+        const styleStartMatch = linePrefix.match(/<style:$/);
+        if (styleStartMatch) {
+            const categories = ['behavior', 'emotion', 'cognition', 'symptom', 'relationship', 'time', 'background', 'generic'];
+            categories.forEach(cat => {
+                const item = new vscode.CompletionItem(cat, vscode.CompletionItemKind.Color);
+                item.detail = `${cat.charAt(0).toUpperCase() + cat.slice(1)} styles`;
+                item.insertText = `${cat}.`;
+                item.command = { command: 'editor.action.triggerSuggest', title: 'Trigger Suggest' };
+                items.push(item);
+            });
+        }
+
+        // After <style:category. - suggest presets for that category
+        const styleCategoryMatch = linePrefix.match(/<style:([a-z]+)\.$/);
+        if (styleCategoryMatch) {
+            const category = styleCategoryMatch[1];
+            const presets: Record<string, { name: string; color: string }[]> = {
+                behavior: [
+                    { name: 'default', color: '#e74c3c' },
+                    { name: 'red', color: '#e74c3c' },
+                    { name: 'warning', color: '#f39c12' },
+                    { name: 'avoidance', color: '#d35400' }
+                ],
+                emotion: [
+                    { name: 'default', color: '#9b59b6' },
+                    { name: 'purple', color: '#9b59b6' },
+                    { name: 'sad', color: '#34495e' },
+                    { name: 'anxious', color: '#e67e22' },
+                    { name: 'positive', color: '#27ae60' }
+                ],
+                cognition: [
+                    { name: 'default', color: '#3498db' },
+                    { name: 'blue', color: '#3498db' },
+                    { name: 'distortion', color: '#8e44ad' },
+                    { name: 'belief', color: '#2980b9' }
+                ],
+                symptom: [
+                    { name: 'default', color: '#e67e22' },
+                    { name: 'orange', color: '#e67e22' },
+                    { name: 'critical', color: '#c0392b' },
+                    { name: 'physical', color: '#16a085' }
+                ],
+                relationship: [
+                    { name: 'default', color: '#1abc9c' },
+                    { name: 'teal', color: '#1abc9c' },
+                    { name: 'conflict', color: '#e74c3c' },
+                    { name: 'support', color: '#27ae60' },
+                    { name: 'loss', color: '#7f8c8d' }
+                ],
+                time: [
+                    { name: 'default', color: '#95a5a6' },
+                    { name: 'silver', color: '#95a5a6' },
+                    { name: 'recent', color: '#3498db' },
+                    { name: 'chronic', color: '#e67e22' }
+                ],
+                generic: [
+                    { name: 'default', color: '#6c5ce7' }
+                ]
+            };
+
+            const categoryPresets = presets[category] || presets.generic;
+            categoryPresets.forEach(preset => {
+                const item = new vscode.CompletionItem(preset.name, vscode.CompletionItemKind.Color);
+                item.detail = `Color: ${preset.color}`;
+                item.insertText = `${preset.name}>`;
+                item.documentation = new vscode.MarkdownString(`**${category}.${preset.name}**\n\nApplies ${category} styling with ${preset.color} color`);
+                items.push(item);
+            });
+        }
+
+        // ================================================================
+        // ANIMATION COMPLETIONS - <anim:type>
+        // ================================================================
+
+        // After <anim: - suggest animation types
+        const animMatch = linePrefix.match(/<anim:$/);
+        if (animMatch) {
+            const animations = [
+                { name: 'none', desc: 'No animation' },
+                { name: 'highlight', desc: 'Brief flash effect on interaction' },
+                { name: 'pulse', desc: 'Gentle breathing/pulsing effect' },
+                { name: 'glow', desc: 'Soft luminance shift' },
+                { name: 'shimmer', desc: 'Light sweep effect across keyword' },
+                { name: 'shake', desc: 'Brief shake for attention or contradiction' },
+                { name: 'pop', desc: 'Scale pop for emphasis' },
+                { name: 'float', desc: 'Subtle lift on hover' }
+            ];
+
+            animations.forEach(anim => {
+                const item = new vscode.CompletionItem(anim.name, vscode.CompletionItemKind.Event);
+                item.detail = anim.desc;
+                item.insertText = `${anim.name}>`;
+                item.documentation = new vscode.MarkdownString(`**Animation: ${anim.name}**\n\n${anim.desc}`);
                 items.push(item);
             });
         }
@@ -1222,19 +1370,20 @@ class SDNSHoverProvider implements vscode.HoverProvider {
 
                         // Look up keyword in database
                         const parts = reference.split('.');
-                        let keyword = null;
+                        let keyword: KeywordDefinition | undefined = undefined;
 
-                        // Check patient-specific first (patient.category.id)
-                        if (parts.length === 3) {
-                            const [patientId, category, id] = parts;
-                            keyword = PATIENT_KEYWORDS[patientId]?.find(
-                                kw => kw.id === `${category}.${id}` || kw.id === reference
-                            );
+                        // Try to find keyword by full reference
+                        keyword = allKeywords.get(reference);
+
+                        // If not found and has 3 parts (patient.category.id), try category.id
+                        if (!keyword && parts.length === 3) {
+                            const [, category, id] = parts;
+                            keyword = allKeywords.get(`${category}.${id}`);
                         }
 
-                        // Check global keywords (category.id)
-                        if (!keyword && parts.length >= 2) {
-                            keyword = KEYWORDS_DATABASE.find(kw => kw.id === reference);
+                        // If still not found and has 2 parts, try direct lookup
+                        if (!keyword && parts.length === 2) {
+                            keyword = allKeywords.get(reference);
                         }
 
                         if (keyword) {
@@ -1242,7 +1391,18 @@ class SDNSHoverProvider implements vscode.HoverProvider {
                                 keyword.importance === 'high' ? '🟠' :
                                     keyword.importance === 'medium' ? '🟡' : '⚪';
 
-                            const categoryInfo = KEYWORD_CATEGORIES.find(c => c.id === keyword!.category);
+                            // Extract category from the keyword ID (e.g., "time.duration" -> "time")
+                            const categoryId = keyword.id.split('.')[0];
+                            const categoryInfo = KEYWORD_CATEGORIES.find(c => c.id === categoryId);
+
+                            // Build effects string from effects object
+                            const effectsList: string[] = [];
+                            if (keyword.effects) {
+                                if (keyword.effects.focusCost) effectsList.push(`Focus: ${keyword.effects.focusCost}`);
+                                if (keyword.effects.rapportChange) effectsList.push(`Rapport: ${keyword.effects.rapportChange > 0 ? '+' : ''}${keyword.effects.rapportChange}`);
+                                if (keyword.effects.reveals?.length) effectsList.push(`Reveals: ${keyword.effects.reveals.length}`);
+                                if (keyword.effects.contradicts?.length) effectsList.push(`Contradicts: ${keyword.effects.contradicts.length}`);
+                            }
 
                             return new vscode.Hover(new vscode.MarkdownString([
                                 `**${importanceIcon} Keyword: ${keyword.id}**`,
@@ -1251,9 +1411,9 @@ class SDNSHoverProvider implements vscode.HoverProvider {
                                 '',
                                 `| Property | Value |`,
                                 `|----------|-------|`,
-                                `| Category | ${categoryInfo?.icon || ''} ${categoryInfo?.label || keyword.category} |`,
+                                `| Category | ${categoryInfo?.icon || ''} ${categoryInfo?.label || categoryId} |`,
                                 `| Importance | ${keyword.importance} |`,
-                                keyword.effects ? `| Effects | ${keyword.effects.join(', ')} |` : '',
+                                effectsList.length > 0 ? `| Effects | ${effectsList.join(', ')} |` : '',
                                 '',
                                 `Display text: \`${displayText}\``
                             ].filter(Boolean).join('\n')));

@@ -426,9 +426,10 @@ Keywords can trigger various game effects:
 
 #### Keyword Styling
 
-Control visual appearance:
+Control visual appearance using inline properties or CSS preset references:
 
 ```session
+// Option 1: Inline style properties (in keyword definition)
 style: {
     color: '#e74c3c',           // Text color
     bgColor: 'rgba(231,76,60,0.15)', // Background
@@ -436,7 +437,63 @@ style: {
     animation: 'pulse',          // Animation (pulse, glow, shake)
     importance: 'critical'       // low, medium, high, critical
 }
+
+// Option 2: CSS preset reference (in dialogue)
+[I had trouble sleeping]<keyword:gregory.behavior.sleep-trouble><style:behavior.red><anim:pulse>
 ```
+
+#### Style Presets
+
+Use `<style:category.preset>` to apply predefined CSS styles:
+
+| Category | Presets | Color |
+|----------|---------|-------|
+| `behavior` | `default`, `red`, `warning`, `avoidance` | Red tones |
+| `emotion` | `default`, `purple`, `sad`, `anxious`, `positive` | Purple/varied |
+| `cognition` | `default`, `blue`, `distortion`, `belief` | Blue tones |
+| `symptom` | `default`, `orange`, `critical`, `physical` | Orange/red |
+| `relationship` | `default`, `teal`, `conflict`, `support`, `loss` | Teal/varied |
+| `time` | `default`, `silver`, `recent`, `chronic` | Gray tones |
+
+Example usage:
+```session
+PATIENT (nervous)
+"I've been [worried](emotion.worried)<style:emotion.anxious> about this for [weeks](time.weeks)<style:time.chronic>."
+```
+
+#### Animation Presets
+
+Use `<anim:type>` to apply animations:
+
+| Animation | Description |
+|-----------|-------------|
+| `none` | No animation |
+| `highlight` | Brief flash effect on interaction |
+| `pulse` | Gentle breathing/pulsing effect |
+| `glow` | Soft luminance shift |
+| `shimmer` | Light sweep effect across keyword |
+| `shake` | Brief shake (for contradictions) |
+| `pop` | Scale pop for emphasis |
+| `float` | Subtle lift on hover |
+
+Example:
+```session
+PATIENT
+"I [sleep fine]<contradicts:bags-under-eyes><anim:shake>."
+```
+
+#### Importance Levels
+
+Keywords have importance levels that affect subtle visual treatment:
+
+| Level | Visual Treatment |
+|-------|------------------|
+| `low` | Baseline - subtle styling |
+| `medium` | Slightly more noticeable |
+| `high` | 2px border, slight glow |
+| `critical` | 2px border, idle pulse animation |
+
+Note: Visual differences are subtle to avoid spoiling gameplay.
 
 #### Keyword Menu Options
 

@@ -1,0 +1,134 @@
+/* 
+ * Keyword Styles - Main Entry Point
+ * Import this file to include all keyword styling
+ * 
+ * SDNS - See You Next Session
+ */
+
+@import './importance.css';
+@import './categories.css';
+@import './animations.css';
+
+/* Base keyword styling - applies to all keywords */
+.keyword {
+    /* CSS Custom Properties - can be overridden by category/importance */
+    --keyword-color: rgba(108, 92, 231, 1);
+    --keyword-bg: rgba(108, 92, 231, 0.15);
+    --keyword-border-color: rgba(108, 92, 231, 0.4);
+    --keyword-border-width: 1px;
+    --keyword-glow-color: rgba(108, 92, 231, 0.4);
+    --keyword-glow-intensity: 0;
+
+    /* Base styles */
+    display: inline;
+    position: relative;
+    color: var(--keyword-color);
+    background: var(--keyword-bg);
+    border-bottom: var(--keyword-border-width) solid var(--keyword-border-color);
+    padding: 2px 4px;
+    margin: 0 1px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    /* Subtle glow based on intensity */
+    box-shadow: 0 0 calc(var(--keyword-glow-intensity) * 15px) var(--keyword-glow-color);
+}
+
+.keyword:hover {
+    background: color-mix(in srgb, var(--keyword-bg) 100%, white 20%);
+    border-color: var(--keyword-color);
+    box-shadow: 0 0 10px var(--keyword-glow-color);
+}
+
+.keyword:active {
+    transform: scale(0.98);
+}
+
+/* Collected state */
+.keyword.collected {
+    opacity: 0.7;
+    cursor: default;
+    text-decoration: line-through;
+    text-decoration-color: rgba(255, 255, 255, 0.3);
+}
+
+.keyword.collected::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Collecting animation */
+.keyword.collecting {
+    animation: keyword-collect 0.4s ease-out;
+}
+
+/* Focus mode highlighting */
+.keyword.focus-highlight {
+    box-shadow: 0 0 20px var(--keyword-glow-color);
+    animation: keyword-pulse 1.5s infinite;
+}
+
+/* Contradiction indicator */
+.keyword.contradiction {
+    --keyword-border-color: rgba(231, 76, 60, 0.6);
+    position: relative;
+}
+
+.keyword.contradiction::before {
+    content: '!';
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 14px;
+    height: 14px;
+    background: rgba(231, 76, 60, 0.9);
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.2s ease;
+}
+
+.keyword.contradiction.revealed::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Safety-flagged keywords */
+.keyword.safety-flag {
+    --keyword-color: rgba(192, 57, 43, 1);
+    --keyword-bg: rgba(192, 57, 43, 0.2);
+    --keyword-border-color: rgba(192, 57, 43, 0.6);
+}
+
+/* Keyword type indicators (icon position) */
+.keyword[data-type]::after {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    font-size: 10px;
+    opacity: 0.8;
+}
+
+/* Disabled state (not yet available) */
+.keyword.locked {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: grayscale(50%);
+}
+
+.keyword.locked:hover {
+    background: var(--keyword-bg);
+    box-shadow: none;
+}

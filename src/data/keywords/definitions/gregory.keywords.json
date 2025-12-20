@@ -70,6 +70,44 @@
                 "note": "First admission of duration - important trust moment"
             }
         },
+        "duration": {
+            "_category": {
+                "label": "Duration",
+                "icon": "tag",
+                "description": "Auto-generated category for duration"
+            },
+            "months_delay": {
+                "id": "gregory.duration.months_delay",
+                "displayText": "Months, actually",
+                "description": "Auto-generated from turn1.session for gregory.duration.months_delay",
+                "importance": "medium"
+            }
+        },
+        "minimizing": {
+            "_category": {
+                "label": "Minimizing",
+                "icon": "tag",
+                "description": "Auto-generated category for minimizing"
+            },
+            "nothing_serious": {
+                "id": "gregory.minimizing.nothing_serious",
+                "displayText": "nothing serious",
+                "description": "Auto-generated from turn1.session for gregory.minimizing.nothing_serious",
+                "importance": "medium"
+            },
+            "not_trouble": {
+                "id": "gregory.minimizing.not_trouble",
+                "displayText": "Well, not trouble exactly",
+                "description": "Auto-generated from turn1.session for gregory.minimizing.not_trouble",
+                "importance": "medium"
+            },
+            "too_small": {
+                "id": "gregory.minimizing.too_small",
+                "displayText": "too small",
+                "description": "Auto-generated from turn1.session for gregory.minimizing.too_small",
+                "importance": "medium"
+            }
+        },
         "cognition": {
             "_category": {
                 "label": "Gregory's Thought Patterns",
@@ -208,6 +246,273 @@
                     "rapportChange": 8
                 },
                 "note": "Deep breakthrough - root of self-doubt"
+            },
+            "running_commentary": {
+                "id": "gregory.cognition.running_commentary",
+                "displayText": "running commentary",
+                "description": "Auto-generated from turn1.session for gregory.cognition.running_commentary",
+                "importance": "medium"
+            },
+            "cant_quiet": {
+                "id": "gregory.cognition.cant_quiet",
+                "displayText": "quiet down",
+                "description": "Auto-generated from turn1.session for gregory.cognition.cant_quiet",
+                "importance": "medium"
+            }
+        },
+        "pattern": {
+            "_category": {
+                "label": "Pattern",
+                "icon": "tag",
+                "description": "Auto-generated category for pattern"
+            },
+            "accumulating": {
+                "id": "gregory.pattern.accumulating",
+                "displayText": "accumulating",
+                "description": "Auto-generated from turn1.session for gregory.pattern.accumulating",
+                "importance": "medium"
+            },
+            "adding_up": {
+                "id": "gregory.pattern.adding_up",
+                "displayText": "keep adding up",
+                "description": "Auto-generated from turn1.session for gregory.pattern.adding_up",
+                "importance": "medium"
+            },
+            "persistent": {
+                "id": "gregory.pattern.persistent",
+                "displayText": "persistent",
+                "description": "Auto-generated from turn1.session for gregory.pattern.persistent",
+                "importance": "medium"
+            }
+        },
+        "coping": {
+            "_category": {
+                "label": "Coping",
+                "icon": "tag",
+                "description": "Auto-generated category for coping"
+            },
+            "hoping_away": {
+                "id": "gregory.coping.hoping_away",
+                "displayText": "hoping they go away on their own",
+                "description": "Auto-generated from turn1.session for gregory.coping.hoping_away",
+                "importance": "medium"
+            },
+            "harder_manage": {
+                "id": "gregory.coping.harder_manage",
+                "displayText": "harder to manage",
+                "description": "Auto-generated from turn1.session for gregory.coping.harder_manage",
+                "importance": "medium"
+            },
+            "routine_fails": {
+                "id": "gregory.coping.routine_fails",
+                "displayText": "help",
+                "description": "Auto-generated from turn1.session for gregory.coping.routine_fails",
+                "importance": "medium"
+            },
+            "prepare_script": {
+                "id": "gregory.coping.prepare_script",
+                "displayText": "prepare what to say",
+                "description": "Auto-generated from turn1.session for gregory.coping.prepare_script",
+                "importance": "medium"
+            }
+        },
+        "sleep": {
+            "_category": {
+                "label": "Sleep",
+                "icon": "tag",
+                "description": "Auto-generated category for sleep"
+            },
+            "claims_sleep": {
+                "id": "gregory.sleep.claims_sleep",
+                "displayText": "do sleep",
+                "description": "Auto-generated from turn1.session for gregory.sleep.claims_sleep",
+                "importance": "medium"
+            },
+            "cant_shut_off": {
+                "id": "gregory.sleep.cant_shut_off",
+                "displayText": "shut off",
+                "description": "Auto-generated from turn1.session for gregory.sleep.cant_shut_off",
+                "importance": "medium"
+            },
+            "claims_fine": {
+                "id": "gregory.sleep.claims_fine",
+                "displayText": "fine",
+                "description": "Auto-generated from turn1.session for gregory.sleep.claims_fine",
+                "importance": "medium"
+            },
+            "not_great": {
+                "id": "gregory.sleep.not_great",
+                "displayText": "Not great at all",
+                "description": "Auto-generated from turn1.session for gregory.sleep.not_great",
+                "importance": "medium"
+            },
+            "cant_settle": {
+                "id": "gregory.sleep.cant_settle",
+                "displayText": "settling down",
+                "description": "Auto-generated from turn1.session for gregory.sleep.cant_settle",
+                "importance": "medium"
+            }
+        },
+        "perfectionism": {
+            "_category": {
+                "label": "Perfectionism",
+                "icon": "tag",
+                "description": "Auto-generated category for perfectionism"
+            },
+            "said_correctly": {
+                "id": "gregory.perfectionism.said_correctly",
+                "displayText": "correctly",
+                "description": "Auto-generated from turn1.session for gregory.perfectionism.said_correctly",
+                "importance": "medium"
+            },
+            "doing_correctly": {
+                "id": "gregory.perfectionism.doing_correctly",
+                "displayText": "doing it correctly",
+                "description": "Auto-generated from turn1.session for gregory.perfectionism.doing_correctly",
+                "importance": "medium"
+            },
+            "right_things": {
+                "id": "gregory.perfectionism.right_things",
+                "displayText": "right things",
+                "description": "Auto-generated from turn1.session for gregory.perfectionism.right_things",
+                "importance": "medium"
+            },
+            "process_correctly": {
+                "id": "gregory.perfectionism.process_correctly",
+                "displayText": "following the process correctly",
+                "description": "Auto-generated from turn1.session for gregory.perfectionism.process_correctly",
+                "importance": "medium"
+            },
+            "perfection": {
+                "id": "gregory.perfectionism.perfection",
+                "displayText": "Perfection",
+                "description": "Auto-generated from turn1.session for gregory.perfectionism.perfection",
+                "importance": "medium"
+            },
+            "flawless": {
+                "id": "gregory.perfectionism.flawless",
+                "displayText": "flawless",
+                "description": "Auto-generated from turn1.session for gregory.perfectionism.flawless",
+                "importance": "medium"
+            },
+            "too_much": {
+                "id": "gregory.perfectionism.too_much",
+                "displayText": "too much",
+                "description": "Auto-generated from turn1.session for gregory.perfectionism.too_much",
+                "importance": "medium"
+            },
+            "expectations": {
+                "id": "gregory.perfectionism.expectations",
+                "displayText": "expectations to live up to",
+                "description": "Auto-generated from turn1.session for gregory.perfectionism.expectations",
+                "importance": "medium"
+            }
+        },
+        "uncertainty": {
+            "_category": {
+                "label": "Uncertainty",
+                "icon": "tag",
+                "description": "Auto-generated category for uncertainty"
+            },
+            "i_think": {
+                "id": "gregory.uncertainty.i_think",
+                "displayText": "think",
+                "description": "Auto-generated from turn1.session for gregory.uncertainty.i_think",
+                "importance": "medium"
+            }
+        },
+        "hypervigilance": {
+            "_category": {
+                "label": "Hypervigilance",
+                "icon": "tag",
+                "description": "Auto-generated category for hypervigilance"
+            },
+            "feeling_watched": {
+                "id": "gregory.hypervigilance.feeling_watched",
+                "displayText": "watched",
+                "description": "Auto-generated from turn1.session for gregory.hypervigilance.feeling_watched",
+                "importance": "medium"
+            },
+            "constantly_watched": {
+                "id": "gregory.hypervigilance.constantly_watched",
+                "displayText": "constantly being watched",
+                "description": "Auto-generated from turn1.session for gregory.hypervigilance.constantly_watched",
+                "importance": "medium"
+            },
+            "especially_now": {
+                "id": "gregory.hypervigilance.especially_now",
+                "displayText": "Especially now",
+                "description": "Auto-generated from turn1.session for gregory.hypervigilance.especially_now",
+                "importance": "medium"
+            },
+            "perceived": {
+                "id": "gregory.hypervigilance.perceived",
+                "displayText": "perceived",
+                "description": "Auto-generated from turn1.session for gregory.hypervigilance.perceived",
+                "importance": "medium"
+            },
+            "every_moment": {
+                "id": "gregory.hypervigilance.every_moment",
+                "displayText": "Every moment",
+                "description": "Auto-generated from turn1.session for gregory.hypervigilance.every_moment",
+                "importance": "medium"
+            }
+        },
+        "anxiety": {
+            "_category": {
+                "label": "Anxiety",
+                "icon": "tag",
+                "description": "Auto-generated category for anxiety"
+            },
+            "many_concerns": {
+                "id": "gregory.anxiety.many_concerns",
+                "displayText": "many concerns",
+                "description": "Auto-generated from turn1.session for gregory.anxiety.many_concerns",
+                "importance": "medium"
+            },
+            "waiting_wrong": {
+                "id": "gregory.anxiety.waiting_wrong",
+                "displayText": "waiting for something to go wrong",
+                "description": "Auto-generated from turn1.session for gregory.anxiety.waiting_wrong",
+                "importance": "medium"
+            },
+            "worry_everything": {
+                "id": "gregory.anxiety.worry_everything",
+                "displayText": "Everything",
+                "description": "Auto-generated from turn1.session for gregory.anxiety.worry_everything",
+                "importance": "medium"
+            }
+        },
+        "fear": {
+            "_category": {
+                "label": "Fear",
+                "icon": "tag",
+                "description": "Auto-generated category for fear"
+            },
+            "more_serious": {
+                "id": "gregory.fear.more_serious",
+                "displayText": "more serious",
+                "description": "Auto-generated from turn1.session for gregory.fear.more_serious",
+                "importance": "medium"
+            }
+        },
+        "rumination": {
+            "_category": {
+                "label": "Rumination",
+                "icon": "tag",
+                "description": "Auto-generated category for rumination"
+            },
+            "replaying": {
+                "id": "gregory.rumination.replaying",
+                "displayText": "Replaying conversations",
+                "description": "Auto-generated from turn1.session for gregory.rumination.replaying",
+                "importance": "medium"
+            },
+            "everything_wrong": {
+                "id": "gregory.rumination.everything_wrong",
+                "displayText": "Everything I did wrong that day",
+                "description": "Auto-generated from turn1.session for gregory.rumination.everything_wrong",
+                "importance": "medium"
             }
         },
         "behavior": {
@@ -312,6 +617,93 @@
                         "breakthrough-masking"
                     ]
                 }
+            },
+            "specific_routine": {
+                "id": "gregory.behavior.specific_routine",
+                "displayText": "specific one",
+                "description": "Auto-generated from turn1.session for gregory.behavior.specific_routine",
+                "importance": "medium"
+            }
+        },
+        "compulsion": {
+            "_category": {
+                "label": "Compulsion",
+                "icon": "tag",
+                "description": "Auto-generated category for compulsion"
+            },
+            "multiple_checks": {
+                "id": "gregory.compulsion.multiple_checks",
+                "displayText": "multiple times",
+                "description": "Auto-generated from turn1.session for gregory.compulsion.multiple_checks",
+                "importance": "medium"
+            },
+            "triple_check": {
+                "id": "gregory.compulsion.triple_check",
+                "displayText": "triple-check my work for the next day",
+                "description": "Auto-generated from turn1.session for gregory.compulsion.triple_check",
+                "importance": "medium"
+            },
+            "over_and_over": {
+                "id": "gregory.compulsion.over_and_over",
+                "displayText": "over and over",
+                "description": "Auto-generated from turn1.session for gregory.compulsion.over_and_over",
+                "importance": "medium"
+            }
+        },
+        "core": {
+            "_category": {
+                "label": "Core",
+                "icon": "tag",
+                "description": "Auto-generated category for core"
+            },
+            "not_good_enough": {
+                "id": "gregory.core.not_good_enough",
+                "displayText": "not good enough",
+                "description": "Auto-generated from turn1.session for gregory.core.not_good_enough",
+                "importance": "medium"
+            },
+            "dont_feel_together": {
+                "id": "gregory.core.dont_feel_together",
+                "displayText": "don't feel put-together",
+                "description": "Auto-generated from turn1.session for gregory.core.dont_feel_together",
+                "importance": "medium"
+            },
+            "pretending_together": {
+                "id": "gregory.core.pretending_together",
+                "displayText": "together as I'm pretending to be",
+                "description": "Auto-generated from turn1.session for gregory.core.pretending_together",
+                "importance": "medium"
+            },
+            "no_confidence": {
+                "id": "gregory.core.no_confidence",
+                "displayText": "Not even a little",
+                "description": "Auto-generated from turn1.session for gregory.core.no_confidence",
+                "importance": "medium"
+            },
+            "no_trust_self": {
+                "id": "gregory.core.no_trust_self",
+                "displayText": "trust my own perception anymore",
+                "description": "Auto-generated from turn1.session for gregory.core.no_trust_self",
+                "importance": "medium"
+            }
+        },
+        "social": {
+            "_category": {
+                "label": "Social",
+                "icon": "tag",
+                "description": "Auto-generated category for social"
+            },
+            "exhausting": {
+                "id": "gregory.social.exhausting",
+                "displayText": "exhausting",
+                "description": "Auto-generated from turn1.session for gregory.social.exhausting",
+                "importance": "medium"
+            },
+            "drained": {
+                "id": "gregory.social.drained",
+                "displayText": "drained",
+                "description": "Auto-generated from turn1.session for gregory.social.drained",
+                "importance": "medium"
             }
         },
         "emotion": {
@@ -389,6 +781,244 @@
                         "chronic-tension"
                     ]
                 }
+            },
+            "difficulties": {
+                "id": "gregory.emotion.difficulties",
+                "displayText": "difficulties",
+                "description": "Auto-generated from turn1.session for gregory.emotion.difficulties",
+                "importance": "medium"
+            }
+        },
+        "avoidance": {
+            "_category": {
+                "label": "Avoidance",
+                "icon": "tag",
+                "description": "Auto-generated category for avoidance"
+            },
+            "avoid_things": {
+                "id": "gregory.avoidance.avoid_things",
+                "displayText": "avoid some things",
+                "description": "Auto-generated from turn1.session for gregory.avoidance.avoid_things",
+                "importance": "medium"
+            },
+            "public_speaking": {
+                "id": "gregory.avoidance.public_speaking",
+                "displayText": "public speaking",
+                "description": "Auto-generated from turn1.session for gregory.avoidance.public_speaking",
+                "importance": "medium"
+            }
+        },
+        "fatigue": {
+            "_category": {
+                "label": "Fatigue",
+                "icon": "tag",
+                "description": "Auto-generated category for fatigue"
+            },
+            "really_tired": {
+                "id": "gregory.fatigue.really_tired",
+                "displayText": "Really tired",
+                "description": "Auto-generated from turn1.session for gregory.fatigue.really_tired",
+                "importance": "medium"
+            }
+        },
+        "insight": {
+            "_category": {
+                "label": "Insight",
+                "icon": "tag",
+                "description": "Auto-generated category for insight"
+            },
+            "stop_performing": {
+                "id": "gregory.insight.stop_performing",
+                "displayText": "stop performing",
+                "description": "Auto-generated from turn1.session for gregory.insight.stop_performing",
+                "importance": "medium"
+            },
+            "exhausting_performance": {
+                "id": "gregory.insight.exhausting_performance",
+                "displayText": "exhausting performance",
+                "description": "Auto-generated from turn1.session for gregory.insight.exhausting_performance",
+                "importance": "medium"
+            },
+            "knows_impossible": {
+                "id": "gregory.insight.knows_impossible",
+                "displayText": "know",
+                "description": "Auto-generated from turn1.session for gregory.insight.knows_impossible",
+                "importance": "medium"
+            },
+            "whole_life": {
+                "id": "gregory.insight.whole_life",
+                "displayText": "my whole life",
+                "description": "Auto-generated from turn1.session for gregory.insight.whole_life",
+                "importance": "medium"
+            },
+            "still_trying": {
+                "id": "gregory.insight.still_trying",
+                "displayText": "Still trying to be correct",
+                "description": "Auto-generated from turn1.session for gregory.insight.still_trying",
+                "importance": "medium"
+            }
+        },
+        "appearance": {
+            "_category": {
+                "label": "Appearance",
+                "icon": "tag",
+                "description": "Auto-generated category for appearance"
+            },
+            "effort": {
+                "id": "gregory.appearance.effort",
+                "displayText": "quite a bit of effort",
+                "description": "Auto-generated from turn1.session for gregory.appearance.effort",
+                "importance": "medium"
+            },
+            "professionally": {
+                "id": "gregory.appearance.professionally",
+                "displayText": "professionally",
+                "description": "Auto-generated from turn1.session for gregory.appearance.professionally",
+                "importance": "medium"
+            },
+            "twenty_minutes": {
+                "id": "gregory.appearance.twenty_minutes",
+                "displayText": "twenty minutes",
+                "description": "Auto-generated from turn1.session for gregory.appearance.twenty_minutes",
+                "importance": "medium"
+            }
+        },
+        "identity": {
+            "_category": {
+                "label": "Identity",
+                "icon": "tag",
+                "description": "Auto-generated category for identity"
+            },
+            "stands_out": {
+                "id": "gregory.identity.stands_out",
+                "displayText": "six foot one with red hair",
+                "description": "Auto-generated from turn1.session for gregory.identity.stands_out",
+                "importance": "medium"
+            },
+            "dont_know": {
+                "id": "gregory.identity.dont_know",
+                "displayText": "genuinely don't know",
+                "description": "Auto-generated from turn1.session for gregory.identity.dont_know",
+                "importance": "medium"
+            },
+            "nothing_solid": {
+                "id": "gregory.identity.nothing_solid",
+                "displayText": "solid",
+                "description": "Auto-generated from turn1.session for gregory.identity.nothing_solid",
+                "importance": "medium"
+            }
+        },
+        "reassurance": {
+            "_category": {
+                "label": "Reassurance",
+                "icon": "tag",
+                "description": "Auto-generated category for reassurance"
+            },
+            "doing_right": {
+                "id": "gregory.reassurance.doing_right",
+                "displayText": "doing this right",
+                "description": "Auto-generated from turn1.session for gregory.reassurance.doing_right",
+                "importance": "medium"
+            },
+            "valid": {
+                "id": "gregory.reassurance.valid",
+                "displayText": "valid",
+                "description": "Auto-generated from turn1.session for gregory.reassurance.valid",
+                "importance": "medium"
+            },
+            "normal": {
+                "id": "gregory.reassurance.normal",
+                "displayText": "normal",
+                "description": "Auto-generated from turn1.session for gregory.reassurance.normal",
+                "importance": "medium"
+            }
+        },
+        "work": {
+            "_category": {
+                "label": "Work",
+                "icon": "tag",
+                "description": "Auto-generated category for work"
+            },
+            "job": {
+                "id": "gregory.work.job",
+                "displayText": "redacted for now",
+                "description": "Auto-generated from turn1.session for gregory.work.job",
+                "importance": "medium"
+            },
+            "objectively_good": {
+                "id": "gregory.work.objectively_good",
+                "displayText": "Objectively good",
+                "description": "Auto-generated from turn1.session for gregory.work.objectively_good",
+                "importance": "medium"
+            },
+            "around_work": {
+                "id": "gregory.work.around_work",
+                "displayText": "around",
+                "description": "Auto-generated from turn1.session for gregory.work.around_work",
+                "importance": "medium"
+            },
+            "managing_impression": {
+                "id": "gregory.work.managing_impression",
+                "displayText": "managing how I come across",
+                "description": "Auto-generated from turn1.session for gregory.work.managing_impression",
+                "importance": "medium"
+            }
+        },
+        "impostor": {
+            "_category": {
+                "label": "Impostor",
+                "icon": "tag",
+                "description": "Auto-generated category for impostor"
+            },
+            "dont_know": {
+                "id": "gregory.impostor.dont_know",
+                "displayText": "don't know what I'm doing",
+                "description": "Auto-generated from turn1.session for gregory.impostor.dont_know",
+                "importance": "medium"
+            }
+        },
+        "family": {
+            "_category": {
+                "label": "Family",
+                "icon": "tag",
+                "description": "Auto-generated category for family"
+            },
+            "good_people": {
+                "id": "gregory.family.good_people",
+                "displayText": "Good people",
+                "description": "Auto-generated from turn1.session for gregory.family.good_people",
+                "importance": "medium"
+            },
+            "learned_perfect": {
+                "id": "gregory.family.learned_perfect",
+                "displayText": "perfect",
+                "description": "Auto-generated from turn1.session for gregory.family.learned_perfect",
+                "importance": "medium"
+            },
+            "everything_correct": {
+                "id": "gregory.family.everything_correct",
+                "displayText": "Everything to be done correctly",
+                "description": "Auto-generated from turn1.session for gregory.family.everything_correct",
+                "importance": "medium"
+            }
+        },
+        "childhood": {
+            "_category": {
+                "label": "Childhood",
+                "icon": "tag",
+                "description": "Auto-generated category for childhood"
+            },
+            "always_watching": {
+                "id": "gregory.childhood.always_watching",
+                "displayText": "Always watching",
+                "description": "Auto-generated from turn1.session for gregory.childhood.always_watching",
+                "importance": "medium"
+            },
+            "terrified_mistakes": {
+                "id": "gregory.childhood.terrified_mistakes",
+                "displayText": "terrified of making mistakes",
+                "description": "Auto-generated from turn1.session for gregory.childhood.terrified_mistakes",
+                "importance": "medium"
             }
         },
         "background": {

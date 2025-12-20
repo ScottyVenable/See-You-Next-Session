@@ -1,0 +1,431 @@
+{
+    "$schema": "./keyword-schema.json",
+    "source": "cognition",
+    "displayName": "Cognition Keywords",
+    "description": "Keywords related to thoughts, beliefs, and thinking patterns",
+    "version": "1.0.0",
+    "keywords": {
+        "self_beliefs": {
+            "_category": {
+                "label": "Negative Self-Beliefs",
+                "icon": "x-circle",
+                "description": "Core beliefs about the self"
+            },
+            "not_good_enough": {
+                "id": "cognition.self_beliefs.not_good_enough",
+                "displayText": "not good enough",
+                "aliases": [
+                    "not enough",
+                    "inadequate",
+                    "never good enough"
+                ],
+                "description": "Core belief of inadequacy",
+                "importance": "critical",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.18)",
+                    "icon": "x-circle"
+                },
+                "effects": {
+                    "focusCost": 8,
+                    "reveals": [
+                        "core-belief-inadequacy"
+                    ],
+                    "triggers": [
+                        "cognitive-distortion"
+                    ],
+                    "rapportChange": 3
+                },
+                "menuOptions": [
+                    {
+                        "id": "note-core-belief",
+                        "label": "Note: Core belief identified",
+                        "icon": "alert-circle",
+                        "action": "note",
+                        "params": {
+                            "template": "Core belief: \"Not good enough\""
+                        }
+                    }
+                ]
+            },
+            "failure": {
+                "id": "cognition.self_beliefs.failure",
+                "displayText": "failure",
+                "aliases": [
+                    "failed",
+                    "failing",
+                    "never succeed"
+                ],
+                "description": "Belief of being a failure",
+                "importance": "high",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.15)",
+                    "icon": "thumbs-down"
+                },
+                "effects": {
+                    "focusCost": 7,
+                    "reveals": [
+                        "self-criticism"
+                    ],
+                    "rapportChange": 2
+                }
+            },
+            "unlovable": {
+                "id": "cognition.self_beliefs.unlovable",
+                "displayText": "unlovable",
+                "aliases": [
+                    "no one loves me",
+                    "cant be loved",
+                    "dont deserve love"
+                ],
+                "description": "Belief of being unworthy of love",
+                "importance": "critical",
+                "style": {
+                    "color": "#8e44ad",
+                    "bgColor": "rgba(142, 68, 173, 0.2)",
+                    "icon": "heart-off"
+                },
+                "effects": {
+                    "focusCost": 10,
+                    "reveals": [
+                        "core-belief-unlovable"
+                    ],
+                    "triggers": [
+                        "attachment-issue"
+                    ],
+                    "rapportChange": 4
+                }
+            }
+        },
+        "distortions": {
+            "_category": {
+                "label": "Cognitive Distortions",
+                "icon": "repeat",
+                "description": "Common thinking errors and distortions"
+            },
+            "always_wrong": {
+                "id": "cognition.distortions.always_wrong",
+                "displayText": "always",
+                "aliases": [
+                    "never",
+                    "every time",
+                    "without exception"
+                ],
+                "description": "All-or-nothing thinking",
+                "importance": "medium",
+                "style": {
+                    "color": "#3498db",
+                    "bgColor": "rgba(52, 152, 219, 0.15)",
+                    "icon": "repeat"
+                },
+                "effects": {
+                    "focusCost": 4,
+                    "reveals": [
+                        "cognitive-distortion-absolute"
+                    ]
+                },
+                "note": "Look for all-or-nothing thinking patterns"
+            },
+            "should": {
+                "id": "cognition.distortions.should",
+                "displayText": "should",
+                "aliases": [
+                    "must",
+                    "have to",
+                    "supposed to"
+                ],
+                "description": "Should statements - self-imposed rules",
+                "importance": "medium",
+                "style": {
+                    "color": "#3498db",
+                    "bgColor": "rgba(52, 152, 219, 0.12)",
+                    "icon": "check-square"
+                },
+                "effects": {
+                    "focusCost": 4,
+                    "reveals": [
+                        "cognitive-distortion-should"
+                    ]
+                }
+            },
+            "mind_reading": {
+                "id": "cognition.distortions.mind_reading",
+                "displayText": "they think",
+                "aliases": [
+                    "they must think",
+                    "everyone thinks",
+                    "people see me as"
+                ],
+                "description": "Assuming knowledge of others' thoughts",
+                "importance": "medium",
+                "style": {
+                    "color": "#3498db",
+                    "bgColor": "rgba(52, 152, 219, 0.15)",
+                    "icon": "eye"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "cognitive-distortion-mindreading"
+                    ]
+                },
+                "menuOptions": [
+                    {
+                        "id": "challenge-thought",
+                        "label": "Ask: How do you know that?",
+                        "icon": "message-circle",
+                        "action": "ask-about",
+                        "params": {
+                            "topic": "cognition.evidence"
+                        }
+                    }
+                ]
+            },
+            "catastrophizing": {
+                "id": "cognition.distortions.catastrophizing",
+                "displayText": "worst case",
+                "aliases": [
+                    "disaster",
+                    "terrible",
+                    "awful",
+                    "end of the world"
+                ],
+                "description": "Expecting the worst outcome",
+                "importance": "high",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.15)",
+                    "icon": "alert-triangle"
+                },
+                "effects": {
+                    "focusCost": 6,
+                    "reveals": [
+                        "cognitive-distortion-catastrophizing"
+                    ]
+                }
+            }
+        },
+        "fear": {
+            "_category": {
+                "label": "Fear & Worry Thoughts",
+                "icon": "help-circle",
+                "description": "Fear and worry thought patterns"
+            },
+            "what_if": {
+                "id": "cognition.fear.what_if",
+                "displayText": "what if",
+                "aliases": [
+                    "but what if",
+                    "imagine if"
+                ],
+                "description": "Anticipatory worry pattern",
+                "importance": "medium",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.12)",
+                    "icon": "help-circle"
+                },
+                "effects": {
+                    "focusCost": 4,
+                    "reveals": [
+                        "anticipatory-anxiety"
+                    ]
+                }
+            },
+            "something_wrong": {
+                "id": "cognition.fear.something_wrong",
+                "displayText": "something wrong",
+                "aliases": [
+                    "off",
+                    "not right",
+                    "bad feeling"
+                ],
+                "description": "Vague sense that something is wrong",
+                "importance": "medium",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.12)",
+                    "icon": "alert-circle"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "generalized-anxiety"
+                    ]
+                }
+            },
+            "going_crazy": {
+                "id": "cognition.fear.going_crazy",
+                "displayText": "going crazy",
+                "aliases": [
+                    "losing my mind",
+                    "insane",
+                    "mental"
+                ],
+                "description": "Fear of losing control or sanity",
+                "importance": "critical",
+                "style": {
+                    "color": "#8e44ad",
+                    "bgColor": "rgba(142, 68, 173, 0.18)",
+                    "icon": "alert-octagon"
+                },
+                "effects": {
+                    "focusCost": 8,
+                    "reveals": [
+                        "fear-of-losing-control"
+                    ],
+                    "rapportChange": 3
+                },
+                "menuOptions": [
+                    {
+                        "id": "normalize",
+                        "label": "Note: Normalize experience",
+                        "icon": "heart",
+                        "action": "note"
+                    }
+                ]
+            }
+        },
+        "identity": {
+            "_category": {
+                "label": "Identity & Self-Perception",
+                "icon": "user",
+                "description": "Identity and self-perception patterns"
+            },
+            "fake": {
+                "id": "cognition.identity.fake",
+                "displayText": "fake",
+                "aliases": [
+                    "imposter",
+                    "fraud",
+                    "pretending",
+                    "not real me"
+                ],
+                "description": "Feeling inauthentic or like an imposter",
+                "importance": "high",
+                "style": {
+                    "color": "#f39c12",
+                    "bgColor": "rgba(243, 156, 18, 0.15)",
+                    "icon": "mask"
+                },
+                "effects": {
+                    "focusCost": 6,
+                    "reveals": [
+                        "imposter-feelings"
+                    ]
+                }
+            },
+            "dont_know_who": {
+                "id": "cognition.identity.dont_know_who",
+                "displayText": "don't know who I am",
+                "aliases": [
+                    "lost myself",
+                    "who am I",
+                    "dont recognize myself"
+                ],
+                "description": "Identity confusion",
+                "importance": "high",
+                "style": {
+                    "color": "#8e44ad",
+                    "bgColor": "rgba(142, 68, 173, 0.18)",
+                    "icon": "user-x"
+                },
+                "effects": {
+                    "focusCost": 7,
+                    "reveals": [
+                        "identity-confusion"
+                    ],
+                    "rapportChange": 2
+                }
+            }
+        },
+        "suicidal": {
+            "_category": {
+                "label": "Suicidal Ideation",
+                "icon": "alert-octagon",
+                "description": "CRITICAL: Suicidal ideation indicators"
+            },
+            "better_off": {
+                "id": "cognition.suicidal.better_off",
+                "displayText": "better off without me",
+                "aliases": [
+                    "everyone be better",
+                    "wouldnt miss me",
+                    "dont want to be here"
+                ],
+                "description": "CRITICAL: Suicidal ideation indicator",
+                "importance": "critical",
+                "style": {
+                    "color": "#c0392b",
+                    "bgColor": "rgba(192, 57, 43, 0.25)",
+                    "icon": "alert-octagon",
+                    "animation": "pulse"
+                },
+                "effects": {
+                    "focusCost": 0,
+                    "reveals": [
+                        "suicidal-ideation"
+                    ],
+                    "triggers": [
+                        "safety-critical"
+                    ],
+                    "rapportChange": 5
+                },
+                "menuOptions": [
+                    {
+                        "id": "safety-immediate",
+                        "label": "IMMEDIATE SAFETY ASSESSMENT",
+                        "icon": "shield",
+                        "action": "safety-assessment",
+                        "params": {
+                            "topic": "safety.immediate",
+                            "priority": "critical"
+                        }
+                    }
+                ],
+                "note": "CRITICAL: Always assess for safety immediately"
+            },
+            "end_it": {
+                "id": "cognition.suicidal.end_it",
+                "displayText": "end it",
+                "aliases": [
+                    "kill myself",
+                    "not be alive",
+                    "disappear"
+                ],
+                "description": "CRITICAL: Direct suicidal ideation",
+                "importance": "critical",
+                "style": {
+                    "color": "#c0392b",
+                    "bgColor": "rgba(192, 57, 43, 0.3)",
+                    "icon": "alert-octagon",
+                    "animation": "pulse"
+                },
+                "effects": {
+                    "focusCost": 0,
+                    "reveals": [
+                        "active-suicidal-ideation"
+                    ],
+                    "triggers": [
+                        "safety-critical"
+                    ],
+                    "rapportChange": 5
+                },
+                "menuOptions": [
+                    {
+                        "id": "safety-immediate",
+                        "label": "IMMEDIATE SAFETY ASSESSMENT",
+                        "icon": "shield",
+                        "action": "safety-assessment",
+                        "params": {
+                            "topic": "safety.immediate",
+                            "priority": "critical"
+                        }
+                    }
+                ],
+                "note": "CRITICAL: Direct SI - immediate safety protocol"
+            }
+        }
+    }
+}

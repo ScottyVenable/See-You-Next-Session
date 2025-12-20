@@ -61,8 +61,7 @@ PATIENT
 
 @if rapport >= 30
     PATIENT (nervous)
-    "I've been meaning to come for a while now. [Months, actually]<keyword:gregory.duration.months_delay>. But I 
-    kept thinking maybe I was overreacting."
+    "I've been meaning to come for a while now. [Months, actually]<keyword:gregory.duration.months_delay>. But I kept thinking maybe I was overreacting."
     
     PATIENT (hesitant)
     "Do people often feel like they're overreacting? I don't want to waste 
@@ -147,8 +146,7 @@ some trouble with sleep. [Well, not trouble exactly]<keyword:gregory.minimizing.
     not perfect, but who sleeps perfectly?"
     
     PATIENT
-    "I get enough hours. [I think]<keyword:gregory.uncertainty.i_think>. Unless the recommended amount has 
-    changed? I try to stay informed about these things."
+    "I get enough hours. [I think]<keyword:gregory.uncertainty.i_think>. Unless the recommended amount has changed? I try to stay informed about these things."
 @else
     PATIENT (guarded)
     "[I sleep fine]<keyword:gregory.sleep.claims_fine><contradicts:bags_under_eyes>. That's probably not 

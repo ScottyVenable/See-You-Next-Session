@@ -1,0 +1,132 @@
+/*
+ * Keyword Importance Levels
+ * Subtle visual hierarchy that doesn't spoil gameplay
+ * 
+ * Design Philosophy:
+ * - All keywords should feel interactive
+ * - Higher importance = slightly more noticeable
+ * - Player learns through gameplay, not obvious visuals
+ * - Later perks could enhance visibility
+ */
+
+/* Low importance - Baseline styling */
+.keyword-importance-low {
+    --keyword-border-width: 1px;
+    --keyword-glow-intensity: 0;
+}
+
+.keyword-importance-low:hover {
+    --keyword-glow-intensity: 0.15;
+}
+
+/* Medium importance - Slightly more presence */
+.keyword-importance-medium {
+    --keyword-border-width: 1px;
+    --keyword-glow-intensity: 0.05;
+}
+
+.keyword-importance-medium:hover {
+    --keyword-glow-intensity: 0.25;
+}
+
+/* High importance - Noticeable but not screaming */
+.keyword-importance-high {
+    --keyword-border-width: 2px;
+    --keyword-glow-intensity: 0.1;
+}
+
+.keyword-importance-high:hover {
+    --keyword-glow-intensity: 0.35;
+}
+
+/* Critical importance - Demands attention */
+.keyword-importance-critical {
+    --keyword-border-width: 2px;
+    --keyword-glow-intensity: 0.2;
+}
+
+.keyword-importance-critical:not(.collected) {
+    animation: keyword-critical-idle 3s ease-in-out infinite;
+}
+
+.keyword-importance-critical:hover {
+    --keyword-glow-intensity: 0.5;
+}
+
+/* Critical idle animation - very subtle pulse */
+@keyframes keyword-critical-idle {
+
+    0%,
+    100% {
+        --keyword-glow-intensity: 0.15;
+    }
+
+    50% {
+        --keyword-glow-intensity: 0.25;
+    }
+}
+
+/* Perk: Trained Eye - Enhanced visibility for important keywords */
+.trained-eye-active .keyword-importance-high {
+    --keyword-glow-intensity: 0.25;
+}
+
+.trained-eye-active .keyword-importance-critical {
+    --keyword-glow-intensity: 0.4;
+    animation: keyword-critical-enhanced 2s ease-in-out infinite;
+}
+
+@keyframes keyword-critical-enhanced {
+
+    0%,
+    100% {
+        --keyword-glow-intensity: 0.35;
+        transform: scale(1);
+    }
+
+    50% {
+        --keyword-glow-intensity: 0.5;
+        transform: scale(1.02);
+    }
+}
+
+/* Dev mode - Show importance clearly */
+.dev-mode .keyword::before {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    font-size: 9px;
+    padding: 1px 4px;
+    border-radius: 2px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.dev-mode .keyword:hover::before {
+    opacity: 1;
+}
+
+.dev-mode .keyword-importance-low::before {
+    content: 'LOW';
+    color: #95a5a6;
+}
+
+.dev-mode .keyword-importance-medium::before {
+    content: 'MEDIUM';
+    color: #3498db;
+}
+
+.dev-mode .keyword-importance-high::before {
+    content: 'HIGH';
+    color: #e67e22;
+}
+
+.dev-mode .keyword-importance-critical::before {
+    content: 'CRITICAL';
+    color: #e74c3c;
+}

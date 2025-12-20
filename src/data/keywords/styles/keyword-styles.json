@@ -1,0 +1,297 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "SDNS Keyword Style Presets",
+    "description": "Style presets for keyword visual customization in See You Next Session",
+    "version": "1.0.0",
+    "categories": {
+        "behavior": {
+            "_meta": {
+                "label": "Behavior",
+                "description": "Styles for behavioral pattern keywords",
+                "icon": "activity"
+            },
+            "default": {
+                "color": "#e74c3c",
+                "bgColor": "rgba(231, 76, 60, 0.15)",
+                "cssClass": "keyword-category-behavior"
+            },
+            "red": {
+                "color": "#e74c3c",
+                "bgColor": "rgba(231, 76, 60, 0.15)",
+                "cssClass": "keyword-style-behavior-red"
+            },
+            "warning": {
+                "color": "#f39c12",
+                "bgColor": "rgba(243, 156, 18, 0.15)",
+                "cssClass": "keyword-style-behavior-warning"
+            },
+            "avoidance": {
+                "color": "#d35400",
+                "bgColor": "rgba(211, 84, 0, 0.15)",
+                "cssClass": "keyword-style-behavior-avoidance"
+            }
+        },
+        "emotion": {
+            "_meta": {
+                "label": "Emotion",
+                "description": "Styles for emotional expression keywords",
+                "icon": "heart"
+            },
+            "default": {
+                "color": "#9b59b6",
+                "bgColor": "rgba(155, 89, 182, 0.15)",
+                "cssClass": "keyword-category-emotion"
+            },
+            "purple": {
+                "color": "#9b59b6",
+                "bgColor": "rgba(155, 89, 182, 0.15)",
+                "cssClass": "keyword-style-emotion-purple"
+            },
+            "sad": {
+                "color": "#34495e",
+                "bgColor": "rgba(52, 73, 94, 0.2)",
+                "cssClass": "keyword-style-emotion-sad"
+            },
+            "anxious": {
+                "color": "#e67e22",
+                "bgColor": "rgba(230, 126, 34, 0.15)",
+                "cssClass": "keyword-style-emotion-anxious"
+            },
+            "positive": {
+                "color": "#27ae60",
+                "bgColor": "rgba(39, 174, 96, 0.15)",
+                "cssClass": "keyword-style-emotion-positive"
+            }
+        },
+        "cognition": {
+            "_meta": {
+                "label": "Cognition",
+                "description": "Styles for thought and belief keywords",
+                "icon": "brain"
+            },
+            "default": {
+                "color": "#3498db",
+                "bgColor": "rgba(52, 152, 219, 0.15)",
+                "cssClass": "keyword-category-cognition"
+            },
+            "blue": {
+                "color": "#3498db",
+                "bgColor": "rgba(52, 152, 219, 0.15)",
+                "cssClass": "keyword-style-cognition-blue"
+            },
+            "distortion": {
+                "color": "#8e44ad",
+                "bgColor": "rgba(142, 68, 173, 0.15)",
+                "cssClass": "keyword-style-cognition-distortion"
+            },
+            "belief": {
+                "color": "#2980b9",
+                "bgColor": "rgba(41, 128, 185, 0.15)",
+                "cssClass": "keyword-style-cognition-belief"
+            }
+        },
+        "symptom": {
+            "_meta": {
+                "label": "Symptom",
+                "description": "Styles for clinical symptom keywords",
+                "icon": "alert-circle"
+            },
+            "default": {
+                "color": "#e67e22",
+                "bgColor": "rgba(230, 126, 34, 0.15)",
+                "cssClass": "keyword-category-symptom"
+            },
+            "orange": {
+                "color": "#e67e22",
+                "bgColor": "rgba(230, 126, 34, 0.15)",
+                "cssClass": "keyword-style-symptom-orange"
+            },
+            "critical": {
+                "color": "#c0392b",
+                "bgColor": "rgba(192, 57, 43, 0.2)",
+                "cssClass": "keyword-style-symptom-critical"
+            },
+            "physical": {
+                "color": "#16a085",
+                "bgColor": "rgba(22, 160, 133, 0.15)",
+                "cssClass": "keyword-style-symptom-physical"
+            }
+        },
+        "relationship": {
+            "_meta": {
+                "label": "Relationship",
+                "description": "Styles for social and relationship keywords",
+                "icon": "users"
+            },
+            "default": {
+                "color": "#1abc9c",
+                "bgColor": "rgba(26, 188, 156, 0.15)",
+                "cssClass": "keyword-category-relationship"
+            },
+            "teal": {
+                "color": "#1abc9c",
+                "bgColor": "rgba(26, 188, 156, 0.15)",
+                "cssClass": "keyword-style-relationship-teal"
+            },
+            "conflict": {
+                "color": "#e74c3c",
+                "bgColor": "rgba(231, 76, 60, 0.12)",
+                "cssClass": "keyword-style-relationship-conflict"
+            },
+            "support": {
+                "color": "#27ae60",
+                "bgColor": "rgba(39, 174, 96, 0.15)",
+                "cssClass": "keyword-style-relationship-support"
+            },
+            "loss": {
+                "color": "#7f8c8d",
+                "bgColor": "rgba(127, 140, 141, 0.15)",
+                "cssClass": "keyword-style-relationship-loss"
+            }
+        },
+        "time": {
+            "_meta": {
+                "label": "Time",
+                "description": "Styles for temporal and duration keywords",
+                "icon": "clock"
+            },
+            "default": {
+                "color": "#95a5a6",
+                "bgColor": "rgba(149, 165, 166, 0.15)",
+                "cssClass": "keyword-category-time"
+            },
+            "silver": {
+                "color": "#95a5a6",
+                "bgColor": "rgba(149, 165, 166, 0.15)",
+                "cssClass": "keyword-style-time-silver"
+            },
+            "recent": {
+                "color": "#3498db",
+                "bgColor": "rgba(52, 152, 219, 0.1)",
+                "cssClass": "keyword-style-time-recent"
+            },
+            "chronic": {
+                "color": "#e67e22",
+                "bgColor": "rgba(230, 126, 34, 0.1)",
+                "cssClass": "keyword-style-time-chronic"
+            }
+        },
+        "background": {
+            "_meta": {
+                "label": "Background",
+                "description": "Styles for history and context keywords",
+                "icon": "book"
+            },
+            "default": {
+                "color": "#d35400",
+                "bgColor": "rgba(211, 84, 0, 0.12)",
+                "cssClass": "keyword-category-background"
+            }
+        },
+        "generic": {
+            "_meta": {
+                "label": "Generic",
+                "description": "Default styles for uncategorized keywords",
+                "icon": "tag"
+            },
+            "default": {
+                "color": "#6c5ce7",
+                "bgColor": "rgba(108, 92, 231, 0.15)",
+                "cssClass": "keyword-category-generic"
+            }
+        }
+    },
+    "animations": {
+        "none": {
+            "name": "None",
+            "description": "No animation",
+            "cssClass": "keyword-anim-none"
+        },
+        "highlight": {
+            "name": "Highlight",
+            "description": "Brief flash effect on interaction",
+            "cssClass": "keyword-anim-highlight"
+        },
+        "pulse": {
+            "name": "Pulse",
+            "description": "Gentle breathing/pulsing effect",
+            "cssClass": "keyword-anim-pulse"
+        },
+        "glow": {
+            "name": "Glow",
+            "description": "Soft luminance shift",
+            "cssClass": "keyword-anim-glow"
+        },
+        "shimmer": {
+            "name": "Shimmer",
+            "description": "Light sweep effect across keyword",
+            "cssClass": "keyword-anim-shimmer"
+        },
+        "shake": {
+            "name": "Shake",
+            "description": "Brief shake for attention or contradiction",
+            "cssClass": "keyword-anim-shake"
+        },
+        "pop": {
+            "name": "Pop",
+            "description": "Scale pop for emphasis",
+            "cssClass": "keyword-anim-pop"
+        },
+        "float": {
+            "name": "Float",
+            "description": "Subtle lift on hover",
+            "cssClass": "keyword-anim-float"
+        }
+    },
+    "importance": {
+        "low": {
+            "name": "Low",
+            "description": "Baseline importance - subtle styling",
+            "cssClass": "keyword-importance-low",
+            "borderWidth": "1px",
+            "glowIntensity": 0
+        },
+        "medium": {
+            "name": "Medium",
+            "description": "Notable but not urgent",
+            "cssClass": "keyword-importance-medium",
+            "borderWidth": "1px",
+            "glowIntensity": 0.05
+        },
+        "high": {
+            "name": "High",
+            "description": "Important - more visible",
+            "cssClass": "keyword-importance-high",
+            "borderWidth": "2px",
+            "glowIntensity": 0.1
+        },
+        "critical": {
+            "name": "Critical",
+            "description": "Must not be missed",
+            "cssClass": "keyword-importance-critical",
+            "borderWidth": "2px",
+            "glowIntensity": 0.2,
+            "defaultAnimation": "pulse"
+        }
+    },
+    "special": {
+        "contradiction": {
+            "name": "Contradiction",
+            "description": "Marks conflicting information",
+            "cssClass": "keyword-category-contradiction",
+            "icon": "alert-triangle"
+        },
+        "breakthrough": {
+            "name": "Breakthrough",
+            "description": "Triggers breakthrough moment",
+            "cssClass": "keyword-category-breakthrough",
+            "icon": "zap"
+        },
+        "safety": {
+            "name": "Safety Concern",
+            "description": "Safety-related keyword requiring attention",
+            "cssClass": "keyword-category-safety",
+            "icon": "shield-alert"
+        }
+    }
+}

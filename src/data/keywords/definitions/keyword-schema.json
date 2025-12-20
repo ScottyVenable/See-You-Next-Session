@@ -185,9 +185,32 @@
                         "none",
                         "pulse",
                         "glow",
-                        "shake"
+                        "shake",
+                        "shimmer",
+                        "pop",
+                        "highlight",
+                        "float"
                     ],
-                    "description": "Animation effect"
+                    "description": "Animation effect from presets"
+                },
+                "cssClass": {
+                    "type": "string",
+                    "description": "CSS class preset reference (e.g., 'behavior.red', 'emotion.sad')",
+                    "pattern": "^[a-z]+\\.[a-z_-]+$"
+                },
+                "animationClass": {
+                    "type": "string",
+                    "description": "Animation preset reference (e.g., 'pulse', 'glow')",
+                    "enum": [
+                        "none",
+                        "highlight",
+                        "pulse",
+                        "glow",
+                        "shimmer",
+                        "shake",
+                        "pop",
+                        "float"
+                    ]
                 }
             }
         },

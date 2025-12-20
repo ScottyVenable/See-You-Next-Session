@@ -1,0 +1,329 @@
+{
+    "$schema": "./keyword-schema.json",
+    "source": "time",
+    "displayName": "Time & Duration Keywords",
+    "description": "Keywords related to time periods, duration, and frequency",
+    "version": "1.0.0",
+    "keywords": {
+        "duration": {
+            "_category": {
+                "label": "Duration",
+                "icon": "calendar",
+                "description": "How long something has lasted"
+            },
+            "months": {
+                "id": "time.duration.months",
+                "displayText": "months",
+                "aliases": [
+                    "for months",
+                    "several months",
+                    "a few months",
+                    "months now"
+                ],
+                "description": "A duration spanning multiple months - indicates a persistent issue",
+                "importance": "medium",
+                "style": {
+                    "color": "#6b7fd7",
+                    "bgColor": "rgba(107, 127, 215, 0.15)",
+                    "icon": "calendar"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "chronicity"
+                    ],
+                    "setVars": {
+                        "duration_mentioned": true
+                    }
+                },
+                "menuOptions": [
+                    {
+                        "id": "note-duration",
+                        "label": "Note: Long-term issue",
+                        "icon": "note",
+                        "action": "note",
+                        "params": {
+                            "template": "Patient reports issue lasting months"
+                        }
+                    },
+                    {
+                        "id": "ask-specifics",
+                        "label": "Ask: How many months?",
+                        "icon": "message-circle",
+                        "action": "ask-about",
+                        "params": {
+                            "topic": "duration.specifics"
+                        }
+                    }
+                ],
+                "note": "Important for establishing chronicity of symptoms"
+            },
+            "weeks": {
+                "id": "time.duration.weeks",
+                "displayText": "weeks",
+                "aliases": [
+                    "for weeks",
+                    "several weeks",
+                    "a few weeks"
+                ],
+                "description": "A duration spanning weeks",
+                "importance": "low",
+                "style": {
+                    "color": "#6b7fd7",
+                    "bgColor": "rgba(107, 127, 215, 0.12)",
+                    "icon": "calendar"
+                },
+                "effects": {
+                    "focusCost": 3
+                },
+                "menuOptions": [
+                    {
+                        "id": "note-duration",
+                        "label": "Note: Recent issue",
+                        "icon": "note",
+                        "action": "note"
+                    }
+                ]
+            },
+            "years": {
+                "id": "time.duration.years",
+                "displayText": "years",
+                "aliases": [
+                    "for years",
+                    "several years",
+                    "many years"
+                ],
+                "description": "A duration spanning years - indicates a chronic, long-standing issue",
+                "importance": "high",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.15)",
+                    "icon": "calendar"
+                },
+                "effects": {
+                    "focusCost": 8,
+                    "reveals": [
+                        "chronic-issue"
+                    ],
+                    "rapportChange": 2
+                },
+                "menuOptions": [
+                    {
+                        "id": "note-chronic",
+                        "label": "Note: Chronic condition",
+                        "icon": "alert-circle",
+                        "action": "note",
+                        "params": {
+                            "template": "Patient reports years-long history"
+                        }
+                    }
+                ],
+                "note": "Critical for diagnosis - indicates deeply rooted patterns"
+            },
+            "always": {
+                "id": "time.duration.always",
+                "displayText": "always",
+                "aliases": [
+                    "my whole life",
+                    "as long as I can remember",
+                    "since I was young"
+                ],
+                "description": "Patient indicates this has always been the case",
+                "importance": "critical",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.18)",
+                    "icon": "infinity"
+                },
+                "effects": {
+                    "focusCost": 10,
+                    "reveals": [
+                        "lifelong-pattern"
+                    ],
+                    "triggers": [
+                        "early-onset-discovery"
+                    ]
+                },
+                "menuOptions": [
+                    {
+                        "id": "note-lifelong",
+                        "label": "Note: Lifelong pattern",
+                        "icon": "alert-circle",
+                        "action": "note"
+                    },
+                    {
+                        "id": "ask-childhood",
+                        "label": "Ask: Tell me about childhood",
+                        "icon": "message-circle",
+                        "action": "ask-about",
+                        "params": {
+                            "topic": "family.childhood"
+                        }
+                    }
+                ]
+            }
+        },
+        "frequency": {
+            "_category": {
+                "label": "Frequency",
+                "icon": "repeat",
+                "description": "How often something occurs"
+            },
+            "every_night": {
+                "id": "time.frequency.every_night",
+                "displayText": "every night",
+                "aliases": [
+                    "each night",
+                    "nightly",
+                    "every single night"
+                ],
+                "description": "Something occurring nightly - indicates consistent pattern",
+                "importance": "high",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.15)",
+                    "icon": "moon"
+                },
+                "effects": {
+                    "focusCost": 6,
+                    "reveals": [
+                        "sleep-disturbance-pattern"
+                    ]
+                },
+                "menuOptions": [
+                    {
+                        "id": "note-nightly",
+                        "label": "Note: Nightly occurrence",
+                        "icon": "note",
+                        "action": "note"
+                    }
+                ]
+            },
+            "constantly": {
+                "id": "time.frequency.constantly",
+                "displayText": "constantly",
+                "aliases": [
+                    "all the time",
+                    "non-stop",
+                    "without break",
+                    "24/7"
+                ],
+                "description": "Something happening all the time without relief",
+                "importance": "high",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.15)",
+                    "icon": "repeat"
+                },
+                "effects": {
+                    "focusCost": 7,
+                    "reveals": [
+                        "persistent-symptoms"
+                    ]
+                }
+            },
+            "sometimes": {
+                "id": "time.frequency.sometimes",
+                "displayText": "sometimes",
+                "aliases": [
+                    "occasionally",
+                    "now and then",
+                    "once in a while"
+                ],
+                "description": "Occasional occurrence - may indicate minimization",
+                "importance": "low",
+                "style": {
+                    "color": "#6b7fd7",
+                    "bgColor": "rgba(107, 127, 215, 0.1)",
+                    "icon": "clock"
+                },
+                "effects": {
+                    "focusCost": 2
+                },
+                "menuOptions": [
+                    {
+                        "id": "probe-frequency",
+                        "label": "Ask: How often exactly?",
+                        "icon": "message-circle",
+                        "action": "ask-about",
+                        "params": {
+                            "topic": "frequency.clarification"
+                        }
+                    }
+                ],
+                "note": "Watch for minimization - \"sometimes\" may mean \"often\""
+            }
+        },
+        "recency": {
+            "_category": {
+                "label": "Recency",
+                "icon": "clock",
+                "description": "When something started"
+            },
+            "recently": {
+                "id": "time.recency.recently",
+                "displayText": "recently",
+                "aliases": [
+                    "lately",
+                    "these days",
+                    "not long ago"
+                ],
+                "description": "Something that started in the recent past",
+                "importance": "medium",
+                "style": {
+                    "color": "#3498db",
+                    "bgColor": "rgba(52, 152, 219, 0.12)",
+                    "icon": "clock"
+                },
+                "effects": {
+                    "focusCost": 4
+                },
+                "menuOptions": [
+                    {
+                        "id": "ask-trigger",
+                        "label": "Ask: What changed recently?",
+                        "icon": "message-circle",
+                        "action": "ask-about",
+                        "params": {
+                            "topic": "precipitant"
+                        }
+                    }
+                ]
+            },
+            "since_event": {
+                "id": "time.recency.since_event",
+                "displayText": "since [event]",
+                "description": "Symptoms connected to a specific event - critical for understanding onset",
+                "importance": "critical",
+                "style": {
+                    "color": "#e67e22",
+                    "bgColor": "rgba(230, 126, 34, 0.15)",
+                    "icon": "flag"
+                },
+                "effects": {
+                    "focusCost": 8,
+                    "reveals": [
+                        "precipitating-event"
+                    ],
+                    "triggers": [
+                        "event-connection"
+                    ]
+                },
+                "menuOptions": [
+                    {
+                        "id": "note-precipitant",
+                        "label": "Note: Precipitating event",
+                        "icon": "alert-circle",
+                        "action": "note"
+                    },
+                    {
+                        "id": "explore-event",
+                        "label": "Ask: Tell me about that event",
+                        "icon": "message-circle",
+                        "action": "explore"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,422 @@
+{
+    "$schema": "./keyword-schema.json",
+    "source": "symptom",
+    "displayName": "Symptom Keywords",
+    "description": "Keywords directly related to clinical symptoms and signs",
+    "version": "1.0.0",
+    "keywords": {
+        "physical": {
+            "_category": {
+                "label": "Physical Symptoms",
+                "icon": "heart",
+                "description": "Physical symptom presentations"
+            },
+            "heart_racing": {
+                "id": "symptom.physical.heart_racing",
+                "displayText": "heart racing",
+                "aliases": [
+                    "pounding heart",
+                    "heart beating fast",
+                    "palpitations"
+                ],
+                "description": "Rapid heartbeat or palpitations",
+                "importance": "high",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.15)",
+                    "icon": "heart",
+                    "animation": "pulse"
+                },
+                "effects": {
+                    "focusCost": 6,
+                    "reveals": [
+                        "physical-anxiety"
+                    ],
+                    "triggers": [
+                        "panic-indicator"
+                    ]
+                }
+            },
+            "sweating": {
+                "id": "symptom.physical.sweating",
+                "displayText": "sweating",
+                "aliases": [
+                    "sweaty",
+                    "cold sweat",
+                    "sweating through"
+                ],
+                "description": "Excessive sweating unrelated to temperature",
+                "importance": "medium",
+                "style": {
+                    "color": "#3498db",
+                    "bgColor": "rgba(52, 152, 219, 0.12)",
+                    "icon": "droplet"
+                },
+                "effects": {
+                    "focusCost": 4,
+                    "reveals": [
+                        "physical-anxiety"
+                    ]
+                }
+            },
+            "trembling": {
+                "id": "symptom.physical.trembling",
+                "displayText": "trembling",
+                "aliases": [
+                    "shaking",
+                    "hands shaking",
+                    "cant stop shaking"
+                ],
+                "description": "Shaking or tremors",
+                "importance": "medium",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.12)",
+                    "icon": "activity"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "physical-anxiety"
+                    ]
+                }
+            },
+            "chest_pain": {
+                "id": "symptom.physical.chest_pain",
+                "displayText": "chest pain",
+                "aliases": [
+                    "chest tightness",
+                    "pressure in chest",
+                    "heart attack feeling"
+                ],
+                "description": "Pain or tightness in chest",
+                "importance": "critical",
+                "style": {
+                    "color": "#c0392b",
+                    "bgColor": "rgba(192, 57, 43, 0.18)",
+                    "icon": "alert-circle"
+                },
+                "effects": {
+                    "focusCost": 8,
+                    "reveals": [
+                        "panic-symptoms"
+                    ],
+                    "triggers": [
+                        "panic-marker"
+                    ]
+                },
+                "menuOptions": [
+                    {
+                        "id": "note-medical",
+                        "label": "Note: Rule out medical causes",
+                        "icon": "alert-circle",
+                        "action": "note"
+                    }
+                ]
+            },
+            "dizzy": {
+                "id": "symptom.physical.dizzy",
+                "displayText": "dizzy",
+                "aliases": [
+                    "lightheaded",
+                    "faint",
+                    "room spinning"
+                ],
+                "description": "Dizziness or lightheadedness",
+                "importance": "medium",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.12)",
+                    "icon": "loader"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "physical-anxiety"
+                    ]
+                }
+            },
+            "nausea": {
+                "id": "symptom.physical.nausea",
+                "displayText": "nausea",
+                "aliases": [
+                    "sick to my stomach",
+                    "queasy",
+                    "want to throw up"
+                ],
+                "description": "Feeling sick to stomach",
+                "importance": "low",
+                "style": {
+                    "color": "#27ae60",
+                    "bgColor": "rgba(39, 174, 96, 0.12)",
+                    "icon": "frown"
+                },
+                "effects": {
+                    "focusCost": 3,
+                    "reveals": [
+                        "physical-symptoms"
+                    ]
+                }
+            }
+        },
+        "sleep": {
+            "_category": {
+                "label": "Sleep Symptoms",
+                "icon": "moon",
+                "description": "Sleep-related symptoms"
+            },
+            "insomnia": {
+                "id": "symptom.sleep.insomnia",
+                "displayText": "insomnia",
+                "aliases": [
+                    "cant sleep",
+                    "sleepless",
+                    "up all night"
+                ],
+                "description": "Chronic difficulty sleeping",
+                "importance": "high",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.18)",
+                    "icon": "moon"
+                },
+                "effects": {
+                    "focusCost": 7,
+                    "reveals": [
+                        "insomnia"
+                    ],
+                    "triggers": [
+                        "sleep-disorder-marker"
+                    ]
+                }
+            },
+            "nightmares": {
+                "id": "symptom.sleep.nightmares",
+                "displayText": "nightmares",
+                "aliases": [
+                    "bad dreams",
+                    "wake up scared",
+                    "night terrors"
+                ],
+                "description": "Disturbing dreams",
+                "importance": "high",
+                "style": {
+                    "color": "#8e44ad",
+                    "bgColor": "rgba(142, 68, 173, 0.15)",
+                    "icon": "cloud-lightning"
+                },
+                "effects": {
+                    "focusCost": 6,
+                    "reveals": [
+                        "sleep-disturbance"
+                    ],
+                    "triggers": [
+                        "trauma-indicator"
+                    ]
+                }
+            },
+            "fatigue": {
+                "id": "symptom.sleep.fatigue",
+                "displayText": "exhausted",
+                "aliases": [
+                    "tired",
+                    "no energy",
+                    "wiped out",
+                    "drained"
+                ],
+                "description": "Persistent tiredness or lack of energy",
+                "importance": "medium",
+                "style": {
+                    "color": "#7f8c8d",
+                    "bgColor": "rgba(127, 140, 141, 0.15)",
+                    "icon": "battery-low"
+                },
+                "effects": {
+                    "focusCost": 4,
+                    "reveals": [
+                        "fatigue"
+                    ]
+                }
+            }
+        },
+        "cognitive": {
+            "_category": {
+                "label": "Cognitive Symptoms",
+                "icon": "target",
+                "description": "Cognitive and concentration symptoms"
+            },
+            "cant_concentrate": {
+                "id": "symptom.cognitive.cant_concentrate",
+                "displayText": "can't concentrate",
+                "aliases": [
+                    "distracted",
+                    "mind wandering",
+                    "cant focus"
+                ],
+                "description": "Difficulty focusing or paying attention",
+                "importance": "medium",
+                "style": {
+                    "color": "#3498db",
+                    "bgColor": "rgba(52, 152, 219, 0.12)",
+                    "icon": "target"
+                },
+                "effects": {
+                    "focusCost": 4,
+                    "reveals": [
+                        "concentration-problems"
+                    ]
+                }
+            },
+            "memory_problems": {
+                "id": "symptom.cognitive.memory_problems",
+                "displayText": "forgetting things",
+                "aliases": [
+                    "memory issues",
+                    "keep forgetting",
+                    "cant remember"
+                ],
+                "description": "Difficulty with memory",
+                "importance": "medium",
+                "style": {
+                    "color": "#3498db",
+                    "bgColor": "rgba(52, 152, 219, 0.12)",
+                    "icon": "database"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "cognitive-symptoms"
+                    ]
+                }
+            },
+            "brain_fog": {
+                "id": "symptom.cognitive.brain_fog",
+                "displayText": "brain fog",
+                "aliases": [
+                    "foggy",
+                    "hazy",
+                    "not thinking clearly"
+                ],
+                "description": "Mental cloudiness or confusion",
+                "importance": "medium",
+                "style": {
+                    "color": "#7f8c8d",
+                    "bgColor": "rgba(127, 140, 141, 0.15)",
+                    "icon": "cloud"
+                },
+                "effects": {
+                    "focusCost": 4,
+                    "reveals": [
+                        "cognitive-symptoms"
+                    ]
+                }
+            }
+        },
+        "dissociative": {
+            "_category": {
+                "label": "Dissociative Symptoms",
+                "icon": "eye-off",
+                "description": "Dissociation and derealization symptoms"
+            },
+            "unreal": {
+                "id": "symptom.dissociative.unreal",
+                "displayText": "doesn't feel real",
+                "aliases": [
+                    "not real",
+                    "dreamlike",
+                    "world feels fake"
+                ],
+                "description": "Derealization experience",
+                "importance": "high",
+                "style": {
+                    "color": "#8e44ad",
+                    "bgColor": "rgba(142, 68, 173, 0.18)",
+                    "icon": "eye-off"
+                },
+                "effects": {
+                    "focusCost": 8,
+                    "reveals": [
+                        "dissociation"
+                    ],
+                    "rapportChange": 3
+                }
+            },
+            "outside_body": {
+                "id": "symptom.dissociative.outside_body",
+                "displayText": "outside my body",
+                "aliases": [
+                    "watching myself",
+                    "not in my body",
+                    "floating above"
+                ],
+                "description": "Depersonalization experience",
+                "importance": "critical",
+                "style": {
+                    "color": "#8e44ad",
+                    "bgColor": "rgba(142, 68, 173, 0.2)",
+                    "icon": "user"
+                },
+                "effects": {
+                    "focusCost": 10,
+                    "reveals": [
+                        "dissociation"
+                    ],
+                    "triggers": [
+                        "dissociation-marker"
+                    ],
+                    "rapportChange": 4
+                }
+            }
+        },
+        "appetite": {
+            "_category": {
+                "label": "Weight/Appetite",
+                "icon": "trending-down",
+                "description": "Weight and appetite changes"
+            },
+            "weight_loss": {
+                "id": "symptom.appetite.weight_loss",
+                "displayText": "losing weight",
+                "aliases": [
+                    "lost weight",
+                    "clothes dont fit",
+                    "getting thin"
+                ],
+                "description": "Unintentional weight loss",
+                "importance": "high",
+                "style": {
+                    "color": "#e67e22",
+                    "bgColor": "rgba(230, 126, 34, 0.15)",
+                    "icon": "trending-down"
+                },
+                "effects": {
+                    "focusCost": 6,
+                    "reveals": [
+                        "physical-changes"
+                    ]
+                }
+            },
+            "weight_gain": {
+                "id": "symptom.appetite.weight_gain",
+                "displayText": "gaining weight",
+                "aliases": [
+                    "gained weight",
+                    "getting heavy"
+                ],
+                "description": "Unintentional weight gain",
+                "importance": "medium",
+                "style": {
+                    "color": "#e67e22",
+                    "bgColor": "rgba(230, 126, 34, 0.15)",
+                    "icon": "trending-up"
+                },
+                "effects": {
+                    "focusCost": 4,
+                    "reveals": [
+                        "physical-changes"
+                    ]
+                }
+            }
+        }
+    }
+}

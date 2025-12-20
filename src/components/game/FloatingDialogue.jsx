@@ -45,7 +45,7 @@ function getKeywordType(keyword) {
 function sanitizeDialogueText(rawText = '') {
     return rawText
         .replace(/\[([^\]]+)\](<[^>]+>)?/g, '$1')
-        .replace(/%([^%<>]+)(<[^>]+>)?%/g, '$1');
+        .replace(/%([^%]+)%(<[^>]+>)?/g, '$1');
 }
 
 // Minimal inline markdown renderer (bold, italics, code, newlines)

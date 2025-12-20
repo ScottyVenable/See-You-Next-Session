@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import '../../styles/dialogue-box.css';
+import '../../styles/keywords/index.css';
 
 // Animation variants
 const dialogueVariants = {
@@ -83,11 +84,16 @@ const contextMenuVariants = {
 
 // Helper function to determine keyword type from content/context
 function getKeywordType(keyword) {
+    // If keyword has explicit category, use it
+    if (keyword.category) {
+        return keyword.category;
+    }
+
     const text = keyword.text.toLowerCase();
 
     // Duration keywords (time-related)
     if (/\b(always|never|constantly|recently|lately|sometimes|often|weeks?|months?|years?|days?|hours?|morning|night|every|since|ago)\b/.test(text)) {
-        return 'duration';
+        return 'time';
     }
 
     // Intensity keywords (severity/degree)
@@ -116,7 +122,50 @@ function getKeywordType(keyword) {
     }
 
     // Default to general
-    return 'general';
+    return 'generic';
+}
+
+// Helper function to build keyword CSS classes
+function getKeywordClasses(keyword, isCollected, keywordType) {
+    const classes = ['keyword', 'dialogue-keyword'];
+
+    // Collection state
+    classes.push(isCollected ? 'collected' : 'available');
+
+    // Category class
+    classes.push(`keyword-category-${keywordType}`);
+
+    // Importance class
+    if (keyword.importance) {
+        classes.push(`keyword-importance-${keyword.importance}`);
+    }
+
+    // Custom CSS class from style preset (e.g., 'behavior.red')
+    if (keyword.style?.cssClass) {
+        const parts = keyword.style.cssClass.split('.');
+        if (parts.length === 2) {
+            classes.push(`keyword-style-${parts[0]}-${parts[1]}`);
+        }
+    }
+
+    // Animation class
+    if (keyword.style?.animation || keyword.style?.animationClass) {
+        const anim = keyword.style.animationClass || keyword.style.animation;
+        if (anim && anim !== 'none') {
+            classes.push(`keyword-anim-${anim}`);
+        }
+    }
+
+    // Special states
+    if (keyword.contradicts || keyword.effects?.contradicts?.length > 0) {
+        classes.push('contradiction');
+    }
+
+    if (keyword.safetyFlag || keyword.safety) {
+        classes.push('safety-flag');
+    }
+
+    return classes.join(' ');
 }
 
 function DialogueBox({
@@ -341,6 +390,7 @@ function DialogueBox({
                 const isCollected = collectedKeywords.has(keyword.id);
                 const keywordType = getKeywordType(keyword);
                 const shouldAnimate = !animatedKeywords.has(keyword.id);
+                const keywordClasses = getKeywordClasses(keyword, isCollected, keywordType);
 
                 // Mark as animated
                 if (shouldAnimate && !isTyping) {
@@ -349,10 +399,20 @@ function DialogueBox({
                     }, 100);
                 }
 
+                // Build inline styles from keyword definition
+                const keywordStyle = {};
+                if (keyword.style?.color) {
+                    keywordStyle['--keyword-color'] = keyword.style.color;
+                }
+                if (keyword.style?.bgColor) {
+                    keywordStyle['--keyword-bg'] = keyword.style.bgColor;
+                }
+
                 parts.push(
                     <motion.span
                         key={`keyword-${keyword.id}`}
-                        className={`dialogue-keyword ${isCollected ? 'collected' : 'available'} keyword-type-${keywordType}`}
+                        className={keywordClasses}
+                        style={keywordStyle}
                         variants={shouldAnimate && !isTyping ? keywordPopVariants : undefined}
                         initial={shouldAnimate && !isTyping ? "hidden" : false}
                         animate="visible"

@@ -585,7 +585,7 @@ class Parser {
         const observations = this.extractObservations(text);
         const cleanText = text
             .replace(/\[([^\]]+)\](<[^>]+>)?/g, '$1')
-            .replace(/%([^%<>]+)(<[^>]+>)?%/g, '$1');
+            .replace(/%([^%]+)%(<[^>]+>)?/g, '$1');
 
         return {
             type: 'speech',
@@ -643,7 +643,7 @@ class Parser {
 
     extractObservations(text) {
         const observations = [];
-        const regex = /%([^%<>]+)(<([^>]+)>)?%/g;
+        const regex = /%([^%]+)%(<([^>]+)>)?/g;
         let match;
 
         while ((match = regex.exec(text)) !== null) {

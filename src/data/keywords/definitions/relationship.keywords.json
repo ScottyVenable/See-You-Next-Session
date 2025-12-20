@@ -1,0 +1,444 @@
+{
+    "$schema": "./keyword-schema.json",
+    "source": "relationship",
+    "displayName": "Relationship Keywords",
+    "description": "Keywords related to social connections, relationships, and interactions",
+    "version": "1.0.0",
+    "keywords": {
+        "support": {
+            "_category": {
+                "label": "Social Support",
+                "icon": "users",
+                "description": "Keywords related to social support and isolation"
+            },
+            "no_one": {
+                "id": "relationship.support.no_one",
+                "displayText": "no one",
+                "aliases": [
+                    "nobody",
+                    "alone",
+                    "by myself",
+                    "on my own"
+                ],
+                "description": "Feeling alone or without support",
+                "importance": "high",
+                "style": {
+                    "color": "#3498db",
+                    "bgColor": "rgba(52, 152, 219, 0.15)",
+                    "icon": "user-x"
+                },
+                "effects": {
+                    "focusCost": 6,
+                    "reveals": [
+                        "social-isolation"
+                    ],
+                    "rapportChange": 2
+                }
+            },
+            "burden": {
+                "id": "relationship.support.burden",
+                "displayText": "burden",
+                "aliases": [
+                    "bother people",
+                    "in the way",
+                    "too much for them"
+                ],
+                "description": "Feeling like a burden to others",
+                "importance": "critical",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.18)",
+                    "icon": "weight"
+                },
+                "effects": {
+                    "focusCost": 8,
+                    "reveals": [
+                        "perceived-burden"
+                    ],
+                    "triggers": [
+                        "depression-marker"
+                    ],
+                    "rapportChange": 3
+                },
+                "menuOptions": [
+                    {
+                        "id": "safety-note",
+                        "label": "Monitor for SI",
+                        "icon": "alert-circle",
+                        "action": "note"
+                    }
+                ],
+                "note": "Perceived burdensomeness is risk factor for SI"
+            },
+            "present": {
+                "id": "relationship.support.present",
+                "displayText": "support",
+                "aliases": [
+                    "supportive",
+                    "there for me",
+                    "helps me"
+                ],
+                "description": "Reference to supportive relationships",
+                "importance": "medium",
+                "style": {
+                    "color": "#27ae60",
+                    "bgColor": "rgba(39, 174, 96, 0.15)",
+                    "icon": "users"
+                },
+                "effects": {
+                    "focusCost": 3,
+                    "reveals": [
+                        "social-support-present"
+                    ]
+                }
+            }
+        },
+        "family": {
+            "_category": {
+                "label": "Family",
+                "icon": "home",
+                "description": "Keywords related to family relationships"
+            },
+            "general": {
+                "id": "relationship.family.general",
+                "displayText": "family",
+                "aliases": [
+                    "parents",
+                    "siblings",
+                    "relatives"
+                ],
+                "description": "Reference to family members",
+                "importance": "low",
+                "style": {
+                    "color": "#f39c12",
+                    "bgColor": "rgba(243, 156, 18, 0.12)",
+                    "icon": "home"
+                },
+                "effects": {
+                    "focusCost": 2
+                },
+                "menuOptions": [
+                    {
+                        "id": "explore-family",
+                        "label": "Ask: Tell me about your family",
+                        "icon": "message-circle",
+                        "action": "ask-about",
+                        "params": {
+                            "topic": "family.background"
+                        }
+                    }
+                ]
+            },
+            "parents": {
+                "id": "relationship.family.parents",
+                "displayText": "parents",
+                "aliases": [
+                    "mom",
+                    "dad",
+                    "mother",
+                    "father"
+                ],
+                "description": "Reference to parents",
+                "importance": "medium",
+                "style": {
+                    "color": "#f39c12",
+                    "bgColor": "rgba(243, 156, 18, 0.15)",
+                    "icon": "users"
+                },
+                "effects": {
+                    "focusCost": 4
+                },
+                "menuOptions": [
+                    {
+                        "id": "explore-parents",
+                        "label": "Ask: About your parents",
+                        "icon": "message-circle",
+                        "action": "ask-about",
+                        "params": {
+                            "topic": "family.parents"
+                        }
+                    }
+                ]
+            },
+            "childhood": {
+                "id": "relationship.family.childhood",
+                "displayText": "growing up",
+                "aliases": [
+                    "as a child",
+                    "when I was young",
+                    "childhood"
+                ],
+                "description": "Reference to childhood experiences",
+                "importance": "high",
+                "style": {
+                    "color": "#f39c12",
+                    "bgColor": "rgba(243, 156, 18, 0.18)",
+                    "icon": "star"
+                },
+                "effects": {
+                    "focusCost": 6,
+                    "reveals": [
+                        "childhood-history"
+                    ]
+                }
+            }
+        },
+        "romantic": {
+            "_category": {
+                "label": "Romantic",
+                "icon": "heart",
+                "description": "Keywords related to romantic relationships"
+            },
+            "partner": {
+                "id": "relationship.romantic.partner",
+                "displayText": "partner",
+                "aliases": [
+                    "spouse",
+                    "husband",
+                    "wife",
+                    "boyfriend",
+                    "girlfriend"
+                ],
+                "description": "Reference to romantic partner",
+                "importance": "medium",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.12)",
+                    "icon": "heart"
+                },
+                "effects": {
+                    "focusCost": 4
+                }
+            },
+            "breakup": {
+                "id": "relationship.romantic.breakup",
+                "displayText": "broke up",
+                "aliases": [
+                    "divorce",
+                    "separated",
+                    "left me",
+                    "ended things"
+                ],
+                "description": "End of romantic relationship",
+                "importance": "high",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.18)",
+                    "icon": "heart-off"
+                },
+                "effects": {
+                    "focusCost": 7,
+                    "reveals": [
+                        "recent-loss"
+                    ],
+                    "triggers": [
+                        "stressor-identified"
+                    ],
+                    "rapportChange": 2
+                }
+            }
+        },
+        "loss": {
+            "_category": {
+                "label": "Loss",
+                "icon": "cloud",
+                "description": "Keywords related to loss and grief"
+            },
+            "death": {
+                "id": "relationship.loss.death",
+                "displayText": "died",
+                "aliases": [
+                    "passed away",
+                    "lost them",
+                    "gone",
+                    "funeral"
+                ],
+                "description": "Reference to death of someone",
+                "importance": "critical",
+                "style": {
+                    "color": "#2c3e50",
+                    "bgColor": "rgba(44, 62, 80, 0.18)",
+                    "icon": "cloud"
+                },
+                "effects": {
+                    "focusCost": 8,
+                    "reveals": [
+                        "grief-loss"
+                    ],
+                    "triggers": [
+                        "grief-marker"
+                    ],
+                    "rapportChange": 4
+                },
+                "menuOptions": [
+                    {
+                        "id": "express-condolence",
+                        "label": "Express condolences",
+                        "icon": "heart",
+                        "action": "note"
+                    },
+                    {
+                        "id": "explore-loss",
+                        "label": "Ask: Tell me about them",
+                        "icon": "message-circle",
+                        "action": "explore",
+                        "params": {
+                            "topic": "loss.explore"
+                        }
+                    }
+                ]
+            }
+        },
+        "conflict": {
+            "_category": {
+                "label": "Conflict",
+                "icon": "alert-triangle",
+                "description": "Keywords related to interpersonal conflict"
+            },
+            "fighting": {
+                "id": "relationship.conflict.fighting",
+                "displayText": "fighting",
+                "aliases": [
+                    "arguing",
+                    "arguments",
+                    "conflict",
+                    "yelling"
+                ],
+                "description": "Interpersonal conflict",
+                "importance": "medium",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.15)",
+                    "icon": "alert-triangle"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "relationship-conflict"
+                    ]
+                }
+            },
+            "abuse": {
+                "id": "relationship.conflict.abuse",
+                "displayText": "hurt me",
+                "aliases": [
+                    "abuse",
+                    "hit me",
+                    "violent",
+                    "cruel"
+                ],
+                "description": "Reference to abuse or mistreatment",
+                "importance": "critical",
+                "style": {
+                    "color": "#c0392b",
+                    "bgColor": "rgba(192, 57, 43, 0.2)",
+                    "icon": "alert-octagon",
+                    "animation": "pulse"
+                },
+                "effects": {
+                    "focusCost": 0,
+                    "reveals": [
+                        "trauma-history"
+                    ],
+                    "triggers": [
+                        "trauma-marker",
+                        "safety-check"
+                    ],
+                    "rapportChange": 5
+                },
+                "menuOptions": [
+                    {
+                        "id": "safety-assessment",
+                        "label": "Current safety?",
+                        "icon": "shield",
+                        "action": "safety-assessment",
+                        "params": {
+                            "topic": "safety.current",
+                            "priority": "high"
+                        }
+                    }
+                ]
+            }
+        },
+        "social": {
+            "_category": {
+                "label": "Social/Work",
+                "icon": "briefcase",
+                "description": "Keywords related to work and social relationships"
+            },
+            "coworkers": {
+                "id": "relationship.social.coworkers",
+                "displayText": "coworkers",
+                "aliases": [
+                    "colleagues",
+                    "boss",
+                    "manager",
+                    "team"
+                ],
+                "description": "Reference to workplace relationships",
+                "importance": "low",
+                "style": {
+                    "color": "#3498db",
+                    "bgColor": "rgba(52, 152, 219, 0.12)",
+                    "icon": "briefcase"
+                },
+                "effects": {
+                    "focusCost": 3
+                }
+            },
+            "friends": {
+                "id": "relationship.social.friends",
+                "displayText": "friends",
+                "aliases": [
+                    "friend",
+                    "buddy",
+                    "close friends"
+                ],
+                "description": "Reference to friendships",
+                "importance": "low",
+                "style": {
+                    "color": "#27ae60",
+                    "bgColor": "rgba(39, 174, 96, 0.12)",
+                    "icon": "users"
+                },
+                "effects": {
+                    "focusCost": 2
+                },
+                "menuOptions": [
+                    {
+                        "id": "explore-social",
+                        "label": "Ask: About friendships",
+                        "icon": "message-circle",
+                        "action": "ask-about",
+                        "params": {
+                            "topic": "social.friends"
+                        }
+                    }
+                ]
+            },
+            "no_friends": {
+                "id": "relationship.social.no_friends",
+                "displayText": "no friends",
+                "aliases": [
+                    "dont have friends",
+                    "no real friends",
+                    "lost touch"
+                ],
+                "description": "Lack of friendships",
+                "importance": "high",
+                "style": {
+                    "color": "#3498db",
+                    "bgColor": "rgba(52, 152, 219, 0.18)",
+                    "icon": "user-minus"
+                },
+                "effects": {
+                    "focusCost": 6,
+                    "reveals": [
+                        "social-isolation"
+                    ],
+                    "rapportChange": 2
+                }
+            }
+        }
+    }
+}

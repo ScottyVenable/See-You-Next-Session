@@ -1,0 +1,434 @@
+{
+    "$schema": "./keyword-schema.json",
+    "source": "behavior",
+    "displayName": "Behavior Keywords",
+    "description": "Keywords related to actions, habits, and behavioral patterns",
+    "version": "1.0.0",
+    "keywords": {
+        "avoidance": {
+            "_category": {
+                "label": "Avoidance Behaviors",
+                "icon": "arrow-right",
+                "description": "Patterns of avoiding situations or activities"
+            },
+            "avoiding": {
+                "id": "behavior.avoidance.avoiding",
+                "displayText": "avoiding",
+                "aliases": [
+                    "avoid",
+                    "stay away from",
+                    "dont go"
+                ],
+                "description": "Patient avoids certain situations or activities",
+                "importance": "medium",
+                "style": {
+                    "color": "#27ae60",
+                    "bgColor": "rgba(39, 174, 96, 0.12)",
+                    "icon": "arrow-right"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "avoidance-behavior"
+                    ]
+                },
+                "menuOptions": [
+                    {
+                        "id": "ask-what-avoid",
+                        "label": "Ask: What do you avoid?",
+                        "icon": "message-circle",
+                        "action": "ask-about",
+                        "params": {
+                            "topic": "avoidance.specifics"
+                        }
+                    }
+                ]
+            },
+            "isolation": {
+                "id": "behavior.avoidance.isolation",
+                "displayText": "isolating",
+                "aliases": [
+                    "isolate",
+                    "stay home",
+                    "avoid people",
+                    "keep to myself"
+                ],
+                "description": "Withdrawing from social contact",
+                "importance": "high",
+                "style": {
+                    "color": "#3498db",
+                    "bgColor": "rgba(52, 152, 219, 0.15)",
+                    "icon": "user-minus"
+                },
+                "effects": {
+                    "focusCost": 6,
+                    "reveals": [
+                        "social-withdrawal"
+                    ],
+                    "rapportChange": 2
+                }
+            }
+        },
+        "compulsive": {
+            "_category": {
+                "label": "Checking & Compulsive",
+                "icon": "check-square",
+                "description": "Repetitive checking and compulsive behavior patterns"
+            },
+            "checking": {
+                "id": "behavior.compulsive.checking",
+                "displayText": "checking",
+                "aliases": [
+                    "check",
+                    "double-check",
+                    "triple-check",
+                    "make sure"
+                ],
+                "description": "Repetitive checking behavior",
+                "importance": "high",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.15)",
+                    "icon": "check-square"
+                },
+                "effects": {
+                    "focusCost": 6,
+                    "reveals": [
+                        "checking-behavior"
+                    ]
+                },
+                "menuOptions": [
+                    {
+                        "id": "ask-what-check",
+                        "label": "Ask: What do you check?",
+                        "icon": "message-circle",
+                        "action": "ask-about",
+                        "params": {
+                            "topic": "checking.specifics"
+                        }
+                    },
+                    {
+                        "id": "ask-how-often",
+                        "label": "Ask: How many times?",
+                        "icon": "message-circle",
+                        "action": "ask-about",
+                        "params": {
+                            "topic": "checking.frequency"
+                        }
+                    }
+                ]
+            },
+            "over_and_over": {
+                "id": "behavior.compulsive.over_and_over",
+                "displayText": "over and over",
+                "aliases": [
+                    "again and again",
+                    "repeatedly",
+                    "multiple times",
+                    "cant stop"
+                ],
+                "description": "Repetitive action pattern",
+                "importance": "high",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.18)",
+                    "icon": "repeat"
+                },
+                "effects": {
+                    "focusCost": 7,
+                    "reveals": [
+                        "compulsive-pattern"
+                    ],
+                    "triggers": [
+                        "ocd-indicator"
+                    ]
+                }
+            }
+        },
+        "reassurance": {
+            "_category": {
+                "label": "Reassurance Seeking",
+                "icon": "help-circle",
+                "description": "Seeking validation from others"
+            },
+            "seeking": {
+                "id": "behavior.reassurance.seeking",
+                "displayText": "need reassurance",
+                "aliases": [
+                    "tell me its okay",
+                    "is that normal",
+                    "am I right"
+                ],
+                "description": "Seeking validation from others",
+                "importance": "medium",
+                "style": {
+                    "color": "#f39c12",
+                    "bgColor": "rgba(243, 156, 18, 0.15)",
+                    "icon": "help-circle"
+                },
+                "effects": {
+                    "focusCost": 4,
+                    "reveals": [
+                        "reassurance-seeking"
+                    ]
+                },
+                "menuOptions": [
+                    {
+                        "id": "note-reassurance",
+                        "label": "Note: Seeks validation",
+                        "icon": "note",
+                        "action": "note"
+                    }
+                ]
+            }
+        },
+        "sleep": {
+            "_category": {
+                "label": "Sleep Behaviors",
+                "icon": "moon",
+                "description": "Sleep-related behavioral patterns"
+            },
+            "cant_sleep": {
+                "id": "behavior.sleep.cant_sleep",
+                "displayText": "can't sleep",
+                "aliases": [
+                    "trouble sleeping",
+                    "cant fall asleep",
+                    "insomnia",
+                    "lie awake"
+                ],
+                "description": "Difficulty falling or staying asleep",
+                "importance": "high",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.15)",
+                    "icon": "moon"
+                },
+                "effects": {
+                    "focusCost": 6,
+                    "reveals": [
+                        "sleep-disturbance"
+                    ],
+                    "triggers": [
+                        "insomnia-indicator"
+                    ]
+                },
+                "menuOptions": [
+                    {
+                        "id": "ask-sleep-pattern",
+                        "label": "Ask: What happens at night?",
+                        "icon": "message-circle",
+                        "action": "ask-about",
+                        "params": {
+                            "topic": "sleep.pattern"
+                        }
+                    }
+                ]
+            },
+            "racing_mind": {
+                "id": "behavior.sleep.racing_mind",
+                "displayText": "mind racing",
+                "aliases": [
+                    "cant stop thinking",
+                    "thoughts wont stop",
+                    "mind wont shut off"
+                ],
+                "description": "Thoughts moving rapidly, hard to control",
+                "importance": "high",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.15)",
+                    "icon": "zap"
+                },
+                "effects": {
+                    "focusCost": 7,
+                    "reveals": [
+                        "racing-thoughts"
+                    ]
+                }
+            }
+        },
+        "eating": {
+            "_category": {
+                "label": "Eating Behaviors",
+                "icon": "x-circle",
+                "description": "Eating-related behavioral patterns"
+            },
+            "not_eating": {
+                "id": "behavior.eating.not_eating",
+                "displayText": "not eating",
+                "aliases": [
+                    "lost appetite",
+                    "dont feel hungry",
+                    "skipping meals"
+                ],
+                "description": "Reduced appetite or eating avoidance",
+                "importance": "medium",
+                "style": {
+                    "color": "#e67e22",
+                    "bgColor": "rgba(230, 126, 34, 0.15)",
+                    "icon": "x-circle"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "appetite-change"
+                    ]
+                }
+            },
+            "overeating": {
+                "id": "behavior.eating.overeating",
+                "displayText": "overeating",
+                "aliases": [
+                    "eating too much",
+                    "comfort eating",
+                    "binge"
+                ],
+                "description": "Increased eating or emotional eating",
+                "importance": "medium",
+                "style": {
+                    "color": "#e67e22",
+                    "bgColor": "rgba(230, 126, 34, 0.15)",
+                    "icon": "plus-circle"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "appetite-change"
+                    ]
+                }
+            }
+        },
+        "safety": {
+            "_category": {
+                "label": "Self-Harm & Substance",
+                "icon": "alert-octagon",
+                "description": "Safety-critical behavioral indicators"
+            },
+            "self_harm": {
+                "id": "behavior.safety.self_harm",
+                "displayText": "hurt myself",
+                "aliases": [
+                    "cutting",
+                    "burning",
+                    "hitting myself"
+                ],
+                "description": "Self-harming behavior - CRITICAL SAFETY INDICATOR",
+                "importance": "critical",
+                "style": {
+                    "color": "#c0392b",
+                    "bgColor": "rgba(192, 57, 43, 0.25)",
+                    "icon": "alert-octagon",
+                    "animation": "pulse"
+                },
+                "effects": {
+                    "focusCost": 0,
+                    "reveals": [
+                        "self-harm"
+                    ],
+                    "triggers": [
+                        "safety-critical"
+                    ],
+                    "rapportChange": 5
+                },
+                "menuOptions": [
+                    {
+                        "id": "safety-protocol",
+                        "label": "SAFETY ASSESSMENT",
+                        "icon": "shield",
+                        "action": "safety-assessment",
+                        "params": {
+                            "topic": "safety.immediate",
+                            "priority": "critical"
+                        }
+                    }
+                ],
+                "note": "CRITICAL: Always trigger safety assessment"
+            },
+            "drinking": {
+                "id": "behavior.safety.drinking",
+                "displayText": "drinking",
+                "aliases": [
+                    "alcohol",
+                    "few drinks",
+                    "drinking more"
+                ],
+                "description": "Alcohol use that may be problematic",
+                "importance": "high",
+                "style": {
+                    "color": "#e67e22",
+                    "bgColor": "rgba(230, 126, 34, 0.15)",
+                    "icon": "droplet"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "substance-use"
+                    ]
+                },
+                "menuOptions": [
+                    {
+                        "id": "ask-quantity",
+                        "label": "Ask: How much/how often?",
+                        "icon": "message-circle",
+                        "action": "ask-about",
+                        "params": {
+                            "topic": "substance.quantity"
+                        }
+                    }
+                ]
+            }
+        },
+        "performance": {
+            "_category": {
+                "label": "Performance & Work",
+                "icon": "award",
+                "description": "Work and performance-related behaviors"
+            },
+            "perfectionism": {
+                "id": "behavior.performance.perfectionism",
+                "displayText": "has to be perfect",
+                "aliases": [
+                    "perfect",
+                    "exactly right",
+                    "cant make mistakes"
+                ],
+                "description": "Perfectionist tendencies",
+                "importance": "medium",
+                "style": {
+                    "color": "#3498db",
+                    "bgColor": "rgba(52, 152, 219, 0.15)",
+                    "icon": "award"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "perfectionism"
+                    ]
+                }
+            },
+            "procrastinating": {
+                "id": "behavior.performance.procrastinating",
+                "displayText": "procrastinating",
+                "aliases": [
+                    "putting off",
+                    "avoiding tasks",
+                    "cant get started"
+                ],
+                "description": "Delaying tasks or decisions",
+                "importance": "low",
+                "style": {
+                    "color": "#7f8c8d",
+                    "bgColor": "rgba(127, 140, 141, 0.12)",
+                    "icon": "clock"
+                },
+                "effects": {
+                    "focusCost": 3,
+                    "reveals": [
+                        "avoidance-behavior"
+                    ]
+                }
+            }
+        }
+    }
+}
