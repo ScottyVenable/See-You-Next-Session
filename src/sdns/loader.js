@@ -42,13 +42,17 @@ export function clearSessionCache() {
 
 /**
  * Load a patient's session dialogue file
+ * 
+ * File naming convention: {patientId}_{turnNumber}.session
+ * Example: gregory_1.session, gregory_2.session
+ * 
  * @param {string} patientId - Patient folder name (e.g., 'gregory')
  * @param {number} turnNumber - Turn number to load (e.g., 1, 2, 3)
  * @param {boolean} forceReload - Skip cache and force reload
  * @returns {Promise<string|null>} - Raw session file content or null
  */
 export async function loadSessionDialogue(patientId, turnNumber, forceReload = false) {
-    const cacheKey = `${patientId}/turn${turnNumber}`;
+    const cacheKey = `${patientId}/${patientId}_${turnNumber}`;
 
     // Check cache (skip in dev mode for HMR support)
     if (!isDev && !forceReload && sessionCache.has(cacheKey)) {
@@ -64,15 +68,17 @@ export async function loadSessionDialogue(patientId, turnNumber, forceReload = f
             ...import.meta.glob('./patients/**/dialogue/*.session', { query: '?raw', import: 'default' }),
         };
 
-        const filePath = `/src/patients/${patientId}/dialogue/turn${turnNumber}.session`;
+        // New naming convention: {patientId}_{turnNumber}.session
+        const fileName = `${patientId}_${turnNumber}.session`;
+        const filePath = `/src/patients/${patientId}/dialogue/${fileName}`;
 
         // Direct hit first
         let loaderPath = filePath;
         if (!sessionFiles[loaderPath]) {
-            // Fallback: search for any path that contains patientId/turnX (helps with nested folders/aliases)
+            // Fallback: search for any path that contains the file
             loaderPath = Object.keys(sessionFiles).find((p) =>
-                p.endsWith(`/patients/${patientId}/dialogue/turn${turnNumber}.session`) ||
-                p.includes(`/patients/${patientId}/dialogue/turn${turnNumber}.session`)
+                p.endsWith(`/patients/${patientId}/dialogue/${fileName}`) ||
+                p.includes(`/patients/${patientId}/dialogue/${fileName}`)
             );
         }
 

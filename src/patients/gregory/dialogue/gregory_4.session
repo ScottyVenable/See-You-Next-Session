@@ -1,0 +1,330 @@
+## Gregory Vigil - Turn 4: Resolution
+## Session Dialogue and Narration System (.session)
+## Status: SKELETON - Content Pending
+
+## =============================================================================
+## TURN 4 OVERVIEW
+## =============================================================================
+## Time: 0:45-1:00 (final 15 minutes of session)
+## Theme: Resolution
+## Player Learns: Diagnosis submission, session conclusion, outcome feedback
+##
+## Key Story Beats:
+## 1. Session Reflection - Brief recap of what was discussed
+## 2. The Question - "So... what do you think is going on with me?"
+## 3. Diagnosis Moment - Player submits their diagnosis
+## 4. Gregory's Reaction - Varies based on accuracy and rapport
+## 5. Looking Forward - Discussion of next steps, hope/concern
+##
+## Keywords to Introduce:
+## - gregory.resolution.the_question
+## - gregory.resolution.diagnosis_reaction
+## - gregory.resolution.hope
+## - gregory.resolution.next_steps
+##
+## This turn is primarily reactive to player's diagnosis
+## =============================================================================
+
+=== START ===
+
+NARRATOR
+*The session nears its end. Gregory shifts in his seat, expectant.*
+
+@pause 0.5
+
+@if rapport >= 60
+    NARRATOR
+    *There's a vulnerability in his expression now - anxiety, yes, but also perhaps relief at having been heard.*
+@else
+    NARRATOR
+    *Gregory maintains his composed exterior, though his eyes betray uncertainty about what comes next.*
+@endif
+
+%His hands rest in his lap, fingers interlaced. Still. Waiting.%<symptom:controlled_stillness>
+
+-> session_reflection
+
+=== session_reflection ===
+
+## Brief acknowledgment of the conversation that took place
+
+PATIENT (thoughtful)
+"We've talked about a lot today."
+
+@pause 0.5
+
+@if rapport >= 50
+    PATIENT
+    "More than I usually... I don't usually talk about this stuff."
+    
+    PATIENT (quiet)
+    "With anyone."
+@else
+    PATIENT
+    "I hope I gave you enough to work with."
+    
+    PATIENT (apologetic)
+    "I know I tend to [ramble]<keyword:gregory.pattern.rambling>."
+@endif
+
+-> the_question
+
+=== the_question ===
+
+## KEY SCENE: Gregory asks for the diagnosis
+
+NARRATOR
+*Gregory takes a deep breath. The question he's been building toward.*
+
+PATIENT (nervous)
+"So..."
+
+@pause 0.3
+
+PATIENT (seeking)
+"[What do you think is going on with me]<keyword:gregory.resolution.the_question>?"
+
+%His eyes fix on you, a mixture of hope and fear in his gaze.%<symptom:expectant_gaze>
+
+@pause 0.5
+
+PATIENT (quickly)
+"I mean, if you have an idea. If you've figured something out."
+
+PATIENT (vulnerable)
+"Is there... is there a [name]<keyword:gregory.resolution.wanting_name> for what I have?"
+
+-> await_diagnosis
+
+=== await_diagnosis ===
+
+## SYSTEM: This is where the game prompts for diagnosis submission
+## The following blocks trigger based on diagnosis result
+
+NARRATOR
+*The moment of assessment has arrived. Gregory waits.*
+
+@prompt_diagnosis
+
+## Continue to appropriate response block based on diagnosis
+
+=== diagnosis_correct_high_rapport ===
+
+## Correct diagnosis (GAD) with high rapport (60+)
+
+NARRATOR
+*You share your assessment: Generalized Anxiety Disorder.*
+
+@pause 1
+
+PATIENT (relieved)
+"Generalized Anxiety Disorder..."
+
+@pause 0.5
+
+PATIENT
+"I... I've wondered. If there was a [name]<keyword:gregory.resolution.relief_naming> for it."
+
+%His shoulders drop slightly, tension releasing.%<symptom:tension_release>
+
+PATIENT (vulnerable)
+"Is it strange that I feel [relieved]<keyword:gregory.resolution.relief>? Like maybe I'm not 
+just... broken or weak?"
+
+@pause 0.5
+
+PATIENT (grateful)
+"Thank you. For listening. For not making me feel like 
+I was [wasting your time]<keyword:gregory.resolution.validation>."
+
+-> looking_forward_positive
+
+=== diagnosis_correct_low_rapport ===
+
+## Correct diagnosis (GAD) with low rapport (below 40)
+
+NARRATOR
+*You share your assessment: Generalized Anxiety Disorder.*
+
+@pause 1
+
+PATIENT (guarded)
+"Generalized Anxiety Disorder. I see."
+
+@pause 0.5
+
+PATIENT
+"I suppose that makes sense. Given what I told you."
+
+%He nods slowly, processing. His expression remains carefully neutral.%<symptom:neutral_mask>
+
+PATIENT (distant)
+"So what happens now? Is there... is there something 
+I'm [supposed to do]<keyword:gregory.resolution.uncertainty>?"
+
+-> looking_forward_neutral
+
+=== diagnosis_incorrect_high_rapport ===
+
+## Wrong diagnosis with high rapport
+
+NARRATOR
+*You share your assessment. Gregory's expression shifts - confusion flickering across his face.*
+
+@pause 1
+
+PATIENT (confused)
+"Oh. I... I'm not sure that quite [fits]<keyword:gregory.resolution.mismatch>."
+
+@pause 0.5
+
+PATIENT (apologetic)
+"I'm sorry if I wasn't clear about things. Maybe I 
+didn't [explain well enough]<keyword:gregory.resolution.self_blame>."
+
+PATIENT (anxious)
+"Should we... should we talk more? I feel like maybe 
+I gave you the [wrong impression]<keyword:gregory.resolution.concern>."
+
+-> looking_forward_uncertain
+
+=== diagnosis_incorrect_low_rapport ===
+
+## Wrong diagnosis with low rapport
+
+NARRATOR
+*You share your assessment. Gregory's jaw tightens almost imperceptibly.*
+
+@pause 1
+
+PATIENT (withdrawn)
+"I don't think that's quite right."
+
+@pause 0.5
+
+PATIENT (flat)
+"But you're the professional."
+
+%His gaze drops to his hands. The distance between you feels larger now.%<symptom:withdrawal>
+
+PATIENT (quiet)
+"Maybe I should... think about what you've said."
+
+-> looking_forward_disappointed
+
+=== looking_forward_positive ===
+
+## Positive conclusion - correct diagnosis, good rapport
+
+PATIENT (hopeful)
+"So... there's treatment? Things I can do?"
+
+@pause 0.5
+
+PATIENT
+"I've spent so long thinking I just needed to try harder.
+To be [better]<keyword:gregory.resolution.self_improvement>."
+
+PATIENT (relieved)
+"But if this is something... something real. With a name."
+
+@pause 0.3
+
+PATIENT (determined)
+"Then maybe I can actually [work on it]<keyword:gregory.resolution.hope>."
+
+NARRATOR
+*For the first time today, something like genuine hope crosses Gregory's face.*
+
+-> session_end
+
+=== looking_forward_neutral ===
+
+## Neutral conclusion - correct diagnosis, mediocre rapport
+
+PATIENT (measured)
+"I'll look into it. Treatment options, I mean."
+
+PATIENT
+"I appreciate your time today."
+
+%He stands, smoothing his clothes - the careful, measured movements returning.%<symptom:controlled_behavior>
+
+PATIENT (polite)
+"Thank you for your assessment."
+
+-> session_end
+
+=== looking_forward_uncertain ===
+
+## Uncertain conclusion - wrong diagnosis, high rapport
+
+PATIENT (anxious)
+"Maybe I should come back? Talk to someone else?"
+
+@pause 0.5
+
+PATIENT
+"I don't mean... I'm not saying you did anything wrong."
+
+PATIENT (spiraling)
+"I just... I want to understand what's happening to me.
+I [need]<keyword:gregory.resolution.desperate> to understand."
+
+NARRATOR
+*Gregory's earlier calm has fractured. The session ends with questions unanswered.*
+
+-> session_end
+
+=== looking_forward_disappointed ===
+
+## Disappointed conclusion - wrong diagnosis, low rapport
+
+PATIENT (flat)
+"I should go."
+
+@pause 0.5
+
+NARRATOR
+*Gregory rises stiffly. The careful composure has returned, but harder now. A wall rebuilt.*
+
+PATIENT (distant)
+"Thank you for your time."
+
+%He doesn't meet your eyes as he gathers his things.%<symptom:avoidance>
+
+-> session_end
+
+=== session_end ===
+
+## Final scene for all paths
+
+NARRATOR
+*The session concludes. Gregory moves toward the door.*
+
+@if rapport >= 60 AND diagnosis_correct
+    PATIENT (genuine)
+    "I'll see you next time?"
+    
+    NARRATOR
+    *A small smile - perhaps the first real one you've seen from him.*
+@elseif diagnosis_correct
+    PATIENT (polite)
+    "Goodbye."
+@else
+    NARRATOR
+    *Gregory leaves without another word. The door clicks shut behind him.*
+@endif
+
+-> END
+
+=== END ===
+
+NARRATOR
+*The session with Gregory Vigil has concluded.*
+
+@trigger_session_report
+
+## End of Turn 4
+## End of Gregory's Session
+## Proceed to Session Report screen

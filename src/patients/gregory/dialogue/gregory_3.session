@@ -1,0 +1,247 @@
+## Gregory Vigil - Turn 3: Going Deeper
+## Session Dialogue and Narration System (.session)
+## Status: SKELETON - Content Pending
+
+## =============================================================================
+## TURN 3 OVERVIEW
+## =============================================================================
+## Time: 0:30-0:45 (third 15 minutes of session)
+## Theme: Going Deeper
+## Player Learns: Contradictions, synthesis mechanic, breakthroughs
+##
+## Key Story Beats:
+## 1. Childhood Mentions (high rapport only) - Brief glimpses of origins
+## 2. The Watching Feeling - Core anxiety about being observed
+## 3. Major Breakthrough Opportunity - Connecting statements to symptoms
+## 4. Emotional Vulnerability - If rapport is high, genuine moments
+## 5. Fear Admission - "I'm afraid of being seen as broken"
+##
+## Keywords to Introduce:
+## - gregory.core.fear_of_judgment
+## - gregory.history.always_anxious
+## - gregory.insight.tired_of_pretending
+## - gregory.emotion.overwhelmed
+## - gregory.behavior.performance
+##
+## Visual Symptoms to Show:
+## - All previous symptoms more pronounced
+## - Possible tear-welling (high rapport, emotional moments)
+## - Relaxed posture (if breakthrough achieved)
+## - Continued tension (if no breakthrough)
+##
+## Contradiction Opportunities:
+## - "I take care of myself" vs bitten_nails -> Reveals nervous habits
+## - "I'm calm, this doesn't bother me" vs trembling_hands -> Acknowledges hidden anxiety
+## - "I don't worry about what others think" vs darting_eyes -> Opens up about social fears
+## =============================================================================
+
+=== START ===
+
+NARRATOR
+*The session's midpoint approaches. Gregory's guard has lowered - or hasn't - based on how the conversation has progressed.*
+
+@pause 0.5
+
+@if rapport >= 60
+    NARRATOR
+    *There's something different in his posture now. Less rigid. His hands rest more naturally in his lap.*
+    
+    %Though still alert, his eyes meet yours more steadily than before.%<symptom:improved_eye_contact>
+@else
+    NARRATOR
+    *Gregory remains watchful, his professional composure intact but strained.*
+    
+    %His fingers continue their restless motion, picking at his cuticles.%<symptom:fidgeting>
+@endif
+
+PATIENT (thoughtful)
+"Can I ask you something?"
+
+-> the_watching_feeling
+
+=== the_watching_feeling ===
+
+## KEY SCENE: Core anxiety about being observed
+
+PATIENT (hesitant)
+"Do you ever feel like... like you're always being [watched]<keyword:gregory.core.being_watched>?"
+
+@pause 0.5
+
+PATIENT
+"Not in a paranoid way. I know that sounds paranoid."
+
+PATIENT (nervous)
+"It's more like... being [on stage]<keyword:gregory.core.performance>. All the time."
+
+%He swallows visibly, his throat tightening.%<symptom:throat_tension>
+
+PATIENT
+"Like everyone is waiting for you to [mess up]<keyword:gregory.core.fear_of_judgment>."
+
+-> childhood_hints
+
+=== childhood_hints ===
+
+## HIGH RAPPORT ONLY: Glimpses of origins
+
+@if rapport >= 70
+    NARRATOR
+    *Gregory is quiet for a moment. When he speaks again, his voice is softer.*
+    
+    PATIENT (vulnerable)
+    "I've been like this for as long as I can remember."
+    
+    @pause 0.5
+    
+    PATIENT
+    "My parents... they meant well. They just wanted me to be [careful]<keyword:gregory.history.be_careful>."
+    
+    PATIENT (quiet)
+    "'Think before you speak, Gregory.' 'Are you sure about that, Gregory?'"
+    
+    PATIENT
+    "I guess I never stopped [thinking]<keyword:gregory.history.always_anxious>. Before I speak. 
+    Before I do anything."
+@else
+    PATIENT (guarded)
+    "I've always been... [careful]<keyword:gregory.pattern.careful>. That's all."
+    
+    PATIENT
+    "There's nothing wrong with being careful."
+@endif
+
+-> breakthrough_opportunity
+
+=== breakthrough_opportunity ===
+
+## KEY SCENE: Major contradiction and synthesis opportunity
+## TODO: Expand with multiple contradiction paths
+
+NARRATOR
+*Gregory unconsciously touches his face, running a hand through his carefully maintained hair.*
+
+## Contradiction: "I take care of myself" vs visual bitten_nails
+%His fingernails are bitten down to the quick, the skin around them raw and red.%<symptom:bitten_nails>
+
+PATIENT (dismissive)
+"I [take care of myself]<keyword:gregory.coping.self_care_claim>. I have routines."
+
+## If player has caught the contradiction (synthesis successful)
+@if synthesis_complete("self_care_claim", "bitten_nails")
+    NARRATOR
+    *He notices where you're looking. His hand drops quickly to his lap.*
+    
+    @pause 0.5
+    
+    PATIENT (caught)
+    "I... I didn't even realize I was doing it."
+    
+    PATIENT (vulnerable)
+    "The nail thing. It started when I was a kid."
+    
+    PATIENT
+    "I do it when I'm... when things are [too much]<keyword:gregory.emotion.overwhelmed>."
+    
+    @restore_focus 30
+    @set flag breakthrough_self_care
+@endif
+
+-> emotional_vulnerability
+
+=== emotional_vulnerability ===
+
+## HIGH RAPPORT PATH: Genuine emotional moments
+
+@if rapport >= 60
+    NARRATOR
+    *Something shifts in Gregory's expression. The mask slipping, just for a moment.*
+    
+    PATIENT (exhausted)
+    "I'm so [tired]<keyword:gregory.insight.tired_of_pretending>."
+    
+    @pause 0.5
+    
+    PATIENT
+    "Of pretending everything is fine."
+    
+    PATIENT (vulnerable)
+    "Of performing 'okay' for everyone. My boss. My coworkers. My family."
+    
+    %His eyes glisten slightly, though no tears fall.%<symptom:tear_welling>
+    
+    PATIENT (quiet)
+    "What if they saw what I'm really like? Would they still..."
+    
+    @pause 0.3
+    
+    PATIENT
+    "Would they still [want me around]<keyword:gregory.core.fear_of_rejection>?"
+@else
+    PATIENT (controlled)
+    "Sorry. I'm rambling again."
+    
+    PATIENT
+    "We don't need to get into all of this."
+@endif
+
+-> fear_admission
+
+=== fear_admission ===
+
+## KEY SCENE: The core fear revealed
+
+@if rapport >= 50
+    PATIENT (quiet)
+    "Can I tell you what I'm really afraid of?"
+    
+    @pause 0.5
+    
+    PATIENT
+    "Being seen as [broken]<keyword:gregory.core.fear_broken>."
+    
+    PATIENT
+    "Like there's something fundamentally [wrong]<keyword:gregory.core.something_wrong> with me.
+    That everyone else can see but I can't fix."
+    
+    PATIENT (desperate)
+    "What if this is just... [who I am]<keyword:gregory.core.identity_fear>?"
+@endif
+
+-> turn_3_conclusion
+
+=== turn_3_conclusion ===
+
+## Rapport-gated conclusions based on breakthrough status
+
+@if flag breakthrough_self_care OR flag breakthrough_sleep OR flag breakthrough_judgment
+    NARRATOR
+    *Gregory takes a deep breath. Something has shifted - a weight partially lifted.*
+    
+    PATIENT (relieved)
+    "I've never said any of this out loud before."
+    
+    @pause 0.5
+    
+    PATIENT (vulnerable)
+    "Thank you. For not... for not making me feel crazy."
+@else
+    NARRATOR
+    *Gregory's guard remains partially up, though cracks have appeared.*
+    
+    PATIENT (uncertain)
+    "I'm not sure why I'm telling you all this."
+    
+    PATIENT
+    "I hope it's helpful. For whatever you're supposed to figure out about me."
+@endif
+
+-> END
+
+=== END ===
+
+NARRATOR
+*The third portion of the session concludes. The final segment awaits.*
+
+## End of Turn 3
+## Continue to gregory_4.session

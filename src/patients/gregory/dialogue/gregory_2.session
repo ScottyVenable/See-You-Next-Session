@@ -1,0 +1,207 @@
+## Gregory Vigil - Turn 2: Building Trust
+## Session Dialogue and Narration System (.session)
+## Status: SKELETON - Content Pending
+
+## =============================================================================
+## TURN 2 OVERVIEW
+## =============================================================================
+## Time: 0:15-0:30 (second 15 minutes of session)
+## Theme: Building Trust
+## Player Learns: Rapport system, Focus Mode, symptom observation depth
+##
+## Key Story Beats:
+## 1. Work Life - Gregory's job and daily stressors
+## 2. Social Anxiety Hints - Worries about coworkers' perceptions  
+## 3. Perfectionism Emerges - The need to get everything "right"
+## 4. First Contradiction Setup - "I'm sleeping fine" vs. visible exhaustion
+## 5. Control Facade - Gregory tries to present as having things together
+##
+## Keywords to Introduce:
+## - gregory.work.performance_worry
+## - gregory.social.coworker_judgment
+## - gregory.perfectionism.checking
+## - gregory.sleep.claims_fine (contradiction)
+## - gregory.physical.exhaustion
+## - gregory.behavior.avoidance
+##
+## Visual Symptoms to Show:
+## - Leg bouncing (more noticeable)
+## - Lip chewing (when stressed)
+## - Increased eye scanning
+## - Hands clasped tightly
+## =============================================================================
+
+=== START ===
+
+NARRATOR
+*Time has passed. Gregory has settled slightly in his chair, though his alertness remains. His leg bounces in a steady rhythm he seems unaware of.*
+
+@pause 0.5
+
+%His hands are clasped tightly in his lap, knuckles slightly white.%<symptom:tension_hands>
+
+PATIENT (nervous)
+"So... where were we?"
+
+-> work_introduction
+
+=== work_introduction ===
+
+## TODO: Expand with full dialogue about Gregory's work situation
+## Reference GREGORY_DIALOGUE_OUTLINE.md for story beats
+
+NARRATOR
+*Gregory's expression shifts slightly at the mention of work - a flicker of something between pride and anxiety.*
+
+PATIENT (hesitant)
+"Work is... work is [fine]<keyword:gregory.work.claims_fine>. Mostly."
+
+@pause 0.5
+
+PATIENT
+"I'm a paralegal. At Henderson and Associates downtown."
+
+PATIENT (guarded)
+"It's good work. Stable. I've been there [four years]<keyword:gregory.work.tenure> now."
+
+-> work_concerns
+
+=== work_concerns ===
+
+## TODO: Expand with performance anxiety content
+
+PATIENT (nervous)
+"The thing is... there's been a lot of [changes lately]<keyword:gregory.work.changes>."
+
+%He chews his lip briefly before continuing.%<symptom:lip_chewing>
+
+PATIENT
+"New management. New systems. It's just... a lot to [keep track of]<keyword:gregory.work.keeping_track>."
+
+@if rapport >= 40
+    PATIENT (vulnerable)
+    "I worry sometimes that I'm not... that I'm not [keeping up]<keyword:gregory.work.performance_worry>."
+@else
+    PATIENT (guarded)
+    "But I manage. Everyone manages, right?"
+@endif
+
+-> social_anxiety_hints
+
+=== social_anxiety_hints ===
+
+## TODO: Expand with coworker perception concerns
+
+NARRATOR
+*His eyes briefly scan toward the door, then back to you.*
+
+%The scanning motion is quicker now, more pronounced than before.%<symptom:darting_eyes>
+
+PATIENT (hesitant)
+"My coworkers are nice enough. Professional."
+
+@pause 0.5
+
+PATIENT (nervous)
+"I just... I sometimes wonder what they [think of me]<keyword:gregory.social.coworker_judgment>."
+
+PATIENT
+"If they notice when I'm... when things are [harder than usual]<keyword:gregory.emotion.struggling>."
+
+-> perfectionism_emerges
+
+=== perfectionism_emerges ===
+
+## TODO: Expand with checking behaviors and perfectionism content
+
+PATIENT (animated)
+"I triple-check everything. [Everything]<keyword:gregory.perfectionism.checking>."
+
+@pause 0.3
+
+PATIENT
+"Emails before I send them. Documents before I file them. 
+My work before I submit it."
+
+PATIENT (seeking validation)
+"That's just being [thorough]<keyword:gregory.perfectionism.thorough>, right? It's not... that's normal?"
+
+@if rapport >= 50
+    PATIENT (vulnerable)
+    "Sometimes I check things [four, five times]<keyword:gregory.perfectionism.repetitive>. 
+    Just to be sure."
+@endif
+
+-> contradiction_setup
+
+=== contradiction_setup ===
+
+## KEY SCENE: Sets up the sleep contradiction
+## Player can observe bags_under_eyes symptom vs "sleeping fine" claim
+
+NARRATOR
+*Gregory stifles a yawn, then immediately looks embarrassed.*
+
+%The dark circles under his eyes are more apparent now, in the session's softer lighting.%<symptom:bags_under_eyes>
+
+PATIENT (dismissive)
+"Sorry. Long day. But I [sleep fine, really]<keyword:gregory.sleep.claims_fine>."
+
+@pause 0.5
+
+PATIENT (quickly)
+"It's not like I'm lying awake for [hours]<keyword:gregory.sleep.minimizing>. Not every night, anyway."
+
+%His leg bouncing intensifies briefly before he stills it with conscious effort.%<symptom:leg_bouncing>
+
+-> control_facade
+
+=== control_facade ===
+
+## TODO: Expand with Gregory's attempts to appear in control
+
+PATIENT (assured)
+"I have things [under control]<keyword:gregory.coping.control_claim>."
+
+PATIENT
+"Systems. Routines. That's how you manage, right?"
+
+@pause 0.5
+
+PATIENT (less certain)
+"It's just... sometimes the systems need [more systems]<keyword:gregory.perfectionism.escalating>."
+
+-> turn_2_conclusion
+
+=== turn_2_conclusion ===
+
+## TODO: Add rapport-gated conclusions and transition hooks
+
+@if rapport >= 60
+    NARRATOR
+    *Gregory seems more relaxed now, his shoulders slightly lower than when this segment began.*
+    
+    PATIENT (thoughtful)
+    "I don't usually... talk about this stuff."
+    
+    @pause 0.5
+    
+    PATIENT
+    "With anyone, really."
+@else
+    NARRATOR
+    *Gregory's professional facade remains mostly intact, though cracks have begun to show.*
+    
+    PATIENT (polite)
+    "Thank you for letting me ramble. I hope I'm making sense."
+@endif
+
+-> END
+
+=== END ===
+
+NARRATOR
+*The second portion of the session draws to a close. Gregory watches you, waiting.*
+
+## End of Turn 2
+## Continue to gregory_3.session

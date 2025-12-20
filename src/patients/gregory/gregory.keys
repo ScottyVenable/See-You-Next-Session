@@ -222,6 +222,781 @@ patientInfo: {
     }
 }
 
+// =============================================================================
+// TURN 2 KEYWORDS - Building Trust
+// =============================================================================
+
+// Work-related keywords
+[work.claims_fine] {
+    category: work
+    displayText: "fine"
+    aliases: ["work is fine", "it's fine"]
+    description: "Gregory's surface claim about work being okay"
+    importance: low
+    
+    style: {
+        color: "#7f8c8d"
+        bgColor: "rgba(127, 140, 141, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 3
+        reveals: ["work-deflection"]
+    }
+}
+
+[work.tenure] {
+    category: work
+    displayText: "four years"
+    aliases: ["4 years", "been there years"]
+    description: "Gregory's tenure at his job - stability but also routine"
+    importance: low
+    
+    style: {
+        color: "#3498db"
+        bgColor: "rgba(52, 152, 219, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 3
+        reveals: ["job-stability"]
+    }
+}
+
+[work.changes] {
+    category: work
+    displayText: "changes lately"
+    aliases: ["changes at work", "things changing"]
+    description: "Work environment changes triggering anxiety"
+    importance: medium
+    
+    style: {
+        color: "#e67e22"
+        bgColor: "rgba(230, 126, 34, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 4
+        reveals: ["change-anxiety", "work-stress"]
+    }
+}
+
+[work.keeping_track] {
+    category: work
+    displayText: "keep track of"
+    aliases: ["keeping track", "track of everything"]
+    description: "Cognitive load from work demands"
+    importance: medium
+    
+    style: {
+        color: "#9b59b6"
+        bgColor: "rgba(155, 89, 182, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 4
+        reveals: ["cognitive-load", "overwhelm"]
+    }
+}
+
+[work.performance_worry] {
+    category: work
+    displayText: "keeping up"
+    aliases: ["not keeping up", "falling behind"]
+    description: "Performance anxiety at work"
+    importance: high
+    
+    style: {
+        color: "#e74c3c"
+        bgColor: "rgba(231, 76, 60, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 5
+        reveals: ["performance-anxiety", "imposter-feelings"]
+        rapportChange: 2
+    }
+}
+
+// Social keywords
+[social.coworker_judgment] {
+    category: social
+    displayText: "think of me"
+    aliases: ["what they think", "think about me", "how they see me"]
+    description: "Fear of coworker judgment - social anxiety component"
+    importance: high
+    
+    style: {
+        color: "#e74c3c"
+        bgColor: "rgba(231, 76, 60, 0.15)"
+        icon: "users"
+    }
+    
+    effects: {
+        focusCost: 5
+        reveals: ["social-anxiety", "judgment-fear"]
+    }
+}
+
+[emotion.struggling] {
+    category: emotion
+    displayText: "harder than usual"
+    aliases: ["struggling", "having a hard time"]
+    description: "Admission of difficulty"
+    importance: medium
+    
+    style: {
+        color: "#f39c12"
+        bgColor: "rgba(243, 156, 18, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 4
+        reveals: ["struggle-admission"]
+        rapportChange: 2
+    }
+}
+
+// Perfectionism keywords
+[perfectionism.checking] {
+    category: perfectionism
+    displayText: "Everything"
+    aliases: ["triple check", "check everything"]
+    description: "Compulsive checking behavior"
+    importance: high
+    
+    style: {
+        color: "#9b59b6"
+        bgColor: "rgba(155, 89, 182, 0.2)"
+    }
+    
+    effects: {
+        focusCost: 5
+        reveals: ["checking-compulsion", "anxiety-behavior"]
+    }
+}
+
+[perfectionism.thorough] {
+    category: perfectionism
+    displayText: "thorough"
+    aliases: ["being thorough", "just thorough"]
+    description: "Rationalization of checking behavior"
+    importance: medium
+    
+    style: {
+        color: "#7f8c8d"
+        bgColor: "rgba(127, 140, 141, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 3
+        reveals: ["behavior-rationalization"]
+    }
+}
+
+[perfectionism.repetitive] {
+    category: perfectionism
+    displayText: "four, five times"
+    aliases: ["multiple times", "again and again"]
+    description: "Reveals extent of compulsive checking"
+    importance: high
+    
+    style: {
+        color: "#e74c3c"
+        bgColor: "rgba(231, 76, 60, 0.18)"
+    }
+    
+    effects: {
+        focusCost: 6
+        reveals: ["compulsion-severity"]
+        rapportChange: 3
+    }
+}
+
+[perfectionism.escalating] {
+    category: perfectionism
+    displayText: "more systems"
+    aliases: ["systems need systems", "more routines"]
+    description: "Escalating coping mechanisms"
+    importance: high
+    
+    style: {
+        color: "#e74c3c"
+        bgColor: "rgba(231, 76, 60, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 5
+        reveals: ["coping-escalation", "control-need"]
+    }
+}
+
+// Sleep keywords (turn 2 additions)
+[sleep.claims_fine] {
+    category: sleep
+    displayText: "sleep fine, really"
+    aliases: ["sleeping fine", "sleep is fine really"]
+    description: "CONTRADICTION: Claims fine sleep despite visible exhaustion"
+    importance: critical
+    note: "Key contradiction with visual symptom - bags under eyes"
+    
+    style: {
+        color: "#e74c3c"
+        bgColor: "rgba(231, 76, 60, 0.2)"
+        animation: "pulse"
+    }
+    
+    effects: {
+        focusCost: 5
+        reveals: ["contradiction-sleep"]
+        contradicts: ["symptom-bags-under-eyes", "symptom-exhaustion"]
+    }
+}
+
+[sleep.minimizing] {
+    category: sleep
+    displayText: "hours"
+    aliases: ["lying awake hours", "awake for hours"]
+    description: "Hedged admission of sleep issues"
+    importance: medium
+    
+    style: {
+        color: "#f39c12"
+        bgColor: "rgba(243, 156, 18, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 4
+        reveals: ["sleep-issues-partial"]
+    }
+}
+
+// Coping keywords
+[coping.control_claim] {
+    category: coping
+    displayText: "under control"
+    aliases: ["have control", "in control"]
+    description: "Gregory's claim of maintaining control"
+    importance: medium
+    
+    style: {
+        color: "#3498db"
+        bgColor: "rgba(52, 152, 219, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 4
+        reveals: ["control-narrative"]
+    }
+}
+
+// =============================================================================
+// TURN 3 KEYWORDS - Going Deeper
+// =============================================================================
+
+// Core fear keywords
+[core.being_watched] {
+    category: core
+    displayText: "watched"
+    aliases: ["being watched", "always watched", "someone watching"]
+    description: "CORE: Fundamental feeling of being observed"
+    importance: critical
+    
+    style: {
+        color: "#c0392b"
+        bgColor: "rgba(192, 57, 43, 0.2)"
+        icon: "eye"
+        animation: "pulse"
+    }
+    
+    effects: {
+        focusCost: 6
+        reveals: ["hypervigilance-core", "self-consciousness"]
+    }
+}
+
+[core.performance] {
+    category: core
+    displayText: "on stage"
+    aliases: ["performing", "like a stage", "always performing"]
+    description: "Feeling of constant performance"
+    importance: high
+    
+    style: {
+        color: "#9b59b6"
+        bgColor: "rgba(155, 89, 182, 0.2)"
+    }
+    
+    effects: {
+        focusCost: 6
+        reveals: ["performance-anxiety-core", "authenticity-struggle"]
+    }
+}
+
+[core.fear_of_judgment] {
+    category: core
+    displayText: "mess up"
+    aliases: ["waiting to mess up", "make a mistake", "slip up"]
+    description: "CORE: Fear of being judged for mistakes"
+    importance: critical
+    
+    style: {
+        color: "#e74c3c"
+        bgColor: "rgba(231, 76, 60, 0.2)"
+        animation: "shake"
+    }
+    
+    effects: {
+        focusCost: 7
+        reveals: ["judgment-fear-core", "perfectionism-root"]
+    }
+}
+
+[core.fear_of_rejection] {
+    category: core
+    displayText: "want me around"
+    aliases: ["still want me", "keep me around"]
+    description: "BREAKTHROUGH: Fear of abandonment"
+    importance: critical
+    
+    style: {
+        color: "#c0392b"
+        bgColor: "rgba(192, 57, 43, 0.25)"
+        animation: "pulse"
+    }
+    
+    effects: {
+        focusCost: 8
+        reveals: ["abandonment-fear", "relationship-anxiety"]
+        triggers: ["breakthrough-rejection"]
+        rapportChange: 5
+    }
+}
+
+[core.fear_broken] {
+    category: core
+    displayText: "broken"
+    aliases: ["being broken", "fundamentally broken"]
+    description: "BREAKTHROUGH: Core fear of being defective"
+    importance: critical
+    
+    style: {
+        color: "#c0392b"
+        bgColor: "rgba(192, 57, 43, 0.25)"
+        animation: "glow"
+    }
+    
+    effects: {
+        focusCost: 8
+        reveals: ["self-worth-core", "defectiveness-belief"]
+        triggers: ["breakthrough-core-belief"]
+        rapportChange: 6
+    }
+}
+
+[core.something_wrong] {
+    category: core
+    displayText: "wrong"
+    aliases: ["something wrong", "wrong with me"]
+    description: "Core belief about being flawed"
+    importance: high
+    
+    style: {
+        color: "#e74c3c"
+        bgColor: "rgba(231, 76, 60, 0.2)"
+    }
+    
+    effects: {
+        focusCost: 6
+        reveals: ["defectiveness-core"]
+    }
+}
+
+[core.identity_fear] {
+    category: core
+    displayText: "who I am"
+    aliases: ["just who I am", "this is me"]
+    description: "Fear that anxiety defines identity"
+    importance: critical
+    
+    style: {
+        color: "#9b59b6"
+        bgColor: "rgba(155, 89, 182, 0.2)"
+        animation: "pulse"
+    }
+    
+    effects: {
+        focusCost: 7
+        reveals: ["identity-anxiety", "hopelessness-fear"]
+    }
+}
+
+// History keywords
+[history.be_careful] {
+    category: history
+    displayText: "careful"
+    aliases: ["be careful", "wanted me careful"]
+    description: "Childhood messaging about caution"
+    importance: high
+    
+    style: {
+        color: "#8e44ad"
+        bgColor: "rgba(142, 68, 173, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 5
+        reveals: ["childhood-messaging", "parental-anxiety"]
+    }
+}
+
+[history.always_anxious] {
+    category: history
+    displayText: "thinking"
+    aliases: ["always thinking", "never stopped thinking"]
+    description: "BREAKTHROUGH: Lifelong anxiety pattern"
+    importance: critical
+    
+    style: {
+        color: "#8e44ad"
+        bgColor: "rgba(142, 68, 173, 0.2)"
+        animation: "pulse"
+    }
+    
+    effects: {
+        focusCost: 7
+        reveals: ["lifelong-pattern", "childhood-origin"]
+        triggers: ["breakthrough-history"]
+        rapportChange: 4
+    }
+}
+
+[pattern.careful] {
+    category: pattern
+    displayText: "careful"
+    aliases: ["always careful", "being careful"]
+    description: "Guarded admission of caution pattern"
+    importance: medium
+    
+    style: {
+        color: "#7f8c8d"
+        bgColor: "rgba(127, 140, 141, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 4
+        reveals: ["caution-pattern"]
+    }
+}
+
+// Insight keywords
+[insight.tired_of_pretending] {
+    category: insight
+    displayText: "tired"
+    aliases: ["so tired", "tired of pretending"]
+    description: "BREAKTHROUGH: Exhaustion from masking"
+    importance: critical
+    
+    style: {
+        color: "#16a085"
+        bgColor: "rgba(22, 160, 133, 0.2)"
+        animation: "glow"
+    }
+    
+    effects: {
+        focusCost: 6
+        reveals: ["masking-exhaustion", "authenticity-desire"]
+        triggers: ["breakthrough-masking"]
+        rapportChange: 5
+    }
+}
+
+// Emotion keywords (turn 3 additions)
+[emotion.overwhelmed] {
+    category: emotion
+    displayText: "too much"
+    aliases: ["overwhelmed", "it's too much"]
+    description: "BREAKTHROUGH: Admission of being overwhelmed"
+    importance: critical
+    
+    style: {
+        color: "#e67e22"
+        bgColor: "rgba(230, 126, 34, 0.2)"
+        animation: "pulse"
+    }
+    
+    effects: {
+        focusCost: 6
+        reveals: ["overwhelm-admission"]
+        rapportChange: 4
+    }
+}
+
+// Coping keywords (turn 3 additions)
+[coping.self_care_claim] {
+    category: coping
+    displayText: "take care of myself"
+    aliases: ["I take care", "looking after myself"]
+    description: "CONTRADICTION: Claims self-care despite evidence"
+    importance: high
+    note: "Key contradiction with bitten nails visual symptom"
+    
+    style: {
+        color: "#e74c3c"
+        bgColor: "rgba(231, 76, 60, 0.18)"
+    }
+    
+    effects: {
+        focusCost: 5
+        reveals: ["contradiction-self-care"]
+        contradicts: ["symptom-bitten-nails"]
+    }
+}
+
+// =============================================================================
+// TURN 4 KEYWORDS - Resolution
+// =============================================================================
+
+[pattern.rambling] {
+    category: pattern
+    displayText: "ramble"
+    aliases: ["tend to ramble", "rambling"]
+    description: "Self-awareness of communication pattern"
+    importance: low
+    
+    style: {
+        color: "#7f8c8d"
+        bgColor: "rgba(127, 140, 141, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 3
+        reveals: ["self-awareness"]
+    }
+}
+
+[resolution.the_question] {
+    category: resolution
+    displayText: "What do you think is going on with me"
+    aliases: ["what's wrong", "what do I have"]
+    description: "Gregory asks for diagnosis"
+    importance: critical
+    
+    style: {
+        color: "#3498db"
+        bgColor: "rgba(52, 152, 219, 0.2)"
+        animation: "pulse"
+    }
+    
+    effects: {
+        focusCost: 0
+        reveals: ["diagnosis-requested"]
+    }
+}
+
+[resolution.wanting_name] {
+    category: resolution
+    displayText: "name"
+    aliases: ["a name for it", "what it's called"]
+    description: "Desire for diagnosis - wanting validation"
+    importance: high
+    
+    style: {
+        color: "#3498db"
+        bgColor: "rgba(52, 152, 219, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 4
+        reveals: ["validation-seeking", "diagnosis-hope"]
+    }
+}
+
+[resolution.relief_naming] {
+    category: resolution
+    displayText: "name"
+    aliases: ["there was a name", "has a name"]
+    description: "Relief at having a diagnosis"
+    importance: high
+    
+    style: {
+        color: "#27ae60"
+        bgColor: "rgba(39, 174, 96, 0.2)"
+    }
+    
+    effects: {
+        focusCost: 0
+        reveals: ["diagnosis-relief"]
+        rapportChange: 3
+    }
+}
+
+[resolution.relief] {
+    category: resolution
+    displayText: "relieved"
+    aliases: ["feel relieved", "relief"]
+    description: "Emotional response to correct diagnosis"
+    importance: high
+    
+    style: {
+        color: "#27ae60"
+        bgColor: "rgba(39, 174, 96, 0.2)"
+        animation: "glow"
+    }
+    
+    effects: {
+        focusCost: 0
+        reveals: ["emotional-validation"]
+        rapportChange: 5
+    }
+}
+
+[resolution.validation] {
+    category: resolution
+    displayText: "wasting your time"
+    aliases: ["wasted your time", "waste of time"]
+    description: "Final reference to core fear of being burden"
+    importance: medium
+    
+    style: {
+        color: "#9b59b6"
+        bgColor: "rgba(155, 89, 182, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 0
+        reveals: ["burden-fear-resolution"]
+    }
+}
+
+[resolution.uncertainty] {
+    category: resolution
+    displayText: "supposed to do"
+    aliases: ["what to do", "what now"]
+    description: "Uncertainty about next steps"
+    importance: medium
+    
+    style: {
+        color: "#7f8c8d"
+        bgColor: "rgba(127, 140, 141, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 0
+        reveals: ["next-steps-anxiety"]
+    }
+}
+
+[resolution.mismatch] {
+    category: resolution
+    displayText: "fits"
+    aliases: ["doesn't fit", "not quite right"]
+    description: "Response to incorrect diagnosis"
+    importance: high
+    
+    style: {
+        color: "#e74c3c"
+        bgColor: "rgba(231, 76, 60, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 0
+        reveals: ["diagnosis-mismatch"]
+    }
+}
+
+[resolution.self_blame] {
+    category: resolution
+    displayText: "explain well enough"
+    aliases: ["didn't explain", "wasn't clear"]
+    description: "Self-blame for miscommunication"
+    importance: medium
+    
+    style: {
+        color: "#f39c12"
+        bgColor: "rgba(243, 156, 18, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 0
+        reveals: ["self-blame-pattern"]
+    }
+}
+
+[resolution.concern] {
+    category: resolution
+    displayText: "wrong impression"
+    aliases: ["gave wrong impression", "misled you"]
+    description: "Anxiety about being misunderstood"
+    importance: medium
+    
+    style: {
+        color: "#e67e22"
+        bgColor: "rgba(230, 126, 34, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 0
+        reveals: ["communication-anxiety"]
+    }
+}
+
+[resolution.self_improvement] {
+    category: resolution
+    displayText: "better"
+    aliases: ["be better", "try harder"]
+    description: "Pattern of self-improvement pressure"
+    importance: medium
+    
+    style: {
+        color: "#9b59b6"
+        bgColor: "rgba(155, 89, 182, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 0
+        reveals: ["perfectionism-resolution"]
+    }
+}
+
+[resolution.hope] {
+    category: resolution
+    displayText: "work on it"
+    aliases: ["can work on", "something to do"]
+    description: "Hope for improvement - positive resolution"
+    importance: high
+    
+    style: {
+        color: "#27ae60"
+        bgColor: "rgba(39, 174, 96, 0.2)"
+        animation: "glow"
+    }
+    
+    effects: {
+        focusCost: 0
+        reveals: ["hope-for-future"]
+        rapportChange: 3
+    }
+}
+
+[resolution.desperate] {
+    category: resolution
+    displayText: "need"
+    aliases: ["I need", "need to understand"]
+    description: "Desperate need for understanding"
+    importance: high
+    
+    style: {
+        color: "#e74c3c"
+        bgColor: "rgba(231, 76, 60, 0.18)"
+    }
+    
+    effects: {
+        focusCost: 0
+        reveals: ["desperation-understanding"]
+    }
+}
+
 ===ACTIONS===
 
 // Actions that can be triggered from keywords or dialogue
