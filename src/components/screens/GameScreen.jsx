@@ -33,15 +33,14 @@ function GameScreen() {
     const [showTutorialHint, setShowTutorialHint] = useState(true);
     const [selectedPrompt, setSelectedPrompt] = useState(null);
     const [dialogueDimensions, setDialogueDimensions] = useState({ width: 500, height: 200 });
+    const [dialoguePosition, setDialoguePosition] = useState(() => ({
+        left: Math.max(100, (window.innerWidth - 500) / 2),
+        bottom: 70
+    }));
     const [isResizing, setIsResizing] = useState(false);
 
     const resizeRef = useRef(null);
-    const startPosRef = useRef({ x: 0, y: 0, width: 0, height: 0 });
-
-    // Dialogue box position - calculated once on mount
-    const [dialoguePosition] = useState(() => ({
-        left: Math.max(100, (window.innerWidth - 500) / 2)
-    }));
+    const startPosRef = useRef({ x: 0, y: 0, width: 0, height: 0, left: 0, bottom: 0 });
 
     const { currentPatient, currentTurn, focus, isFocusMode, rapport } = gameState;
 
@@ -59,9 +58,11 @@ function GameScreen() {
             x: e.clientX,
             y: e.clientY,
             width: dialogueDimensions.width,
-            height: dialogueDimensions.height
+            height: dialogueDimensions.height,
+            left: dialoguePosition.left,
+            bottom: dialoguePosition.bottom
         };
-    }, [dialogueDimensions]);
+    }, [dialogueDimensions, dialoguePosition]);
 
     useEffect(() => {
         if (!isResizing) return;
@@ -75,15 +76,22 @@ function GameScreen() {
 
             let newWidth = startPosRef.current.width;
             let newHeight = startPosRef.current.height;
+            let newLeft = startPosRef.current.left;
+            let newBottom = startPosRef.current.bottom;
 
+            // Handle horizontal resizing
             if (edge.includes('e')) {
                 newWidth = startPosRef.current.width + deltaX;
             }
             if (edge.includes('w')) {
                 newWidth = startPosRef.current.width - deltaX;
+                newLeft = startPosRef.current.left + deltaX;
             }
+            
+            // Handle vertical resizing
             if (edge.includes('s')) {
                 newHeight = startPosRef.current.height + deltaY;
+                newBottom = startPosRef.current.bottom - deltaY;
             }
             if (edge.includes('n')) {
                 newHeight = startPosRef.current.height - deltaY;
@@ -91,13 +99,24 @@ function GameScreen() {
 
             // Constrain width to viewport minus sidebar margins (100px each side)
             const maxWidth = window.innerWidth - 200;
-            newWidth = Math.max(300, Math.min(maxWidth, newWidth));
+            const constrainedWidth = Math.max(300, Math.min(maxWidth, newWidth));
+            
+            // Adjust left if width was constrained and resizing from west
+            if (edge.includes('w') && constrainedWidth !== newWidth) {
+                newLeft = startPosRef.current.left + (startPosRef.current.width - constrainedWidth);
+            }
 
             // Constrain height to viewport minus interaction tray (70px) and top margin (80px)
             const maxHeight = window.innerHeight - 150;
-            newHeight = Math.max(120, Math.min(maxHeight, newHeight));
+            const constrainedHeight = Math.max(120, Math.min(maxHeight, newHeight));
+            
+            // Adjust bottom if height was constrained and resizing from south
+            if (edge.includes('s') && constrainedHeight !== newHeight) {
+                newBottom = startPosRef.current.bottom - (constrainedHeight - startPosRef.current.height);
+            }
 
-            setDialogueDimensions({ width: newWidth, height: newHeight });
+            setDialogueDimensions({ width: constrainedWidth, height: constrainedHeight });
+            setDialoguePosition({ left: newLeft, bottom: newBottom });
         };
 
         const handleMouseUp = () => {
@@ -380,7 +399,8 @@ function GameScreen() {
                         <motion.div
                             className="dialogue-floating draggable"
                             style={{
-                                left: dialoguePosition.left,
+                                left: `${dialoguePosition.left}px`,
+                                bottom: `${dialoguePosition.bottom}px`,
                                 width: `${dialogueDimensions.width}px`,
                                 height: `${dialogueDimensions.height}px`
                             }}
