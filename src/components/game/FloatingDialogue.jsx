@@ -146,9 +146,11 @@ function parseDialogueText(text, keywords = [], observations = []) {
 
 function FloatingDialogue({
     patientId,
+    patientName = 'Patient',
     turn,
     onKeywordCollected,
     onDialogueEnd,
+    onSpeakerChange,
     fallbackDialogue = []
 }) {
     const { gameState, actions } = useGame();
@@ -221,6 +223,24 @@ function FloatingDialogue({
         () => sanitizeDialogueText(currentContent?.text || ''),
         [currentContent?.text]
     );
+
+    // Notify parent of speaker changes
+    useEffect(() => {
+        if (onSpeakerChange && currentContent?.speaker) {
+            // Map speaker codes to display names
+            let displaySpeaker;
+            if (currentContent.speaker === 'PATIENT') {
+                displaySpeaker = patientName;
+            } else if (currentContent.speaker === 'THERAPIST' || currentContent.speaker === 'YOU') {
+                displaySpeaker = 'You';
+            } else if (currentContent.speaker === 'NARRATOR') {
+                displaySpeaker = null; // No label for narration
+            } else {
+                displaySpeaker = currentContent.speaker;
+            }
+            onSpeakerChange(displaySpeaker);
+        }
+    }, [currentContent?.speaker, onSpeakerChange, patientName]);
 
     const finishTyping = useCallback(() => {
         if (typingRef.current) clearInterval(typingRef.current);

@@ -38,6 +38,7 @@ function GameScreen() {
         bottom: 70
     }));
     const [isResizing, setIsResizing] = useState(false);
+    const [currentSpeaker, setCurrentSpeaker] = useState(null);
 
     const resizeRef = useRef(null);
     const startPosRef = useRef({ x: 0, y: 0, width: 0, height: 0, left: 0, bottom: 0 });
@@ -431,7 +432,7 @@ function GameScreen() {
                                 <div className="resize-handle resize-handle-sw" onMouseDown={(e) => startResize('sw', e)} />
 
                                 <div className="dialogue-header">
-                                    <span className="dialogue-speaker">{currentPatient.name}</span>
+                                    <span className="dialogue-speaker">{currentSpeaker || currentPatient.name}</span>
                                     <button
                                         className="dialogue-hide-btn"
                                         onClick={toggleDialogue}
@@ -442,8 +443,10 @@ function GameScreen() {
                                 </div>
                                 <FloatingDialogue
                                     patientId={currentPatient.id}
+                                    patientName={currentPatient.name}
                                     turn={currentTurn}
                                     fallbackDialogue={currentPhase?.dialogue || []}
+                                    onSpeakerChange={setCurrentSpeaker}
                                     onKeywordCollected={(token) => {
                                         actions.collectToken(token);
                                         actions.addToClipboard(token);
