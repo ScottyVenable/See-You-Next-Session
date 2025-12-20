@@ -233,7 +233,40 @@ function FloatingDialogue({
             keywords: currentContent?.keywords?.length || 0,
             fallback: useFallback,
             fallbackIndex,
+            patientId,
+            turn,
         });
+        api.loadRawDialogue = async (rawText) => {
+            if (!rawText || typeof rawText !== 'string') return false;
+            try {
+                loadDialogue(rawText);
+                setUseFallback(false);
+                setFallbackIndex(0);
+                setIsLoaded(true);
+                loadedRef.current = true;
+                startBlock('START');
+                return true;
+            } catch (error) {
+                console.error('Failed to load raw dialogue', error);
+                return false;
+            }
+        };
+        api.loadSession = async (id, sessionTurn, forceReload = false) => {
+            try {
+                const source = await loadPatientDialogue(id, sessionTurn, forceReload);
+                if (!source) return false;
+                loadDialogue(source);
+                setUseFallback(false);
+                setFallbackIndex(0);
+                setIsLoaded(true);
+                loadedRef.current = true;
+                startBlock('START');
+                return true;
+            } catch (error) {
+                console.error('Failed to load session dialogue', error);
+                return false;
+            }
+        };
         window.__synsDialogueDebug = api;
         return () => {
             // Do not delete outright to avoid breaking other listeners; just remove our setters
@@ -242,9 +275,11 @@ function FloatingDialogue({
                 delete window.__synsDialogueDebug.getTypewriterSpeed;
                 delete window.__synsDialogueDebug.skipTypewriter;
                 delete window.__synsDialogueDebug.logState;
+                delete window.__synsDialogueDebug.loadRawDialogue;
+                delete window.__synsDialogueDebug.loadSession;
             }
         };
-    }, [typewriterSpeed, finishTyping, isTyping, displayedText, sanitizedContentText, currentContent, useFallback, fallbackIndex]);
+    }, [typewriterSpeed, finishTyping, isTyping, displayedText, sanitizedContentText, currentContent, useFallback, fallbackIndex, patientId, turn, loadDialogue, startBlock]);
 
     // Typewriter effect
     useEffect(() => {

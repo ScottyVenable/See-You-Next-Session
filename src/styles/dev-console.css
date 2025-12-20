@@ -617,3 +617,27 @@
     white-space: pre-wrap;
     word-break: break-word;
 }
+
+.dialogue-select,
+.dialogue-input,
+.dialogue-textarea {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.dialogue-textarea {
+    width: 100%;
+    resize: vertical;
+    min-height: 140px;
+}
+
+.dialogue-status {
+    margin-top: 8px;
+    color: #88ccff;
+    font-size: 12px;
+}

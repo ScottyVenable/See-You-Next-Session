@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useGame } from '../../context/GameContext.jsx';
 import { useUI, UI_LAYOUTS, SPRITE_RATIOS } from '../../context/UIContext.jsx';
 import { GAME_CONFIG } from '../../data/config.js';
+import { getPatientList } from '../../sdns/index.js';
 import '../../styles/dev-console.css';
 
 const CONSOLE_HISTORY_KEY = 'syns_dev_console_history';
@@ -715,6 +716,11 @@ function CheatsTab({ log }) {
 function DialogueTab({ log }) {
     const [debugState, setDebugState] = useState(null);
     const [speedInput, setSpeedInput] = useState('');
+    const [patients, setPatients] = useState([]);
+    const [selectedPatient, setSelectedPatient] = useState('');
+    const [turnInput, setTurnInput] = useState('1');
+    const [customText, setCustomText] = useState("===START===\nTHERAPIST: \"Let's try a quick debug line.\"\nPATIENT: \"Feeling **better** already, maybe _sort of_.\"");
+    const [status, setStatus] = useState('');
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -724,6 +730,12 @@ function DialogueTab({ log }) {
             }
         }, 500);
         return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
+        getPatientList()
+            .then(list => setPatients(list || []))
+            .catch(() => setPatients([]));
     }, []);
 
     const applySpeed = () => {
@@ -752,6 +764,50 @@ function DialogueTab({ log }) {
         log('Skipped typing', 'success');
     };
 
+    const loadSession = async () => {
+        const api = window.__synsDialogueDebug;
+        if (!api?.loadSession) {
+            log('Dialogue debug API unavailable. Open a dialogue first.', 'error');
+            return;
+        }
+        const turn = parseInt(turnInput, 10) || 1;
+        const pid = selectedPatient || patients[0]?.id || patients[0];
+        if (!pid) {
+            log('No patients available to load.', 'error');
+            return;
+        }
+        setStatus('Loading session...');
+        const ok = await api.loadSession(pid, turn, true);
+        if (ok) {
+            log(`Loaded session for ${pid} turn ${turn}`, 'success');
+            setStatus('Loaded session.');
+        } else {
+            log('Failed to load session dialogue', 'error');
+            setStatus('Failed to load session.');
+        }
+    };
+
+    const loadCustomText = async () => {
+        const api = window.__synsDialogueDebug;
+        if (!api?.loadRawDialogue) {
+            log('Dialogue debug API unavailable. Open a dialogue first.', 'error');
+            return;
+        }
+        if (!customText.trim()) {
+            log('Enter dialogue text to run.', 'error');
+            return;
+        }
+        setStatus('Loading custom text...');
+        const ok = await api.loadRawDialogue(customText);
+        if (ok) {
+            log('Loaded custom dialogue text', 'success');
+            setStatus('Custom text loaded.');
+        } else {
+            log('Failed to load custom text', 'error');
+            setStatus('Failed to load custom text.');
+        }
+    };
+
     const state = debugState || {};
     const speed = window.__synsDialogueDebug?.getTypewriterSpeed?.();
 
@@ -778,6 +834,51 @@ function DialogueTab({ log }) {
             </div>
 
             <div className="dialogue-section">
+                <h3 className="dialogue-section-title">Run Session File</h3>
+                <div className="dialogue-control-row">
+                    <label className="dialogue-label">Patient</label>
+                    <select
+                        className="dialogue-select"
+                        value={selectedPatient}
+                        onChange={(e) => setSelectedPatient(e.target.value)}
+                    >
+                        {patients.length === 0 && <option value="">(no patients found)</option>}
+                        {patients.map((p) => {
+                            const id = p.id || p;
+                            const name = p.name || id;
+                            return <option key={id} value={id}>{name}</option>;
+                        })}
+                    </select>
+                </div>
+                <div className="dialogue-control-row">
+                    <label className="dialogue-label">Turn</label>
+                    <input
+                        className="dialogue-input"
+                        type="number"
+                        min="1"
+                        value={turnInput}
+                        onChange={(e) => setTurnInput(e.target.value)}
+                    />
+                </div>
+                <div className="dialogue-control-row">
+                    <button onClick={loadSession}>Load session</button>
+                </div>
+            </div>
+
+            <div className="dialogue-section">
+                <h3 className="dialogue-section-title">Run Custom Dialogue Text</h3>
+                <textarea
+                    className="dialogue-textarea"
+                    rows={8}
+                    value={customText}
+                    onChange={(e) => setCustomText(e.target.value)}
+                />
+                <div className="dialogue-control-row">
+                    <button onClick={loadCustomText}>Load custom text</button>
+                </div>
+            </div>
+
+            <div className="dialogue-section">
                 <h3 className="dialogue-section-title">Live State</h3>
                 <div className="dialogue-state-grid">
                     <div><span className="dialogue-label">Typing:</span> {state.isTyping ? 'Yes' : 'No'}</div>
@@ -794,6 +895,9 @@ function DialogueTab({ log }) {
                     <div className="dialogue-label">Full</div>
                     <pre>{state.fullText || '—'}</pre>
                 </div>
+                {status && (
+                    <div className="dialogue-status">{status}</div>
+                )}
             </div>
         </div>
     );
