@@ -185,8 +185,10 @@ export async function getPatientList() {
         const patients = [];
 
         for (const path in patientConfigs) {
-            // Extract patient ID from path: /src/patients/gregory/patient_config.json -> gregory
-            const match = path.match(/\/src\/patients\/(.+)\/patient_config\.json$/);
+            // Extract patient ID from various path formats:
+            // /src/patients/gregory/patient_config.json -> gregory
+            // ../patients/gregory/patient_config.json -> gregory
+            const match = path.match(/patients\/([^/]+)\/patient_config\.json$/);
             if (match) {
                 const patientId = match[1];
                 const config = await patientConfigs[path]();

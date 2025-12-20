@@ -43,6 +43,19 @@ function ErrorOverlay() {
         return true;
     });
 
+    const copyAllErrors = useCallback(() => {
+        const logText = filteredErrors.map(e => {
+            const time = new Date(e.timestamp).toLocaleTimeString();
+            return `[${time}] [${e.level}] [${e.category}] ${e.message}${e.context ? `\n  Context: ${JSON.stringify(e.context)}` : ''}`;
+        }).join('\n');
+        
+        navigator.clipboard.writeText(logText).then(() => {
+            console.log('Debug logs copied to clipboard');
+        }).catch(err => {
+            console.error('Failed to copy logs:', err);
+        });
+    }, [filteredErrors]);
+
     const getErrorCount = (level) => {
         return errors.filter(e => e.level === level).length;
     };
@@ -81,12 +94,19 @@ function ErrorOverlay() {
             <div style={styles.header}>
                 <div style={styles.headerLeft}>
                     <span style={styles.headerIcon}>🔧</span>
-                    <span style={styles.headerTitle}>Dev Errors</span>
+                    <span style={styles.headerTitle}>Debug Logs</span>
                     <span style={styles.headerCount}>
                         {stats.total} total
                     </span>
                 </div>
                 <div style={styles.headerRight}>
+                    <button
+                        style={styles.headerButton}
+                        onClick={copyAllErrors}
+                        title="Copy all logs"
+                    >
+                        Copy
+                    </button>
                     <button
                         style={styles.headerButton}
                         onClick={() => setIsExpanded(!isExpanded)}
