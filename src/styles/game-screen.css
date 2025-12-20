@@ -259,6 +259,20 @@
     inset: 0;
     z-index: 1;
     /* Lowest layer - behind everything */
+    display: flex;
+    flex-direction: column;
+}
+
+.viewable-game-window {
+    position: relative;
+    height: calc(100vh - var(--tray-height));
+    min-height: 420px;
+    width: 100%;
+    overflow: hidden;
+    background: linear-gradient(180deg,
+            rgba(15, 25, 45, 1) 0%,
+            rgba(20, 35, 60, 1) 50%,
+            rgba(15, 25, 45, 1) 100%);
 }
 
 .patient-fullscreen {
@@ -458,7 +472,7 @@
     letter-spacing: 0.3px;
     color: var(--color-text);
     margin-bottom: 8px;
-    padding: 4px 12px;
+    padding: 8px;
     flex: 1;
     text-align: left;
 }

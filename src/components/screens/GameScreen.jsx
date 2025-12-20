@@ -372,89 +372,91 @@ function GameScreen() {
                 )}
             </AnimatePresence>
 
-            {/* Main Content Area - Full screen patient */}
+            {/* Main Content Area - Full screen patient within viewable game window */}
             <div className="main-content">
-                {/* Patient View - Full screen background */}
-                <div className="patient-fullscreen">
-                    <PatientView
-                        patient={currentPatient}
-                        isFocusMode={isFocusMode}
-                        fullscreen={true}
-                        onSymptomFound={(symptomId) => {
-                            actions.revealSymptom(symptomId);
-                        }}
-                        onDragStart={handleDragStart}
-                        onDragEnd={handleDragEnd}
-                    />
+                <div className="viewable-game-window">
+                    {/* Patient View - Full screen background */}
+                    <div className="patient-fullscreen">
+                        <PatientView
+                            patient={currentPatient}
+                            isFocusMode={isFocusMode}
+                            fullscreen={true}
+                            onSymptomFound={(symptomId) => {
+                                actions.revealSymptom(symptomId);
+                            }}
+                            onDragStart={handleDragStart}
+                            onDragEnd={handleDragEnd}
+                        />
 
-                    {/* Patient name overlay */}
-                    <div className="patient-name-overlay">
-                        <span className="patient-name">{currentPatient.name || 'Patient'}</span>
+                        {/* Patient name overlay */}
+                        <div className="patient-name-overlay">
+                            <span className="patient-name">{currentPatient.name || 'Patient'}</span>
+                        </div>
                     </div>
+
+                    {/* Dialogue Drawer - slides up from bottom */}
+                    <AnimatePresence>
+                        {dialogueVisible && (
+                            <motion.div
+                                className="dialogue-floating draggable"
+                                style={{
+                                    left: `${dialoguePosition.left}px`,
+                                    bottom: `${dialoguePosition.bottom}px`,
+                                    width: `${dialogueDimensions.width}px`,
+                                    height: `${dialogueDimensions.height}px`
+                                }}
+                                initial={{ opacity: 0, y: 100 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 100 }}
+                                drag={!isResizing}
+                                dragMomentum={false}
+                                dragElastic={0}
+                                dragConstraints={{
+                                    left: 70 - dialoguePosition.left,
+                                    right: Math.max(0, window.innerWidth - dialoguePosition.left - dialogueDimensions.width - 70),
+                                    top: Math.max(-(window.innerHeight - dialogueDimensions.height - 150), -window.innerHeight + 200),
+                                    bottom: 0
+                                }}
+                                whileDrag={{ scale: 1.02, boxShadow: '0 -8px 40px rgba(0, 0, 0, 0.5)' }}
+                                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                            >
+                                {/* Resize handles */}
+                                <div className="resize-handle resize-handle-n" onMouseDown={(e) => startResize('n', e)} />
+                                <div className="resize-handle resize-handle-s" onMouseDown={(e) => startResize('s', e)} />
+                                <div className="resize-handle resize-handle-e" onMouseDown={(e) => startResize('e', e)} />
+                                <div className="resize-handle resize-handle-w" onMouseDown={(e) => startResize('w', e)} />
+                                <div className="resize-handle resize-handle-ne" onMouseDown={(e) => startResize('ne', e)} />
+                                <div className="resize-handle resize-handle-nw" onMouseDown={(e) => startResize('nw', e)} />
+                                <div className="resize-handle resize-handle-se" onMouseDown={(e) => startResize('se', e)} />
+                                <div className="resize-handle resize-handle-sw" onMouseDown={(e) => startResize('sw', e)} />
+
+                                <div className="dialogue-header">
+                                    <span className="dialogue-speaker">{currentPatient.name}</span>
+                                    <button
+                                        className="dialogue-hide-btn"
+                                        onClick={toggleDialogue}
+                                        title="Hide dialogue (D)"
+                                    >
+                                        ▼
+                                    </button>
+                                </div>
+                                <FloatingDialogue
+                                    patientId={currentPatient.id}
+                                    turn={currentTurn}
+                                    fallbackDialogue={currentPhase?.dialogue || []}
+                                    onKeywordCollected={(token) => {
+                                        actions.collectToken(token);
+                                        actions.addToClipboard(token);
+                                        setShowTutorialHint(false);
+                                    }}
+                                    onDialogueEnd={() => {
+                                        console.log('Dialogue block ended');
+                                    }}
+                                />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
-
-                {/* Dialogue Drawer - slides up from bottom */}
-                <AnimatePresence>
-                    {dialogueVisible && (
-                        <motion.div
-                            className="dialogue-floating draggable"
-                            style={{
-                                left: `${dialoguePosition.left}px`,
-                                bottom: `${dialoguePosition.bottom}px`,
-                                width: `${dialogueDimensions.width}px`,
-                                height: `${dialogueDimensions.height}px`
-                            }}
-                            initial={{ opacity: 0, y: 100 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 100 }}
-                            drag={!isResizing}
-                            dragMomentum={false}
-                            dragElastic={0}
-                            dragConstraints={{
-                                left: 70 - dialoguePosition.left,
-                                right: Math.max(0, window.innerWidth - dialoguePosition.left - dialogueDimensions.width - 70),
-                                top: Math.max(-(window.innerHeight - dialogueDimensions.height - 150), -window.innerHeight + 200),
-                                bottom: 0
-                            }}
-                            whileDrag={{ scale: 1.02, boxShadow: '0 -8px 40px rgba(0, 0, 0, 0.5)' }}
-                            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                        >
-                            {/* Resize handles */}
-                            <div className="resize-handle resize-handle-n" onMouseDown={(e) => startResize('n', e)} />
-                            <div className="resize-handle resize-handle-s" onMouseDown={(e) => startResize('s', e)} />
-                            <div className="resize-handle resize-handle-e" onMouseDown={(e) => startResize('e', e)} />
-                            <div className="resize-handle resize-handle-w" onMouseDown={(e) => startResize('w', e)} />
-                            <div className="resize-handle resize-handle-ne" onMouseDown={(e) => startResize('ne', e)} />
-                            <div className="resize-handle resize-handle-nw" onMouseDown={(e) => startResize('nw', e)} />
-                            <div className="resize-handle resize-handle-se" onMouseDown={(e) => startResize('se', e)} />
-                            <div className="resize-handle resize-handle-sw" onMouseDown={(e) => startResize('sw', e)} />
-
-                            <div className="dialogue-header">
-                                <span className="dialogue-speaker">{currentPatient.name}</span>
-                                <button
-                                    className="dialogue-hide-btn"
-                                    onClick={toggleDialogue}
-                                    title="Hide dialogue (D)"
-                                >
-                                    ▼
-                                </button>
-                            </div>
-                            <FloatingDialogue
-                                patientId={currentPatient.id}
-                                turn={currentTurn}
-                                fallbackDialogue={currentPhase?.dialogue || []}
-                                onKeywordCollected={(token) => {
-                                    actions.collectToken(token);
-                                    actions.addToClipboard(token);
-                                    setShowTutorialHint(false);
-                                }}
-                                onDialogueEnd={() => {
-                                    console.log('Dialogue block ended');
-                                }}
-                            />
-                        </motion.div>
-                    )}
-                </AnimatePresence>
             </div>
 
             {/* Show dialogue button when hidden - fixed position */}

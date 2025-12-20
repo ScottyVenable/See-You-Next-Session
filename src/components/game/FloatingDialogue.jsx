@@ -9,6 +9,12 @@ import { useDialogue, loadPatientDialogue } from '../../sdns/index.js';
 import { useGame } from '../../context/GameContext.jsx';
 import '../../styles/dialogue-box.css';
 
+const contextMenuVariants = {
+    hidden: { opacity: 0, scale: 0.95, y: -4 },
+    visible: { opacity: 1, scale: 1, y: 0 },
+    exit: { opacity: 0, scale: 0.95, y: -4 },
+};
+
 // Helper function to get keyword type
 function getKeywordType(keyword) {
     if (keyword.contradicts) return 'contradiction';
@@ -156,6 +162,7 @@ function FloatingDialogue({
     const [isLoaded, setIsLoaded] = useState(false);
     const [useFallback, setUseFallback] = useState(false);
     const [fallbackIndex, setFallbackIndex] = useState(0);
+    const [contextMenu, setContextMenu] = useState({ show: false, x: 0, y: 0, keyword: null });
 
     const typingRef = useRef(null);
     const loadedRef = useRef(false);
@@ -366,6 +373,46 @@ function FloatingDialogue({
         return parseDialogueText(displayedText, currentContent?.keywords || []);
     }, [displayedText, currentContent?.keywords, sanitizedContentText]);
 
+    // Close context menu on outside click
+    useEffect(() => {
+        const handler = (e) => {
+            if (!e.target.closest('.keyword-context-menu')) {
+                setContextMenu((prev) => prev.show ? { ...prev, show: false } : prev);
+            }
+        };
+        window.addEventListener('click', handler);
+        return () => window.removeEventListener('click', handler);
+    }, []);
+
+    const handleKeywordContextMenu = useCallback((keyword, event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setContextMenu({
+            show: true,
+            x: event.clientX,
+            y: event.clientY,
+            keyword,
+        });
+    }, []);
+
+    const handleContextAction = useCallback((actionId) => {
+        const keyword = contextMenu.keyword;
+        if (!keyword) return;
+
+        if (actionId === 'collect') {
+            if (!collectedKeywords.has(keyword.id)) {
+                handleKeywordClick(keyword, new Event('click'));
+            }
+        }
+        if (actionId === 'clipboard') {
+            actions.addToClipboard({ id: keyword.id, type: 'text', content: keyword.text });
+        }
+        if (actionId === 'note') {
+            actions.addToClipboard({ id: `${keyword.id}-note`, type: 'text', content: `Note: ${keyword.text}` });
+        }
+        setContextMenu({ show: false, x: 0, y: 0, keyword: null });
+    }, [contextMenu.keyword, collectedKeywords, handleKeywordClick, actions]);
+
     // Loading state
     if (!isLoaded) {
         return (
@@ -391,6 +438,8 @@ function FloatingDialogue({
     const isNarrator = currentContent.speaker === 'NARRATOR';
     const isAction = currentContent.isAction;
 
+    const showClosingQuote = !isTyping || displayedText.length >= sanitizedContentText.length;
+
     return (
         <div className="dialogue-content-container" onClick={handleClick}>
             <div className="dialogue-text">
@@ -410,6 +459,7 @@ function FloatingDialogue({
                                         key={keyword.id || idx}
                                         className={`dialogue-keyword ${isCollected ? 'collected' : 'available'} keyword-type-${keywordType}`}
                                         onClick={(e) => handleKeywordClick(keyword, e)}
+                                        onContextMenu={(e) => handleKeywordContextMenu(keyword, e)}
                                         whileHover={!isCollected ? { scale: 1.02 } : undefined}
                                         whileTap={!isCollected ? { scale: 0.98 } : undefined}
                                     >
@@ -424,7 +474,7 @@ function FloatingDialogue({
                                 </span>
                             );
                         })}
-                        <span className="dialogue-quote">"</span>
+                        {showClosingQuote && <span className="dialogue-quote">"</span>}
                     </>
                 )}
                 {isTyping && <span className="typing-cursor">|</span>}
@@ -441,6 +491,59 @@ function FloatingDialogue({
                     >
                         <span>Click to continue</span>
                         <span className="continue-arrow">▶</span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {contextMenu.show && contextMenu.keyword && (
+                    <motion.div
+                        className="keyword-context-menu"
+                        style={{ top: contextMenu.y, left: contextMenu.x }}
+                        variants={contextMenuVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="context-menu-header">
+                            <span className="context-keyword-text">"{contextMenu.keyword.text}"</span>
+                            <span className={`context-keyword-type type-${getKeywordType(contextMenu.keyword)}`}>
+                                {getKeywordType(contextMenu.keyword)}
+                            </span>
+                        </div>
+                        <div className="context-menu-divider" />
+                        <ul className="context-menu-list">
+                            {!collectedKeywords.has(contextMenu.keyword.id) && (
+                                <li>
+                                    <button
+                                        className="context-menu-item"
+                                        onClick={() => handleContextAction('collect')}
+                                    >
+                                        <span className="menu-icon">📝</span>
+                                        <span className="menu-label">Collect token</span>
+                                    </button>
+                                </li>
+                            )}
+                            <li>
+                                <button
+                                    className="context-menu-item"
+                                    onClick={() => handleContextAction('clipboard')}
+                                >
+                                    <span className="menu-icon">📋</span>
+                                    <span className="menu-label">Copy text</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    className="context-menu-item"
+                                    onClick={() => handleContextAction('note')}
+                                >
+                                    <span className="menu-icon">🗒️</span>
+                                    <span className="menu-label">Add note</span>
+                                </button>
+                            </li>
+                        </ul>
                     </motion.div>
                 )}
             </AnimatePresence>

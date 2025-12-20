@@ -38,6 +38,18 @@
             "sourceMapPathOverrides": {
                 "webpack:///src/*": "${webRoot}/*"
             }
+        },
+        {
+            "name": "Tauri Dev",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "npm run tauri dev",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "TAURI_DEVTOOLS": "true"
+            },
+            "problemMatcher": [],
+            "preLaunchTask": "npm: lint"
         }
     ],
     "compounds": [

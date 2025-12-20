@@ -421,6 +421,7 @@ function DialogueBox({
 
     const hasKeywords = totalKeywords > 0;
     const allCollected = collectedCount === totalKeywords && totalKeywords > 0;
+    const showClosingQuote = !isTyping || displayedText.length >= (currentDialogue?.text?.length || 0);
 
     return (
         <motion.div
@@ -491,7 +492,7 @@ function DialogueBox({
                 <span className="dialogue-quote">"</span>
                 {renderDialogueText()}
                 {isTyping && <span className="typing-cursor">|</span>}
-                <span className="dialogue-quote">"</span>
+                {showClosingQuote && <span className="dialogue-quote">"</span>}
             </div>
 
             {/* Keyword Context Menu */}

@@ -38,6 +38,20 @@
                 "panel": "dedicated",
                 "group": "dev"
             }
+        },
+        {
+            "type": "npm",
+            "script": "lint",
+            "label": "npm: lint",
+            "detail": "eslint src --ext js,jsx",
+            "problemMatcher": [
+                "$eslint-compact"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "never",
+                "panel": "shared"
+            }
         }
     ]
 }

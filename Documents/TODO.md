@@ -187,11 +187,17 @@
 - [x] Remove justified text alignment for better readability.
 - [x] Add markdown support for dialogue text (bold, italics, etc.) and make sure keywords with `[brackets]` are not rendered with the brackets.
 - [x] Markdown formatting does not wait until typewriter effect is finished to render properly.
+- [ ] add an animation popup for a keyword when it shows up in dialogue using the animation plugin for react that we have.
+- [ ] add an animation dev menu tab to preview various animations used in the game for testing and tweaking purposes and also adjust animation settings like speed, easing, etc. It should also contain many "examples" of animations used in the game for reference and choosing an example element to preview the animation on.
+- [ ] add a full menu for a dialogue creator tool that allows easy creation of dialogue trees with branching options, conditions, and effects. This would be a major feature but would greatly improve the workflow for creating dialogue content for the game. It should allow exporting to the .session file format used by the game. The player can choose which patient to create dialogue for and then create the dialogue tree visually with nodes and connections. Each node represents a piece of dialogue or an option, and connections represent the flow of conversation. The tool should also allow adding keywords, mood changes, focus costs, and other effects to each dialogue option. Once the dialogue tree is complete, it can be exported to a .session file that can be imported into the game for testing and use. Markdown support should also be included for formatting dialogue text within the tool and should render properly in that editor when typed in real time.
+- [ ] Speaker labels used in the dialogue system should change based on the person currently speaking. For example, when the patient is speaking, it should show "Patient" or their name, and when the therapist (player) is speaking, it should show "You" or "Therapist". This will help clarify who is speaking during dialogue exchanges.
 
 ### Bugs
 - [x] Resizing the dialogue box from the bottom or left side causes it to resize from the opposite side instead of the intended side.
 - [x] The "click to continue" overflows when dialogue box is resized to small widths. It should not be hidden when we switch to the scrolling mode.
-
+- [ ] The end quote mark is showing up before the dialogue text is finished typing. It should only appear after the full text is displayed.
+- [ ] Somewhere the context menu/tooltip for keywords was removed. It needs to be re-added so that right-clicking keywords shows the context menu again based on the type of keyword from the keyword code we worked on.
+- [ ] "no patients found" message in the Dialogue Dev Tools tab. 
 
 ## Debug Optimizations
 - [ ] Rename the Dev Errors tab to "Degug Logs"
