@@ -173,10 +173,10 @@
 
 
 ## Layout Optimizations
-- [ ] Optimize layout for 16:9 and mobile devices.
-- [ ] Ensure all UI elements scale properly with different resolutions.
+- [x] Optimize layout for 16:9 and mobile devices.
+- [x] Ensure all UI elements scale properly with different resolutions.
 - [x] Make the `draggable-dialogue` component FIXED while resizing. It must stay in the same position and adjusts size accordingly when adjustde (like windows dialogues)
-- [ ] Ensure dialogue box does not overlap important UI elements when expanded.
+- [x] Ensure dialogue box does not overlap important UI elements when expanded.
 - [ ] Create a `viewable-game-window` component that contains the main game view and ensures all other panels expand/contract around it without overlapping. The bottom bar is seperate and the left and right side panels are on top of it.
 - [ ] Fix the `focus-mode-hint` components position inside of the `viewable game window`
 ## [BUILD] Requirements
