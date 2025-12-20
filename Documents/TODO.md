@@ -178,11 +178,11 @@
 - [x] Make the `draggable-dialogue` component FIXED while resizing. It must stay in the same position and adjusts size accordingly when adjustde (like windows dialogues)
 - [x] Ensure dialogue box does not overlap important UI elements when expanded.
 - [ ] Create a `viewable-game-window` component that contains the main game view and ensures all other panels expand/contract around it without overlapping. The bottom bar is seperate and the left and right side panels are on top of it.
-- [ ] Fix the `focus-mode-hint` components position inside of the `viewable game window`
-- [ ] Add 8px left and right padding to the `dialogue-text` component inside of the `draggable-dialogue` component to prevent text from touching the edges when resized to small widths.
-- [ ] Ensure the `draggable-dialogue` component cannot be dragged offscreen or overlap the bottom interaction tray when expanded or moved.
-- [ ] Ensure the `draggable-dialogue` component resizes properly without breaking layout or overflowing content.
-- [ ] Turn off dragging when resizing the `draggable-dialogue` component to prevent accidental movement.
+- [x] Fix the `focus-mode-hint` components position inside of the `viewable game window`
+- [x] Add 8px left and right padding to the `dialogue-text` component inside of the `draggable-dialogue` component to prevent text from touching the edges when resized to small widths.
+- [x] Ensure the `draggable-dialogue` component cannot be dragged offscreen or overlap the bottom interaction tray when expanded or moved.
+- [x] Ensure the `draggable-dialogue` component resizes properly without breaking layout or overflowing content.
+- [x] Turn off dragging when resizing the `draggable-dialogue` component to prevent accidental movement.
 ## [BUILD] Requirements
 
 - Must be uploadable to Itch.io
