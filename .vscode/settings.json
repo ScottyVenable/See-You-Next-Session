@@ -1,7 +1,7 @@
 {
     "files.associations": {
-        "*.syns": "syns",
-        "*.session": "sdns"
+        "*.session": "sdns",
+        "*.keys": "sdns"
     },
     // ========================================
     // PERFORMANCE OPTIMIZATIONS
@@ -25,76 +25,8 @@
         "**/.git": true,
         "**/.DS_Store": true,
         "**/Thumbs.db": true
-    },
-    // ========================================
-    // EDITOR CUSTOMIZATIONS
-    // ========================================
-    "editor.tokenColorCustomizations": {
-        "textMateRules": [
-            {
-                "scope": "entity.name.function.syns",
-                "settings": {
-                    "foreground": "#4EC9B0",
-                    "fontStyle": "bold"
-                }
-            },
-            {
-                "scope": "entity.name.type.class.syns",
-                "settings": {
-                    "foreground": "#4FC1FF"
-                }
-            },
-            {
-                "scope": "entity.name.type.interface.syns",
-                "settings": {
-                    "foreground": "#B8D7A3"
-                }
-            },
-            {
-                "scope": "entity.name.type.namespace.syns",
-                "settings": {
-                    "foreground": "#C586C0",
-                    "fontStyle": "italic"
-                }
-            },
-            {
-                "scope": "support.constant.mood.syns",
-                "settings": {
-                    "foreground": "#DCDCAA",
-                    "fontStyle": "italic"
-                }
-            },
-            {
-                "scope": "keyword.control.conditional.syns",
-                "settings": {
-                    "foreground": "#C586C0"
-                }
-            },
-            {
-                "scope": "keyword.other.rapport.syns, support.function.rapport.syns",
-                "settings": {
-                    "foreground": "#FF6B6B"
-                }
-            },
-            {
-                "scope": "entity.name.tag.target.syns",
-                "settings": {
-                    "foreground": "#9CDCFE"
-                }
-            },
-            {
-                "scope": "string.interpolated.keyword.syns",
-                "settings": {
-                    "foreground": "#FFD700",
-                    "fontStyle": "bold"
-                }
-            },
-            {
-                "scope": "punctuation.definition.section.begin.syns, punctuation.definition.section.end.syns",
-                "settings": {
-                    "foreground": "#569CD6"
-                }
-            }
-        ]
     }
+    // NOTE: Syntax highlighting for SDNS files is provided by the
+    // SDNS Language Extension at src/sdns/vscode-extension/
+    // Install with: cd src/sdns/vscode-extension && npm run package
 }
