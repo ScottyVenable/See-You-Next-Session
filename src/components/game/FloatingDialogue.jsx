@@ -503,6 +503,21 @@ function FloatingDialogue({
                     className={`dialogue-keyword ${isCollected ? 'collected' : 'available'} keyword-type-${keywordType}`}
                     onClick={(e) => handleKeywordClick(keyword, e)}
                     onContextMenu={(e) => handleKeywordContextMenu(keyword, e)}
+                    draggable={isCollected}
+                    onDragStart={(e) => {
+                        if (!isCollected) {
+                            e.preventDefault();
+                            return;
+                        }
+                        const token = {
+                            id: keyword.id,
+                            type: 'text',
+                            content: keyword.text,
+                            contradicts: keyword.contradicts,
+                            relatedSymptom: keyword.relatedSymptom || keyword.symptomRef,
+                        };
+                        e.dataTransfer.setData('application/json', JSON.stringify(token));
+                    }}
                     whileHover={!isCollected ? { scale: 1.02 } : undefined}
                     whileTap={!isCollected ? { scale: 0.98 } : undefined}
                 >
@@ -520,10 +535,25 @@ function FloatingDialogue({
                     key={observation.id || `obs-${idx}`}
                     className={`dialogue-observation ${isCollected ? 'collected' : 'available'}`}
                     onClick={(e) => handleObservationClick(observation, e)}
+                    draggable={isCollected}
+                    onDragStart={(e) => {
+                        if (!isCollected) {
+                            e.preventDefault();
+                            return;
+                        }
+                        const token = {
+                            id: observation.id,
+                            type: 'visual',
+                            content: observation.label || observation.text,
+                            symptomRef: observation.symptom || observation.symptomRef,
+                            source: 'observation',
+                        };
+                        e.dataTransfer.setData('application/json', JSON.stringify(token));
+                    }}
                     whileHover={!isCollected ? { scale: 1.02 } : undefined}
                     whileTap={!isCollected ? { scale: 0.98 } : undefined}
                 >
-                    <span className="observation-icon">👁️</span>
+                    <span className="observation-icon">👁</span>
                     {renderInlineMarkdown(segment.content, `obs-${observation.id || idx}`)}
                     {!isCollected && <span className="observation-hint">+</span>}
                 </motion.span>
