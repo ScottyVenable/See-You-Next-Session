@@ -241,6 +241,11 @@
     transform: translateY(-2px);
 }
 
+.symptom-tag.matched {
+    border-color: var(--color-success);
+    box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.2);
+}
+
 /* Drop Zone */
 .drop-zone {
     margin-top: var(--spacing-lg);
@@ -257,6 +262,23 @@
 .drop-zone:hover {
     border-color: var(--color-accent);
     background: rgba(233, 69, 96, 0.05);
+}
+
+.drop-zone.success {
+    border-color: var(--color-success);
+    background: rgba(74, 222, 128, 0.08);
+    color: var(--color-success);
+}
+
+.drop-zone.fail {
+    border-color: var(--color-accent);
+    background: rgba(233, 69, 96, 0.08);
+    color: var(--color-accent);
+}
+
+.drop-feedback {
+    margin-top: var(--spacing-sm);
+    font-weight: 600;
 }
 
 /* No Selection */

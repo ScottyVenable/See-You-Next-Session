@@ -41,9 +41,11 @@ function getKeywordType(keyword) {
     return 'general';
 }
 
-// Remove bracket markers from keyworded text so the UI never shows [keyword]
+// Remove bracket and observation markers so the UI never shows [keyword] or %observation%
 function sanitizeDialogueText(rawText = '') {
-    return rawText.replace(/\[([^\]]+)\]/g, '$1');
+    return rawText
+        .replace(/\[([^\]]+)\](<[^>]+>)?/g, '$1')
+        .replace(/%([^%<>]+)(<[^>]+>)?%/g, '$1');
 }
 
 // Minimal inline markdown renderer (bold, italics, code, newlines)
@@ -97,39 +99,44 @@ function renderInlineMarkdown(text, keyPrefix = 'md') {
     return nodes;
 }
 
-// Parse text with keywords into renderable segments
-function parseDialogueText(text, keywords = []) {
-    if (!keywords || keywords.length === 0) {
+// Parse text with keywords and observations into renderable segments
+function parseDialogueText(text, keywords = [], observations = []) {
+    if ((!keywords || keywords.length === 0) && (!observations || observations.length === 0)) {
         return [{ type: 'text', content: text }];
     }
 
     const segments = [];
     let remaining = text;
 
-    // Sort keywords by their position in text (first occurrence)
-    const sortedKeywords = [...keywords].sort((a, b) => {
-        const posA = text.indexOf(a.text);
-        const posB = text.indexOf(b.text);
+    const tokens = [
+        ...(keywords || []).map((keyword) => ({ kind: 'keyword', item: keyword })),
+        ...(observations || []).map((observation) => ({ kind: 'observation', item: observation })),
+    ];
+
+    const sortedTokens = tokens.sort((a, b) => {
+        const posA = text.indexOf(a.item.text);
+        const posB = text.indexOf(b.item.text);
         return posA - posB;
     });
 
-    for (const keyword of sortedKeywords) {
-        const index = remaining.indexOf(keyword.text);
+    for (const token of sortedTokens) {
+        const needle = token.item.text;
+        const index = remaining.indexOf(needle);
         if (index === -1) continue;
 
-        // Add text before keyword
         if (index > 0) {
             segments.push({ type: 'text', content: remaining.slice(0, index) });
         }
 
-        // Add keyword
-        segments.push({ type: 'keyword', keyword, content: keyword.text });
+        if (token.kind === 'keyword') {
+            segments.push({ type: 'keyword', keyword: token.item, content: needle });
+        } else {
+            segments.push({ type: 'observation', observation: token.item, content: needle });
+        }
 
-        // Continue with remaining text
-        remaining = remaining.slice(index + keyword.text.length);
+        remaining = remaining.slice(index + needle.length);
     }
 
-    // Add any remaining text
     if (remaining) {
         segments.push({ type: 'text', content: remaining });
     }
@@ -159,6 +166,7 @@ function FloatingDialogue({
     const [isTyping, setIsTyping] = useState(false);
     const [typewriterSpeed, setTypewriterSpeed] = useState(30);
     const [collectedKeywords, setCollectedKeywords] = useState(new Set());
+    const [collectedObservations, setCollectedObservations] = useState(new Set());
     const [isLoaded, setIsLoaded] = useState(false);
     const [useFallback, setUseFallback] = useState(false);
     const [fallbackIndex, setFallbackIndex] = useState(0);
@@ -367,11 +375,34 @@ function FloatingDialogue({
         }
     }, [collectedKeywords, onKeywordCollected, actions]);
 
+    const handleObservationClick = useCallback((observation, event) => {
+        event?.stopPropagation?.();
+
+        if (collectedObservations.has(observation.id)) return;
+
+        setCollectedObservations((prev) => new Set([...prev, observation.id]));
+
+        const token = {
+            id: observation.id,
+            type: 'visual',
+            content: observation.label || observation.text,
+            symptomRef: observation.symptom || observation.symptomRef,
+            source: 'observation',
+        };
+
+        actions.collectToken(token);
+        actions.addToClipboard(token);
+    }, [collectedObservations, actions]);
+
     // Parse text segments
     const textSegments = useMemo(() => {
         if (!sanitizedContentText) return [];
-        return parseDialogueText(displayedText, currentContent?.keywords || []);
-    }, [displayedText, currentContent?.keywords, sanitizedContentText]);
+        return parseDialogueText(
+            displayedText,
+            currentContent?.keywords || [],
+            currentContent?.observations || [],
+        );
+    }, [displayedText, currentContent?.keywords, currentContent?.observations, sanitizedContentText]);
 
     // Close context menu on outside click
     useEffect(() => {
@@ -440,41 +471,64 @@ function FloatingDialogue({
 
     const showClosingQuote = !isTyping || displayedText.length >= sanitizedContentText.length;
 
+    const renderSegment = (segment, idx) => {
+        if (segment.type === 'keyword') {
+            const keyword = segment.keyword;
+            const isCollected = collectedKeywords.has(keyword.id);
+            const keywordType = getKeywordType(keyword);
+
+            return (
+                <motion.span
+                    key={keyword.id || `kw-${idx}`}
+                    className={`dialogue-keyword ${isCollected ? 'collected' : 'available'} keyword-type-${keywordType}`}
+                    onClick={(e) => handleKeywordClick(keyword, e)}
+                    onContextMenu={(e) => handleKeywordContextMenu(keyword, e)}
+                    whileHover={!isCollected ? { scale: 1.02 } : undefined}
+                    whileTap={!isCollected ? { scale: 0.98 } : undefined}
+                >
+                    {renderInlineMarkdown(segment.content, `kw-${keyword.id || idx}`)}
+                    {!isCollected && <span className="keyword-hint">+</span>}
+                </motion.span>
+            );
+        }
+
+        if (segment.type === 'observation') {
+            const observation = segment.observation;
+            const isCollected = collectedObservations.has(observation.id);
+            return (
+                <motion.span
+                    key={observation.id || `obs-${idx}`}
+                    className={`dialogue-observation ${isCollected ? 'collected' : 'available'}`}
+                    onClick={(e) => handleObservationClick(observation, e)}
+                    whileHover={!isCollected ? { scale: 1.02 } : undefined}
+                    whileTap={!isCollected ? { scale: 0.98 } : undefined}
+                >
+                    <span className="observation-icon">👁️</span>
+                    {renderInlineMarkdown(segment.content, `obs-${observation.id || idx}`)}
+                    {!isCollected && <span className="observation-hint">+</span>}
+                </motion.span>
+            );
+        }
+
+        return (
+            <span key={`txt-${idx}`}>
+                {renderInlineMarkdown(segment.content, `txt-${idx}`)}
+            </span>
+        );
+    };
+
     return (
         <div className="dialogue-content-container" onClick={handleClick}>
             <div className="dialogue-text">
                 {isNarrator || isAction ? (
-                    <em>{renderInlineMarkdown(displayedText)}</em>
+                    <em className="narration-text">
+                        {textSegments.map((segment, idx) => renderSegment(segment, idx))}
+                    </em>
                 ) : (
                     <>
-                        <span className="dialogue-quote">"</span>
-                        {textSegments.map((segment, idx) => {
-                            if (segment.type === 'keyword') {
-                                const keyword = segment.keyword;
-                                const isCollected = collectedKeywords.has(keyword.id);
-                                const keywordType = getKeywordType(keyword);
-
-                                return (
-                                    <motion.span
-                                        key={keyword.id || idx}
-                                        className={`dialogue-keyword ${isCollected ? 'collected' : 'available'} keyword-type-${keywordType}`}
-                                        onClick={(e) => handleKeywordClick(keyword, e)}
-                                        onContextMenu={(e) => handleKeywordContextMenu(keyword, e)}
-                                        whileHover={!isCollected ? { scale: 1.02 } : undefined}
-                                        whileTap={!isCollected ? { scale: 0.98 } : undefined}
-                                    >
-                                        {renderInlineMarkdown(segment.content, `kw-${keyword.id || idx}`)}
-                                        {!isCollected && <span className="keyword-hint">+</span>}
-                                    </motion.span>
-                                );
-                            }
-                            return (
-                                <span key={idx}>
-                                    {renderInlineMarkdown(segment.content, `txt-${idx}`)}
-                                </span>
-                            );
-                        })}
-                        {showClosingQuote && <span className="dialogue-quote">"</span>}
+                        <span className="dialogue-quote">&ldquo;</span>
+                        {textSegments.map((segment, idx) => renderSegment(segment, idx))}
+                        {showClosingQuote && <span className="dialogue-quote">&rdquo;</span>}
                     </>
                 )}
                 {isTyping && <span className="typing-cursor">|</span>}
@@ -507,7 +561,7 @@ function FloatingDialogue({
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="context-menu-header">
-                            <span className="context-keyword-text">"{contextMenu.keyword.text}"</span>
+                            <span className="context-keyword-text">&ldquo;{contextMenu.keyword.text}&rdquo;</span>
                             <span className={`context-keyword-type type-${getKeywordType(contextMenu.keyword)}`}>
                                 {getKeywordType(contextMenu.keyword)}
                             </span>

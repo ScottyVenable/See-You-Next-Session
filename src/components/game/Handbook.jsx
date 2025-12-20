@@ -5,6 +5,8 @@ import '../../styles/handbook.css';
 
 function Handbook({ onClose, onTokenDrop, embedded = false }) {
     const [selectedDisorder, setSelectedDisorder] = useState(null);
+    const [dropFeedback, setDropFeedback] = useState(null);
+    const [highlightedSymptom, setHighlightedSymptom] = useState(null);
     const disorders = getAllDisorders();
 
     const handleDragOver = (e) => {
@@ -14,11 +16,33 @@ function Handbook({ onClose, onTokenDrop, embedded = false }) {
 
     const handleDrop = (e, disorderId) => {
         e.preventDefault();
+        if (!disorderId) return;
+
         try {
             const token = JSON.parse(e.dataTransfer.getData('application/json'));
-            onTokenDrop(disorderId, token);
+            const disorder = disorders.find((d) => d.id === disorderId);
+            const related = disorder?.relatedSymptoms || [];
+            const symptomId = token.relatedSymptom || token.symptomRef;
+            const symptomMatch = symptomId ? related.includes(symptomId) : false;
+            const symptom = symptomId ? getSymptomById(symptomId) : null;
+
+            setHighlightedSymptom(symptomMatch ? symptomId : null);
+            setDropFeedback({
+                disorderId,
+                symptomId,
+                matches: symptomMatch,
+                message: symptomMatch
+                    ? `Matches symptom: ${symptom?.name || symptomId}`
+                    : 'No direct symptom match found in this disorder.',
+                tokenLabel: token.content || token.id,
+            });
+
+            if (onTokenDrop) {
+                onTokenDrop(disorderId, token, symptomMatch);
+            }
         } catch (err) {
             console.error('Invalid drop data');
+            setDropFeedback({ disorderId, matches: false, message: 'Could not read dropped token.' });
         }
     };
 
@@ -33,7 +57,11 @@ function Handbook({ onClose, onTokenDrop, embedded = false }) {
                             <button
                                 key={disorder.id}
                                 className={`disorder-tab ${selectedDisorder?.id === disorder.id ? 'active' : ''}`}
-                                onClick={() => setSelectedDisorder(disorder)}
+                                onClick={() => {
+                                    setSelectedDisorder(disorder);
+                                    setDropFeedback(null);
+                                    setHighlightedSymptom(null);
+                                }}
                                 onDragOver={handleDragOver}
                                 onDrop={(e) => handleDrop(e, disorder.id)}
                             >
@@ -63,7 +91,10 @@ function Handbook({ onClose, onTokenDrop, embedded = false }) {
                                         {selectedDisorder.relatedSymptoms.map((symptomId) => {
                                             const symptom = getSymptomById(symptomId);
                                             return (
-                                                <span key={symptomId} className="symptom-tag">
+                                                <span
+                                                    key={symptomId}
+                                                    className={`symptom-tag ${highlightedSymptom === symptomId ? 'matched' : ''}`}
+                                                >
                                                     {symptom?.name || symptomId}
                                                 </span>
                                             );
@@ -71,8 +102,15 @@ function Handbook({ onClose, onTokenDrop, embedded = false }) {
                                     </div>
                                 </div>
 
-                                <div className="drop-zone">
+                                <div
+                                    className={`drop-zone ${dropFeedback?.disorderId === selectedDisorder.id ? (dropFeedback?.matches ? 'success' : 'fail') : ''}`}
+                                    onDragOver={handleDragOver}
+                                    onDrop={(e) => handleDrop(e, selectedDisorder.id)}
+                                >
                                     <p>Drag a token here to test if it matches this disorder</p>
+                                    {dropFeedback?.disorderId === selectedDisorder.id && (
+                                        <p className="drop-feedback">{dropFeedback.message}</p>
+                                    )}
                                 </div>
                             </>
                         ) : (
@@ -80,7 +118,7 @@ function Handbook({ onClose, onTokenDrop, embedded = false }) {
                                 <p>Select a disorder from the list to view details.</p>
                                 <p className="hint">
                                     Tip: Drag tokens from your clipboard onto disorder entries
-                                    to check if they're related!
+                                    to check if they&apos;re related!
                                 </p>
                             </div>
                         )}
@@ -106,7 +144,11 @@ function Handbook({ onClose, onTokenDrop, embedded = false }) {
                             <button
                                 key={disorder.id}
                                 className={`disorder-tab ${selectedDisorder?.id === disorder.id ? 'active' : ''}`}
-                                onClick={() => setSelectedDisorder(disorder)}
+                                onClick={() => {
+                                    setSelectedDisorder(disorder);
+                                    setDropFeedback(null);
+                                    setHighlightedSymptom(null);
+                                }}
                                 onDragOver={handleDragOver}
                                 onDrop={(e) => handleDrop(e, disorder.id)}
                             >
@@ -136,7 +178,10 @@ function Handbook({ onClose, onTokenDrop, embedded = false }) {
                                         {selectedDisorder.relatedSymptoms.map((symptomId) => {
                                             const symptom = getSymptomById(symptomId);
                                             return (
-                                                <span key={symptomId} className="symptom-tag">
+                                                <span
+                                                    key={symptomId}
+                                                    className={`symptom-tag ${highlightedSymptom === symptomId ? 'matched' : ''}`}
+                                                >
                                                     {symptom?.name || symptomId}
                                                 </span>
                                             );
@@ -144,8 +189,15 @@ function Handbook({ onClose, onTokenDrop, embedded = false }) {
                                     </div>
                                 </div>
 
-                                <div className="drop-zone">
+                                <div
+                                    className={`drop-zone ${dropFeedback?.disorderId === selectedDisorder.id ? (dropFeedback?.matches ? 'success' : 'fail') : ''}`}
+                                    onDragOver={handleDragOver}
+                                    onDrop={(e) => handleDrop(e, selectedDisorder.id)}
+                                >
                                     <p>Drag a token here to test if it matches this disorder</p>
+                                    {dropFeedback?.disorderId === selectedDisorder.id && (
+                                        <p className="drop-feedback">{dropFeedback.message}</p>
+                                    )}
                                 </div>
                             </>
                         ) : (
@@ -153,7 +205,7 @@ function Handbook({ onClose, onTokenDrop, embedded = false }) {
                                 <p>Select a disorder from the list to view details.</p>
                                 <p className="hint">
                                     Tip: Drag tokens from your clipboard onto disorder entries
-                                    to check if they're related!
+                                    to check if they&apos;re related!
                                 </p>
                             </div>
                         )}

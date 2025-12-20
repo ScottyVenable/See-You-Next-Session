@@ -270,13 +270,13 @@ function DialogueController({
                                 <em>*{currentSpeech.text}*</em>
                             ) : (
                                 <>
-                                    "
+                                    &ldquo;
                                     <RenderTextWithKeywords
                                         text={currentSpeech.text}
                                         keywords={currentSpeech.keywords}
                                         onKeywordClick={handleKeywordClick}
                                     />
-                                    "
+                                    &rdquo;
                                 </>
                             )}
                         </SpeechText>

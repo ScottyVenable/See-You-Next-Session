@@ -120,7 +120,8 @@ class Lexer {
 
     readIdentifier() {
         let value = '';
-        while (/[a-zA-Z0-9_-]/.test(this.peek())) {
+        // Permit dots/colons for response and tag labels
+        while (/[a-zA-Z0-9_.:@-]/.test(this.peek())) {
             value += this.advance();
         }
         return value;
@@ -579,9 +580,12 @@ class Parser {
             isAction = textToken.isAction;
         }
 
-        // Parse keywords from text
+        // Parse annotations from text
         const keywords = this.extractKeywords(text);
-        const cleanText = text.replace(/\[([^\]]+)\](<[^>]+>)?/g, '$1');
+        const observations = this.extractObservations(text);
+        const cleanText = text
+            .replace(/\[([^\]]+)\](<[^>]+>)?/g, '$1')
+            .replace(/%([^%<>]+)(<[^>]+>)?%/g, '$1');
 
         return {
             type: 'speech',
@@ -590,8 +594,26 @@ class Parser {
             text: cleanText,
             rawText: text,
             keywords,
+            observations,
             isAction,
         };
+    }
+
+    parseMetadata(metaRaw) {
+        if (!metaRaw) return {};
+
+        const meta = {};
+        // support ; separated key:value pairs inside <...>
+        metaRaw.split(';').forEach((pair) => {
+            const [k, ...rest] = pair.split(':');
+            if (!k || rest.length === 0) return;
+            const key = k.trim();
+            const value = rest.join(':').trim();
+            if (key) {
+                meta[key] = value;
+            }
+        });
+        return meta;
     }
 
     extractKeywords(text) {
@@ -600,17 +622,17 @@ class Parser {
         let match;
 
         while ((match = regex.exec(text)) !== null) {
+            const baseText = match[1];
             const keyword = {
-                text: match[1],
-                id: this.generateKeywordId(match[1]),
+                text: baseText,
             };
 
-            // Parse metadata like <contradicts:id> or <reveals:id>
             if (match[3]) {
-                const metaParts = match[3].split(':');
-                if (metaParts.length === 2) {
-                    keyword[metaParts[0]] = metaParts[1];
-                }
+                Object.assign(keyword, this.parseMetadata(match[3]));
+            }
+
+            if (!keyword.id) {
+                keyword.id = this.generateKeywordId(baseText);
             }
 
             keywords.push(keyword);
@@ -619,8 +641,37 @@ class Parser {
         return keywords;
     }
 
+    extractObservations(text) {
+        const observations = [];
+        const regex = /%([^%<>]+)(<([^>]+)>)?%/g;
+        let match;
+
+        while ((match = regex.exec(text)) !== null) {
+            const baseText = match[1];
+            const observation = {
+                text: baseText,
+            };
+
+            if (match[3]) {
+                Object.assign(observation, this.parseMetadata(match[3]));
+            }
+
+            if (!observation.id) {
+                observation.id = this.generateObservationId(baseText);
+            }
+
+            observations.push(observation);
+        }
+
+        return observations;
+    }
+
     generateKeywordId(text) {
         return 'kw-' + text.toLowerCase().replace(/[^a-z0-9]+/g, '-').substring(0, 30);
+    }
+
+    generateObservationId(text) {
+        return 'obs-' + text.toLowerCase().replace(/[^a-z0-9]+/g, '-').substring(0, 30);
     }
 
     parseIf() {

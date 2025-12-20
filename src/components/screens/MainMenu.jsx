@@ -117,7 +117,7 @@ function MainMenu() {
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.6 }}
                     >
-                        "A diagnostic narrative game"
+                        &ldquo;A diagnostic narrative game&rdquo;
                     </motion.p>
                     <motion.span
                         className="version-badge"
@@ -198,7 +198,7 @@ function MainMenu() {
                                     checked={dontShowAgain}
                                     onChange={(e) => setDontShowAgain(e.target.checked)}
                                 />
-                                <span>Don't show this again</span>
+                                <span>Don&apos;t show this again</span>
                             </label>
                             <motion.button
                                 className="disclaimer-continue-btn"

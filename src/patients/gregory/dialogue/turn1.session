@@ -40,7 +40,7 @@ NARRATOR
 but his hands shake slightly as he extends one in greeting.*
 
 NARRATOR
-*As he sits, you notice the dark circles under his eyes that no amount of 
+*As he sits, you notice the %dark circles under his eyes<label:Dark circles under eyes>% that no amount of 
 careful grooming can hide. His fingers drum against his leg, nails bitten 
 to the quick despite his otherwise polished appearance.*
 
@@ -80,8 +80,7 @@ PATIENT
 
 === reason_for_visit ===
 NARRATOR
-*Gregory's eyes dart briefly to the window, then back to you. His leg has 
-started bouncing, though he seems unaware of it.*
+*Gregory's %eyes dart briefly<label:Darting eyes>% to the window, then back to you. His %leg starts bouncing<label:Bouncing leg>%, though he seems unaware of it.*
 
 @pause 1
 

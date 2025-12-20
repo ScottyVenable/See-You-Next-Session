@@ -63,6 +63,17 @@ const tooltipVariants = {
     }
 };
 
+const contextMenuVariants = {
+    hidden: { opacity: 0, scale: 0.95, y: -6 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: { type: "spring", stiffness: 400, damping: 30 }
+    },
+    exit: { opacity: 0, scale: 0.95, y: -6 }
+};
+
 // Mood display configurations
 const MOOD_CONFIG = {
     nervous: { emoji: '😰', color: '#ffd93d', label: 'Nervous' },
@@ -184,6 +195,7 @@ function SynsDialogueBox({
     const [isLoaded, setIsLoaded] = useState(false);
     const [useFallback, setUseFallback] = useState(false);
     const [fallbackIndex, setFallbackIndex] = useState(0);
+    const [contextMenu, setContextMenu] = useState({ show: false, x: 0, y: 0, keyword: null });
 
     const dialogueRef = useRef(null);
     const typingRef = useRef(null);
@@ -329,6 +341,37 @@ function SynsDialogueBox({
         }
     }, [collectedKeywords, onKeywordCollected, actions]);
 
+    const handleKeywordContextMenu = useCallback((keyword, event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setContextMenu({
+            show: true,
+            x: event.clientX,
+            y: event.clientY,
+            keyword,
+        });
+    }, []);
+
+    const handleContextAction = useCallback((actionId) => {
+        const keyword = contextMenu.keyword;
+        if (!keyword) return;
+
+        if (actionId === 'collect' && !collectedKeywords.has(keyword.id)) {
+            handleKeywordClick(keyword, { stopPropagation: () => { } });
+        }
+        if (actionId === 'highlight') {
+            onHighlightInHandbook?.(keyword);
+        }
+        if (actionId === 'ask') {
+            onAskAbout?.(keyword);
+        }
+        if (actionId === 'explore') {
+            onExploreBackground?.(keyword);
+        }
+
+        setContextMenu({ show: false, x: 0, y: 0, keyword: null });
+    }, [contextMenu.keyword, collectedKeywords, handleKeywordClick, onHighlightInHandbook, onAskAbout, onExploreBackground]);
+
     // Get mood config
     const moodConfig = currentContent?.mood
         ? MOOD_CONFIG[currentContent.mood] || MOOD_CONFIG.neutral
@@ -339,6 +382,17 @@ function SynsDialogueBox({
         if (!currentContent?.text) return [];
         return parseDialogueText(displayedText, currentContent.keywords || []);
     }, [displayedText, currentContent?.keywords]);
+
+    useEffect(() => {
+        const handler = (e) => {
+            if (!contextMenu.show) return;
+            if (!e.target.closest('.keyword-context-menu')) {
+                setContextMenu({ show: false, x: 0, y: 0, keyword: null });
+            }
+        };
+        window.addEventListener('click', handler);
+        return () => window.removeEventListener('click', handler);
+    }, [contextMenu.show]);
 
     // Render loading state
     if (!isLoaded) {
@@ -372,6 +426,7 @@ function SynsDialogueBox({
     const totalKeywords = currentContent.keywords?.length || 0;
     const collectedCount = currentContent.keywords?.filter(k => collectedKeywords.has(k.id)).length || 0;
     const allCollected = collectedCount === totalKeywords && totalKeywords > 0;
+    const showClosingQuote = !isTyping || displayedText.length >= (currentContent?.text?.length || 0);
 
     return (
         <motion.div
@@ -451,7 +506,7 @@ function SynsDialogueBox({
                     </>
                 ) : (
                     <>
-                        <span className="dialogue-quote">"</span>
+                        <span className="dialogue-quote">&ldquo;</span>
                         {textSegments.map((segment, idx) => {
                             if (segment.type === 'keyword') {
                                 const keyword = segment.keyword;
@@ -463,6 +518,21 @@ function SynsDialogueBox({
                                         key={keyword.id || idx}
                                         className={`dialogue-keyword ${isCollected ? 'collected' : 'available'} keyword-type-${keywordType}`}
                                         onClick={(e) => handleKeywordClick(keyword, e)}
+                                        onContextMenu={(e) => handleKeywordContextMenu(keyword, e)}
+                                        draggable={isCollected}
+                                        onDragStart={(e) => {
+                                            if (!isCollected) return;
+                                            const token = {
+                                                id: keyword.id,
+                                                type: 'text',
+                                                content: keyword.text,
+                                                contradicts: keyword.contradicts,
+                                                reveals: keyword.reveals,
+                                                relatedSymptom: keyword.relatedSymptom,
+                                            };
+                                            e.dataTransfer.setData('application/json', JSON.stringify(token));
+                                            e.dataTransfer.effectAllowed = 'copy';
+                                        }}
                                         variants={keywordPopVariants}
                                         initial="hidden"
                                         animate="visible"
@@ -480,7 +550,7 @@ function SynsDialogueBox({
                             }
                             return <span key={idx}>{segment.content}</span>;
                         })}
-                        <span className="dialogue-quote">"</span>
+                        {showClosingQuote && <span className="dialogue-quote">&rdquo;</span>}
                     </>
                 )}
 
@@ -510,6 +580,71 @@ function SynsDialogueBox({
                     }}
                 />
             )}
+
+            <AnimatePresence>
+                {contextMenu.show && contextMenu.keyword && (
+                    <motion.div
+                        className="keyword-context-menu"
+                        style={{ top: contextMenu.y, left: contextMenu.x }}
+                        variants={contextMenuVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="context-menu-header">
+                            <span className="context-keyword-text">&ldquo;{contextMenu.keyword.text}&rdquo;</span>
+                            <span className={`context-keyword-type type-${getKeywordType(contextMenu.keyword)}`}>
+                                {getKeywordType(contextMenu.keyword)}
+                            </span>
+                        </div>
+                        <div className="context-menu-divider" />
+                        <ul className="context-menu-list">
+                            {!collectedKeywords.has(contextMenu.keyword.id) && (
+                                <li>
+                                    <button
+                                        className="context-menu-item"
+                                        onClick={() => handleContextAction('collect')}
+                                    >
+                                        Create text token
+                                    </button>
+                                </li>
+                            )}
+                            <li>
+                                <button
+                                    className="context-menu-item"
+                                    onClick={() => handleContextAction('ask')}
+                                >
+                                    Ask about this
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    className="context-menu-item"
+                                    onClick={() => handleContextAction('highlight')}
+                                >
+                                    Highlight in handbook
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    className="context-menu-item"
+                                    onClick={() => handleContextAction('explore')}
+                                >
+                                    Explore further
+                                </button>
+                            </li>
+                        </ul>
+                        <div className="context-menu-divider" />
+                        <button
+                            className="context-menu-close"
+                            onClick={() => setContextMenu({ show: false, x: 0, y: 0, keyword: null })}
+                        >
+                            Close
+                        </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </motion.div>
     );
 }

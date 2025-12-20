@@ -489,10 +489,10 @@ function DialogueBox({
             </div>
 
             <div className="dialogue-text">
-                <span className="dialogue-quote">"</span>
+                <span className="dialogue-quote">&ldquo;</span>
                 {renderDialogueText()}
                 {isTyping && <span className="typing-cursor">|</span>}
-                {showClosingQuote && <span className="dialogue-quote">"</span>}
+                {showClosingQuote && <span className="dialogue-quote">&rdquo;</span>}
             </div>
 
             {/* Keyword Context Menu */}
@@ -511,7 +511,7 @@ function DialogueBox({
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="context-menu-header">
-                            <span className="context-keyword-text">"{contextMenu.keyword.text}"</span>
+                            <span className="context-keyword-text">&ldquo;{contextMenu.keyword.text}&rdquo;</span>
                             <span className={`context-keyword-type type-${getKeywordType(contextMenu.keyword)}`}>
                                 {getKeywordType(contextMenu.keyword)}
                             </span>

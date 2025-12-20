@@ -1,3 +1,4 @@
+/* global __GAME_VERSION__ */
 // Game Configuration Constants
 export const GAME_CONFIG = {
     // Version (auto-generated from git branch + commit)

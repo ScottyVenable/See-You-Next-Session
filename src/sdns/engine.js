@@ -241,6 +241,7 @@ export class DialogueEngine {
             mood: node.mood,
             text: node.text,
             keywords: node.keywords,
+            observations: node.observations,
             isAction: node.isAction,
         };
 

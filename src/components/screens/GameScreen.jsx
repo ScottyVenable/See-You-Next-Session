@@ -174,6 +174,19 @@ function GameScreen() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [toggleDialogue, toggleDrawer, closeDrawer]);
 
+    const handleDragStart = useCallback((token) => {
+        setDraggedToken(token);
+        setShowTutorialHint(false);
+    }, []);
+
+    const handleDragEnd = useCallback(() => {
+        setDraggedToken(null);
+    }, []);
+
+    const handleHandbookTokenDrop = useCallback(() => {
+        setShowTutorialHint(false);
+    }, []);
+
     if (!currentPatient) {
         return (
             <div className="loading">
@@ -196,15 +209,6 @@ function GameScreen() {
         }
         return null;
     };
-
-    const handleDragStart = useCallback((token) => {
-        setDraggedToken(token);
-        setShowTutorialHint(false);
-    }, []);
-
-    const handleDragEnd = useCallback(() => {
-        setDraggedToken(null);
-    }, []);
 
     const handleEndTurn = () => {
         if (currentTurn >= gameState.maxTurns) {
@@ -231,11 +235,7 @@ function GameScreen() {
                 return (
                     <Handbook
                         embedded={true}
-                        onTokenDrop={(disorderId) => {
-                            if (draggedToken) {
-                                console.log(`Testing ${draggedToken.id} against ${disorderId}`);
-                            }
-                        }}
+                        onTokenDrop={handleHandbookTokenDrop}
                     />
                 );
             case 'clipboard':
@@ -641,7 +641,7 @@ function GameScreen() {
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.3 }}
                                 >
-                                    "{breakthroughDialogue.dialogue.text.replace(/\[([^\]]+)\]/g, '$1')}"
+                                    &ldquo;{breakthroughDialogue.dialogue.text.replace(/\[([^\]]+)\]/g, '$1')}&rdquo;
                                 </motion.p>
                             </div>
                             <div className="breakthrough-reward">

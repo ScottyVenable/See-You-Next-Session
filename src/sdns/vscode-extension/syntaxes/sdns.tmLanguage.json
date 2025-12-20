@@ -28,6 +28,9 @@
             "include": "#keywords"
         },
         {
+            "include": "#observations"
+        },
+        {
             "include": "#conditions"
         },
         {
@@ -70,8 +73,17 @@
         "speakers": {
             "patterns": [
                 {
+                    "name": "entity.name.tag.speaker.narrator.sdns",
+                    "match": "^\\s*(NARRATOR)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.tag.speaker.narrator.sdns"
+                        }
+                    }
+                },
+                {
                     "name": "entity.name.tag.speaker.sdns",
-                    "match": "^\\s*(PATIENT|THERAPIST|NARRATOR|SYSTEM)\\b",
+                    "match": "^\\s*(PATIENT|THERAPIST|SYSTEM)\\b",
                     "captures": {
                         "1": {
                             "name": "entity.name.tag.speaker.sdns"
@@ -117,7 +129,7 @@
             "patterns": [
                 {
                     "name": "keyword.control.goto.sdns",
-                    "match": "->\\s*([\\w_-]+)",
+                    "match": "->\\s*([@\\w\\.:/-]+)",
                     "captures": {
                         "1": {
                             "name": "entity.name.label.sdns"
@@ -140,6 +152,9 @@
                             "include": "#keyword-metadata"
                         },
                         {
+                            "include": "#observations"
+                        },
+                        {
                             "name": "constant.character.escape.sdns",
                             "match": "\\\\."
                         }
@@ -156,6 +171,9 @@
                     "patterns": [
                         {
                             "include": "#keywords"
+                        },
+                        {
+                            "include": "#observations"
                         }
                     ]
                 }
@@ -165,10 +183,35 @@
             "patterns": [
                 {
                     "name": "markup.bold.keyword.sdns",
-                    "match": "\\[([^\\]]+)\\]",
+                    "begin": "\\[",
+                    "end": "\\]",
+                    "patterns": [
+                        {
+                            "include": "#keyword-metadata"
+                        }
+                    ],
                     "captures": {
-                        "1": {
+                        "0": {
                             "name": "markup.bold.keyword.text.sdns"
+                        }
+                    }
+                }
+            ]
+        },
+        "observations": {
+            "patterns": [
+                {
+                    "name": "markup.italic.observation.sdns",
+                    "begin": "%",
+                    "end": "%",
+                    "patterns": [
+                        {
+                            "include": "#keyword-metadata"
+                        }
+                    ],
+                    "captures": {
+                        "0": {
+                            "name": "markup.italic.observation.text.sdns"
                         }
                     }
                 }
@@ -178,15 +221,26 @@
             "patterns": [
                 {
                     "name": "entity.other.attribute-name.metadata.sdns",
-                    "match": "<([\\w-]+):([\\w-]+)>",
-                    "captures": {
-                        "1": {
-                            "name": "entity.other.attribute-name.type.sdns"
+                    "begin": "<",
+                    "end": ">",
+                    "patterns": [
+                        {
+                            "name": "entity.other.attribute-name.type.sdns",
+                            "match": "[\\w-]+(?=\s*:)"
                         },
-                        "2": {
-                            "name": "string.unquoted.id.sdns"
+                        {
+                            "name": "punctuation.separator.key-value.sdns",
+                            "match": ":"
+                        },
+                        {
+                            "name": "string.unquoted.id.sdns",
+                            "match": "(?<=:)\\s*[^;>]+"
+                        },
+                        {
+                            "name": "punctuation.separator.sequence.sdns",
+                            "match": ";"
                         }
-                    }
+                    ]
                 }
             ]
         },

@@ -137,11 +137,12 @@ function DevConsole() {
                 }
                 break;
 
-            case 'addfocus':
+            case 'addfocus': {
                 const addAmount = parseInt(args[0]) || 10;
                 actions.restoreFocus(addAmount);
                 log(`Added ${addAmount} focus`, 'success');
                 break;
+            }
 
             case 'rapport':
                 if (args[0]) {
@@ -841,14 +842,18 @@ function DialogueTab({ log }) {
                         className="dialogue-select"
                         value={selectedPatient}
                         onChange={(e) => setSelectedPatient(e.target.value)}
+                        disabled={patients.length === 0}
                     >
-                        {patients.length === 0 && <option value="">(no patients found)</option>}
+                        <option value="" disabled>Select a patient</option>
                         {patients.map((p) => {
                             const id = p.id || p;
                             const name = p.name || id;
                             return <option key={id} value={id}>{name}</option>;
                         })}
                     </select>
+                    {patients.length === 0 && (
+                        <p className="dialogue-hint">No session files detected. Add a patient to /src/patients to enable debugging.</p>
+                    )}
                 </div>
                 <div className="dialogue-control-row">
                     <label className="dialogue-label">Turn</label>

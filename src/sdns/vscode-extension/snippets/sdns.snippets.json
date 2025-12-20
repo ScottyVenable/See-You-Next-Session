@@ -90,6 +90,17 @@
         ],
         "description": "Narrator description/action"
     },
+    "Observation Inline": {
+        "prefix": [
+            "obs",
+            "observation",
+            "%"
+        ],
+        "body": [
+            "%${1:observation text}<label:${2:Label};symptom:${3:symptom-id}>%$0"
+        ],
+        "description": "Inline observation marker with optional label and symptom metadata"
+    },
     "Therapist Line": {
         "prefix": [
             "therapist",

@@ -120,12 +120,13 @@ function gameReducer(state, action) {
                 currentScreen: 'report',
             };
 
-        case ACTIONS.ADVANCE_TURN:
+        case ACTIONS.ADVANCE_TURN: {
             const nextTurn = state.currentTurn + 1;
             if (nextTurn > state.maxTurns) {
                 return { ...state, currentScreen: 'report' };
             }
             return { ...state, currentTurn: nextTurn };
+        }
 
         case ACTIONS.TOGGLE_FOCUS_MODE:
             return { ...state, isFocusMode: !state.isFocusMode };

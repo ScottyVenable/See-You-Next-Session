@@ -191,7 +191,7 @@ function Clipboard({
                                 exit={{ opacity: 0, scale: 0.8 }}
                             >
                                 <span className="slot-type-indicator text">💬</span>
-                                <span className="slot-content" title={textSlot.content}>"{textSlot.content}"</span>
+                                <span className="slot-content" title={textSlot.content}>&ldquo;{textSlot.content}&rdquo;</span>
                                 <motion.button
                                     className="clear-slot"
                                     onClick={() => setTextSlot(null)}
@@ -402,7 +402,7 @@ function Clipboard({
                                                         transition={{ delay: index * 0.05 }}
                                                     >
                                                         <span className="token-icon">📝</span>
-                                                        <span className="token-content-expanded">"{token.content}"</span>
+                                                        <span className="token-content-expanded">&ldquo;{token.content}&rdquo;</span>
                                                         {token.contradicts && <span className="token-badge">!</span>}
                                                         <motion.button
                                                             className="remove-token"
@@ -516,7 +516,7 @@ function Clipboard({
                                                 whileHover={{ scale: 1.02, x: 3 }}
                                             >
                                                 <span className="token-icon">📝</span>
-                                                <span className="token-content">"{token.content}"</span>
+                                                <span className="token-content">&ldquo;{token.content}&rdquo;</span>
                                                 <motion.button
                                                     className="remove-token"
                                                     onClick={(e) => {

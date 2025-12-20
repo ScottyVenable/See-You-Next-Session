@@ -16,7 +16,14 @@
             "scope": [
                 "comment",
                 "comment.line",
-                "comment.block"
+                "comment.block"{
+                    "name": "Speakers - Narrator",
+                    "scope": "entity.name.tag.speaker.narrator.sdns",
+                    "settings": {
+                        "foreground": "#a21caf",
+                        "fontStyle": "bold"
+                    }
+                },
             ],
             "settings": {
                 "foreground": "#9ca3af",
@@ -99,6 +106,17 @@
             "settings": {
                 "foreground": "#dc2626",
                 "fontStyle": "bold underline"
+            }
+        },
+        {
+            "name": "Observations",
+            "scope": [
+                "markup.italic.observation.sdns",
+                "markup.italic.observation.text.sdns"
+            ],
+            "settings": {
+                "foreground": "#0f766e",
+                "fontStyle": "italic"
             }
         },
         {

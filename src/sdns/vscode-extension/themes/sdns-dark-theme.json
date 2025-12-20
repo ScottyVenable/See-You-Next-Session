@@ -43,6 +43,14 @@
             }
         },
         {
+            "name": "Speakers - Narrator",
+            "scope": "entity.name.tag.speaker.narrator.sdns",
+            "settings": {
+                "foreground": "#f0abfc",
+                "fontStyle": "bold"
+            }
+        },
+        {
             "name": "Mood Modifiers",
             "scope": "entity.other.attribute-name.mood.sdns",
             "settings": {
@@ -99,6 +107,17 @@
             "settings": {
                 "foreground": "#f87171",
                 "fontStyle": "bold underline"
+            }
+        },
+        {
+            "name": "Observations",
+            "scope": [
+                "markup.italic.observation.sdns",
+                "markup.italic.observation.text.sdns"
+            ],
+            "settings": {
+                "foreground": "#5eead4",
+                "fontStyle": "italic"
             }
         },
         {

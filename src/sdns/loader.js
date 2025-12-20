@@ -58,23 +58,36 @@ export async function loadSessionDialogue(patientId, turnNumber, forceReload = f
 
     try {
         // Use Vite's glob import to find all .session files
-        const sessionFiles = import.meta.glob('/src/patients/*/dialogue/*.session', {
-            query: '?raw',
-            import: 'default',
-        });
+        const sessionFiles = {
+            ...import.meta.glob('/src/patients/**/dialogue/*.session', { query: '?raw', import: 'default' }),
+            ...import.meta.glob('../patients/**/dialogue/*.session', { query: '?raw', import: 'default' }),
+            ...import.meta.glob('./patients/**/dialogue/*.session', { query: '?raw', import: 'default' }),
+        };
 
         const filePath = `/src/patients/${patientId}/dialogue/turn${turnNumber}.session`;
 
-        if (sessionFiles[filePath]) {
-            const content = await sessionFiles[filePath]();
+        // Direct hit first
+        let loaderPath = filePath;
+        if (!sessionFiles[loaderPath]) {
+            // Fallback: search for any path that contains patientId/turnX (helps with nested folders/aliases)
+            loaderPath = Object.keys(sessionFiles).find((p) =>
+                p.endsWith(`/patients/${patientId}/dialogue/turn${turnNumber}.session`) ||
+                p.includes(`/patients/${patientId}/dialogue/turn${turnNumber}.session`)
+            );
+        }
+
+        if (loaderPath && sessionFiles[loaderPath]) {
+            const content = await sessionFiles[loaderPath]();
             sessionCache.set(cacheKey, content);
-            console.log(`[SDNS Loader] Loaded: ${filePath} (${content.length} chars)`);
+            console.log(`[SDNS Loader] Loaded: ${loaderPath} (${content.length} chars)`);
             return content;
         }
 
-        console.warn(`[SDNS Loader] File not found: ${filePath}`);
+        // If still missing, log available keys to aid debugging
+        const available = Object.keys(sessionFiles);
+        console.warn(`[SDNS Loader] File not found: ${filePath}. Available:`, available);
         const eh = await getErrorHandler();
-        eh.sdns(`Session file not found: ${filePath}`, 'warn', { patientId, turnNumber });
+        eh.sdns(`Session file not found: ${filePath}`, 'warn', { patientId, turnNumber, available });
         return null;
     } catch (err) {
         console.error(`[SDNS Loader] Failed to load turn ${turnNumber} for ${patientId}:`, err);
@@ -95,7 +108,11 @@ export async function loadSessionDialogue(patientId, turnNumber, forceReload = f
  */
 export async function loadDialogueConfig(patientId) {
     try {
-        const configFiles = import.meta.glob('/src/patients/*/dialogue/config.json');
+        const configFiles = {
+            ...import.meta.glob('/src/patients/**/dialogue/config.json'),
+            ...import.meta.glob('../patients/**/dialogue/config.json'),
+            ...import.meta.glob('./patients/**/dialogue/config.json'),
+        };
         const configPath = `/src/patients/${patientId}/dialogue/config.json`;
 
         if (configFiles[configPath]) {
@@ -126,7 +143,11 @@ export async function loadDialogueConfig(patientId) {
  */
 export async function loadPatientConfig(patientId) {
     try {
-        const patientFiles = import.meta.glob('/src/patients/*/patient_config.json');
+        const patientFiles = {
+            ...import.meta.glob('/src/patients/**/patient_config.json'),
+            ...import.meta.glob('../patients/**/patient_config.json'),
+            ...import.meta.glob('./patients/**/patient_config.json'),
+        };
         const configPath = `/src/patients/${patientId}/patient_config.json`;
 
         if (patientFiles[configPath]) {
@@ -156,12 +177,16 @@ export async function loadPatientConfig(patientId) {
  */
 export async function getPatientList() {
     try {
-        const patientConfigs = import.meta.glob('/src/patients/*/patient_config.json');
+        const patientConfigs = {
+            ...import.meta.glob('/src/patients/**/patient_config.json'),
+            ...import.meta.glob('../patients/**/patient_config.json'),
+            ...import.meta.glob('./patients/**/patient_config.json'),
+        };
         const patients = [];
 
         for (const path in patientConfigs) {
             // Extract patient ID from path: /src/patients/gregory/patient_config.json -> gregory
-            const match = path.match(/\/src\/patients\/([^/]+)\/patient_config\.json/);
+            const match = path.match(/\/src\/patients\/(.+)\/patient_config\.json$/);
             if (match) {
                 const patientId = match[1];
                 const config = await patientConfigs[path]();

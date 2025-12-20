@@ -39,13 +39,17 @@ class PatientLoader {
 
         try {
             // Use Vite's glob import to find all patient configs
-            const patientConfigs = import.meta.glob('/src/patients/*/patient_config.json');
+            const patientConfigs = {
+                ...import.meta.glob('/src/patients/**/patient_config.json'),
+                ...import.meta.glob('../patients/**/patient_config.json'),
+                ...import.meta.glob('./patients/**/patient_config.json'),
+            };
 
             const patients = [];
 
             for (const path in patientConfigs) {
                 // Extract patient ID from path: /src/patients/gregory/patient_config.json -> gregory
-                const match = path.match(/\/src\/patients\/([^/]+)\/patient_config\.json/);
+                const match = path.match(/\/src\/patients\/(.+)\/patient_config\.json$/);
                 if (match) {
                     const patientId = match[1];
                     const config = await patientConfigs[path]();
@@ -123,19 +127,29 @@ class PatientLoader {
     async loadTurnDialogue(patientId, turnNumber) {
         try {
             // Canonical location: /src/patients/{patientId}/dialogue/
-            const sessionFiles = import.meta.glob('/src/patients/*/dialogue/*.session', {
-                query: '?raw',
-                import: 'default',
-            });
+            const sessionFiles = {
+                ...import.meta.glob('/src/patients/**/dialogue/*.session', { query: '?raw', import: 'default' }),
+                ...import.meta.glob('../patients/**/dialogue/*.session', { query: '?raw', import: 'default' }),
+                ...import.meta.glob('./patients/**/dialogue/*.session', { query: '?raw', import: 'default' }),
+            };
             const filePath = `/src/patients/${patientId}/dialogue/turn${turnNumber}.session`;
 
-            if (sessionFiles[filePath]) {
-                const content = await sessionFiles[filePath]();
-                console.log(`[PatientLoader] Loaded ${patientId}/dialogue/turn${turnNumber}.session (${content.length} chars)`);
+            let loaderPath = filePath;
+            if (!sessionFiles[loaderPath]) {
+                loaderPath = Object.keys(sessionFiles).find((p) =>
+                    p.endsWith(`/patients/${patientId}/dialogue/turn${turnNumber}.session`) ||
+                    p.includes(`/patients/${patientId}/dialogue/turn${turnNumber}.session`)
+                );
+            }
+
+            if (loaderPath && sessionFiles[loaderPath]) {
+                const content = await sessionFiles[loaderPath]();
+                console.log(`[PatientLoader] Loaded ${loaderPath} (${content.length} chars)`);
                 return content;
             }
 
-            console.warn(`Turn ${turnNumber} dialogue not found for ${patientId} at: ${filePath}`);
+            const available = Object.keys(sessionFiles);
+            console.warn(`Turn ${turnNumber} dialogue not found for ${patientId} at: ${filePath}. Available:`, available);
             return null;
         } catch (err) {
             console.error(`Failed to load turn ${turnNumber} for ${patientId}:`, err);
@@ -260,9 +274,10 @@ class PatientLoader {
             case 'knowledge_points':
                 return (gameProgress.knowledgePoints || 0) >= requirements.amount;
 
-            case 'rank':
+            case 'rank': {
                 const score = gameProgress.patientScores?.[requirements.patientId];
                 return score && this.rankMeetsRequirement(score.rank, requirements.minRank);
+            }
 
             default:
                 return true;
