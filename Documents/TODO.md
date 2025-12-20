@@ -175,7 +175,8 @@
 ## Layout Optimizations
 - [ ] Optimize layout for 16:9 and mobile devices.
 - [ ] Ensure all UI elements scale properly with different resolutions.
-- [ ] Make the `draggable-
+- [x] Make the `draggable-dialogue` component FIXED while resizing. It must stay in the same position and adjusts size accordingly when adjustde (like windows dialogues)
+- [ ] Ensure dialogue box does not overlap important UI elements when expanded.
 
 ## [BUILD] Requirements
 
