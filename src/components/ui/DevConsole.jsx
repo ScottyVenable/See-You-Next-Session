@@ -13,6 +13,7 @@ const TABS = {
     ui: { id: 'ui', label: 'UI', icon: 'UI' },
     state: { id: 'state', label: 'State', icon: '{.}' },
     cheats: { id: 'cheats', label: 'Cheats', icon: '*' },
+    dialogue: { id: 'dialogue', label: 'Dialogue', icon: '"' },
 };
 
 function DevConsole() {
@@ -65,6 +66,8 @@ function DevConsole() {
         setOutput(prev => [...prev, { message, type, timestamp: new Date().toLocaleTimeString() }]);
     }, []);
 
+    const getDialogueDebug = () => window.__synsDialogueDebug;
+
     const executeCommand = useCallback((cmd) => {
         const parts = cmd.trim().toLowerCase().split(' ');
         const command = parts[0];
@@ -93,6 +96,8 @@ function DevConsole() {
                 log('reveal [id]       - Reveal a symptom');
                 log('layout [id]       - Switch UI layout');
                 log('layouts           - List available layouts');
+                log('dialogue [...]    - Dialogue debug (state, skip, speed)');
+                log('typewriter [ms]   - Set or show typewriter speed');
                 log('todo              - Open TODO manager');
                 log('errors            - Show error log');
                 log('clear             - Clear console output');
@@ -229,6 +234,84 @@ function DevConsole() {
                 window.open('/tools/todo-manager.html', '_blank', 'width=900,height=700');
                 break;
 
+            case 'typewriter': {
+                const api = getDialogueDebug();
+                if (!api?.setTypewriterSpeed) {
+                    log('Dialogue debug API unavailable. Open a dialogue first.', 'error');
+                    break;
+                }
+
+                if (!args[0]) {
+                    const current = api.getTypewriterSpeed?.();
+                    if (current) {
+                        log(`Typewriter speed: ${current} ms/char`, 'info');
+                    } else {
+                        log('Typewriter speed unavailable', 'error');
+                    }
+                    break;
+                }
+
+                const speed = parseInt(args[0], 10);
+                if (!Number.isFinite(speed) || speed <= 0) {
+                    log('Usage: typewriter <ms-per-char>', 'error');
+                    break;
+                }
+
+                const ok = api.setTypewriterSpeed(speed);
+                if (ok) log(`Typewriter speed set to ${speed} ms/char`, 'success');
+                else log('Failed to set typewriter speed', 'error');
+                break;
+            }
+
+            case 'dialogue': {
+                const api = getDialogueDebug();
+                const sub = args[0];
+                if (!api) {
+                    log('Dialogue debug API unavailable. Open a dialogue first.', 'error');
+                    break;
+                }
+
+                if (!sub || sub === 'help') {
+                    log('dialogue commands:', 'header');
+                    log('dialogue state       - show dialogue debug state');
+                    log('dialogue skip        - finish current typewriter');
+                    log('dialogue speed <ms>  - set ms per char');
+                    break;
+                }
+
+                if (sub === 'state') {
+                    const state = api.logState?.();
+                    log(`Typing: ${state?.isTyping ? 'yes' : 'no'}`);
+                    log(`Speed: ${api.getTypewriterSpeed?.() || 'n/a'} ms/char`);
+                    log(`Speaker: ${state?.speaker || 'n/a'}`);
+                    log(`Keywords: ${state?.keywords ?? 0}`);
+                    log(`Fallback: ${state?.fallback ? 'yes' : 'no'} (index ${state?.fallbackIndex ?? '-'})`);
+                    log(`Displayed: "${state?.displayedText || ''}"`);
+                    break;
+                }
+
+                if (sub === 'skip') {
+                    api.skipTypewriter?.();
+                    log('Skipped typing', 'success');
+                    break;
+                }
+
+                if (sub === 'speed') {
+                    const speedArg = parseInt(args[1], 10);
+                    if (!Number.isFinite(speedArg) || speedArg <= 0) {
+                        log('Usage: dialogue speed <ms>', 'error');
+                        break;
+                    }
+                    const ok = api.setTypewriterSpeed?.(speedArg);
+                    if (ok) log(`Dialogue speed set to ${speedArg} ms/char`, 'success');
+                    else log('Failed to set dialogue speed', 'error');
+                    break;
+                }
+
+                log(`Unknown dialogue subcommand: ${sub}`, 'error');
+                break;
+            }
+
             case 'errors':
                 log('=== Error Log ===', 'header');
                 import('../../utils/ErrorHandler.js').then(({ errorHandler }) => {
@@ -339,6 +422,7 @@ function DevConsole() {
                         {activeTab === 'ui' && <UITab />}
                         {activeTab === 'state' && <StateTab />}
                         {activeTab === 'cheats' && <CheatsTab log={log} />}
+                        {activeTab === 'dialogue' && <DialogueTab log={log} />}
                     </div>
                 </motion.div>
             )}
@@ -622,6 +706,94 @@ function CheatsTab({ log }) {
                 <p>Focus: <strong>{gameState.focus}/{gameState.maxFocus}</strong></p>
                 <p>Rapport: <strong>{gameState.rapport}/{gameState.maxRapport}</strong></p>
                 <p>Turn: <strong>{gameState.currentTurn}/{gameState.maxTurns}</strong></p>
+            </div>
+        </div>
+    );
+}
+
+// Dialogue Tab - live dialogue debugger
+function DialogueTab({ log }) {
+    const [debugState, setDebugState] = useState(null);
+    const [speedInput, setSpeedInput] = useState('');
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const api = window.__synsDialogueDebug;
+            if (api?.logState) {
+                setDebugState(api.logState());
+            }
+        }, 500);
+        return () => clearInterval(interval);
+    }, []);
+
+    const applySpeed = () => {
+        const api = window.__synsDialogueDebug;
+        const speed = parseInt(speedInput, 10);
+        if (!api?.setTypewriterSpeed) {
+            log('Dialogue debug API unavailable. Open a dialogue first.', 'error');
+            return;
+        }
+        if (!Number.isFinite(speed) || speed <= 0) {
+            log('Enter a positive number for ms/char', 'error');
+            return;
+        }
+        const ok = api.setTypewriterSpeed(speed);
+        if (ok) log(`Typewriter speed set to ${speed} ms/char`, 'success');
+        else log('Failed to set typewriter speed', 'error');
+    };
+
+    const skipTyping = () => {
+        const api = window.__synsDialogueDebug;
+        if (!api?.skipTypewriter) {
+            log('Dialogue debug API unavailable. Open a dialogue first.', 'error');
+            return;
+        }
+        api.skipTypewriter();
+        log('Skipped typing', 'success');
+    };
+
+    const state = debugState || {};
+    const speed = window.__synsDialogueDebug?.getTypewriterSpeed?.();
+
+    return (
+        <div className="dialogue-tab-content">
+            <div className="dialogue-section">
+                <h3 className="dialogue-section-title">Controls</h3>
+                <div className="dialogue-control-row">
+                    <label className="dialogue-label">Typewriter speed (ms/char)</label>
+                    <div className="dialogue-control-inline">
+                        <input
+                            type="number"
+                            min="1"
+                            placeholder={speed ? `${speed}` : '30'}
+                            value={speedInput}
+                            onChange={(e) => setSpeedInput(e.target.value)}
+                        />
+                        <button onClick={applySpeed}>Apply</button>
+                    </div>
+                </div>
+                <div className="dialogue-control-row">
+                    <button onClick={skipTyping}>Skip current typing</button>
+                </div>
+            </div>
+
+            <div className="dialogue-section">
+                <h3 className="dialogue-section-title">Live State</h3>
+                <div className="dialogue-state-grid">
+                    <div><span className="dialogue-label">Typing:</span> {state.isTyping ? 'Yes' : 'No'}</div>
+                    <div><span className="dialogue-label">Speed:</span> {speed ? `${speed} ms/char` : 'n/a'}</div>
+                    <div><span className="dialogue-label">Speaker:</span> {state.speaker || 'n/a'}</div>
+                    <div><span className="dialogue-label">Keywords:</span> {state.keywords ?? 0}</div>
+                    <div><span className="dialogue-label">Fallback:</span> {state.fallback ? 'Yes' : 'No'} (idx {state.fallbackIndex ?? '-'})</div>
+                </div>
+                <div className="dialogue-mono-box">
+                    <div className="dialogue-label">Displayed</div>
+                    <pre>{state.displayedText || '—'}</pre>
+                </div>
+                <div className="dialogue-mono-box">
+                    <div className="dialogue-label">Full</div>
+                    <pre>{state.fullText || '—'}</pre>
+                </div>
             </div>
         </div>
     );

@@ -513,3 +513,107 @@
 .cheats-info strong {
     color: #00ff88;
 }
+
+/* ============================================
+   DIALOGUE TAB STYLES
+   ============================================ */
+
+.dialogue-tab-content {
+    flex: 1;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    align-content: start;
+    overflow-y: auto;
+}
+
+.dialogue-section {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.dialogue-section-title {
+    color: #00ff88;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.dialogue-control-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.dialogue-control-inline {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.dialogue-control-inline input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-family: inherit;
+}
+
+.dialogue-control-inline button,
+.dialogue-control-row button {
+    background: rgba(0, 255, 136, 0.12);
+    border: 1px solid rgba(0, 255, 136, 0.4);
+    color: #00ff88;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.dialogue-control-inline button:hover,
+.dialogue-control-row button:hover {
+    background: rgba(0, 255, 136, 0.2);
+    border-color: #00ff88;
+}
+
+.dialogue-label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    margin-right: 4px;
+}
+
+.dialogue-state-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 12px;
+}
+
+.dialogue-mono-box {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 8px;
+    color: #cde7ff;
+    font-family: 'Fira Code', 'Consolas', monospace;
+}
+
+.dialogue-mono-box pre {
+    margin: 4px 0 0 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+}

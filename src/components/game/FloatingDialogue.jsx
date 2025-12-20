@@ -151,6 +151,7 @@ function FloatingDialogue({
     // Local state
     const [displayedText, setDisplayedText] = useState('');
     const [isTyping, setIsTyping] = useState(false);
+    const [typewriterSpeed, setTypewriterSpeed] = useState(30);
     const [collectedKeywords, setCollectedKeywords] = useState(new Set());
     const [isLoaded, setIsLoaded] = useState(false);
     const [useFallback, setUseFallback] = useState(false);
@@ -206,6 +207,45 @@ function FloatingDialogue({
         [currentContent?.text]
     );
 
+    const finishTyping = useCallback(() => {
+        if (typingRef.current) clearInterval(typingRef.current);
+        setDisplayedText(sanitizedContentText || '');
+        setIsTyping(false);
+    }, [sanitizedContentText]);
+
+    // Expose debug controls for dev console
+    useEffect(() => {
+        const api = window.__synsDialogueDebug || {};
+        api.setTypewriterSpeed = (ms) => {
+            const parsed = Number(ms);
+            if (!Number.isFinite(parsed) || parsed <= 0) return false;
+            setTypewriterSpeed(parsed);
+            return true;
+        };
+        api.getTypewriterSpeed = () => typewriterSpeed;
+        api.skipTypewriter = () => finishTyping();
+        api.logState = () => ({
+            isTyping,
+            displayedText,
+            fullText: sanitizedContentText,
+            hasCurrentContent: Boolean(currentContent),
+            speaker: currentContent?.speaker,
+            keywords: currentContent?.keywords?.length || 0,
+            fallback: useFallback,
+            fallbackIndex,
+        });
+        window.__synsDialogueDebug = api;
+        return () => {
+            // Do not delete outright to avoid breaking other listeners; just remove our setters
+            if (window.__synsDialogueDebug) {
+                delete window.__synsDialogueDebug.setTypewriterSpeed;
+                delete window.__synsDialogueDebug.getTypewriterSpeed;
+                delete window.__synsDialogueDebug.skipTypewriter;
+                delete window.__synsDialogueDebug.logState;
+            }
+        };
+    }, [typewriterSpeed, finishTyping, isTyping, displayedText, sanitizedContentText, currentContent, useFallback, fallbackIndex]);
+
     // Typewriter effect
     useEffect(() => {
         if (!sanitizedContentText) {
@@ -218,7 +258,7 @@ function FloatingDialogue({
         setIsTyping(true);
 
         let index = 0;
-        const speed = 30;
+        const speed = typewriterSpeed;
 
         typingRef.current = setInterval(() => {
             if (index < fullText.length) {
@@ -233,14 +273,12 @@ function FloatingDialogue({
         return () => {
             if (typingRef.current) clearInterval(typingRef.current);
         };
-    }, [sanitizedContentText, currentContent?.id]);
+    }, [sanitizedContentText, currentContent?.id, typewriterSpeed]);
 
     // Handle click to advance dialogue
     const handleClick = useCallback(() => {
         if (isTyping) {
-            if (typingRef.current) clearInterval(typingRef.current);
-            setDisplayedText(sanitizedContentText || '');
-            setIsTyping(false);
+            finishTyping();
             return;
         }
 
@@ -258,7 +296,7 @@ function FloatingDialogue({
                 }
             }
         }
-    }, [isTyping, useFallback, fallbackIndex, fallbackDialogue.length, advance, currentContent, onDialogueEnd, sanitizedContentText]);
+    }, [isTyping, useFallback, fallbackIndex, fallbackDialogue.length, advance, currentContent, onDialogueEnd, sanitizedContentText, finishTyping]);
 
     // Handle keyword collection
     const handleKeywordClick = useCallback((keyword, event) => {
