@@ -190,7 +190,7 @@
 
 ### Bugs
 - [x] Resizing the dialogue box from the bottom or left side causes it to resize from the opposite side instead of the intended side.
-- [ ] The "click to continue" overflows when dialogue box is resized to small widths. It should not be hidden when we switch to the scrolling mode.
+- [x] The "click to continue" overflows when dialogue box is resized to small widths. It should not be hidden when we switch to the scrolling mode.
 
 ## [BUILD] Requirements
 
