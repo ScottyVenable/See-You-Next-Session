@@ -935,3 +935,153 @@
     color: var(--color-text-muted);
     font-size: 0.9rem;
 }
+
+/* ============================================
+   RESPONSIVE DESIGN & LAYOUT OPTIMIZATIONS
+   ============================================ */
+
+/* Viewport height fix for mobile browsers */
+.game-screen {
+    height: 100vh;
+    height: 100dvh;
+    /* Dynamic viewport height for mobile */
+}
+
+/* Desktop - 16:9 optimal layout */
+@media (min-width: 1280px) and (min-aspect-ratio: 16/9) {
+    .dialogue-floating {
+        max-width: 800px;
+    }
+
+    .drawer {
+        max-width: 450px;
+    }
+}
+
+/* Tablet landscape */
+@media (max-width: 1024px) and (orientation: landscape) {
+    .sidebar {
+        width: 48px;
+    }
+
+    .sidebar-btn-label {
+        display: none;
+    }
+
+    .interaction-tray {
+        padding: 8px 55px;
+        height: 60px;
+    }
+
+    .drawer {
+        max-width: 320px;
+    }
+}
+
+/* Tablet portrait */
+@media (max-width: 768px) and (orientation: portrait) {
+    .sidebar {
+        bottom: 60px;
+    }
+
+    .interaction-tray {
+        height: 60px;
+        padding: 6px 50px;
+        flex-wrap: wrap;
+    }
+
+    .tray-meters {
+        flex-direction: row;
+        gap: 8px;
+    }
+
+    .drawer {
+        width: 100% !important;
+        max-width: none;
+    }
+
+    .dialogue-floating {
+        max-width: 90vw;
+    }
+}
+
+/* Mobile devices */
+@media (max-width: 640px) {
+    .sidebar {
+        width: 40px;
+        padding: 6px 2px;
+    }
+
+    .sidebar-btn {
+        padding: 8px 4px;
+    }
+
+    .sidebar-btn-label {
+        display: none;
+    }
+
+    .interaction-tray {
+        padding: 6px 45px;
+        height: 55px;
+        gap: 8px;
+    }
+
+    .tray-center {
+        display: none;
+        /* Hide dialogue selector on very small screens */
+    }
+
+    .drawer {
+        width: 100vw !important;
+    }
+
+    .dialogue-floating {
+        max-width: calc(100vw - 90px);
+        max-height: 50vh;
+        font-size: 0.85rem;
+    }
+
+    .dialogue-text {
+        font-size: 11px;
+    }
+}
+
+/* Prevent dialogue overlap with UI elements */
+.dialogue-floating {
+    /* Ensure dialogue doesn't overlap sidebars */
+    max-width: calc(100vw - 200px);
+}
+
+/* Prevent dialogue from extending below interaction tray */
+@media (min-height: 600px) {
+    .dialogue-floating {
+        max-height: calc(100vh - 150px);
+    }
+}
+
+@media (max-height: 599px) {
+    .dialogue-floating {
+        max-height: calc(100vh - 100px);
+    }
+}
+
+/* Prevent horizontal scroll */
+body,
+.game-screen {
+    overflow-x: hidden;
+}
+
+/* Scale UI elements for very large screens */
+@media (min-width: 1920px) {
+    .dialogue-floating {
+        font-size: 1.1rem;
+    }
+
+    .dialogue-text {
+        font-size: 13px;
+    }
+
+    .interaction-tray {
+        height: 80px;
+    }
+}

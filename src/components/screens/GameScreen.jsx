@@ -89,8 +89,13 @@ function GameScreen() {
                 newHeight = startPosRef.current.height - deltaY;
             }
 
-            newWidth = Math.max(300, Math.min(800, newWidth));
-            newHeight = Math.max(120, Math.min(600, newHeight));
+            // Constrain width to viewport minus sidebar margins (100px each side)
+            const maxWidth = window.innerWidth - 200;
+            newWidth = Math.max(300, Math.min(maxWidth, newWidth));
+
+            // Constrain height to viewport minus interaction tray (70px) and top margin (80px)
+            const maxHeight = window.innerHeight - 150;
+            newHeight = Math.max(120, Math.min(maxHeight, newHeight));
 
             setDialogueDimensions({ width: newWidth, height: newHeight });
         };
@@ -374,7 +379,7 @@ function GameScreen() {
                     {dialogueVisible && (
                         <motion.div
                             className="dialogue-floating draggable"
-                            style={{ 
+                            style={{
                                 left: dialoguePosition.left,
                                 width: `${dialogueDimensions.width}px`,
                                 height: `${dialogueDimensions.height}px`
@@ -386,9 +391,9 @@ function GameScreen() {
                             dragMomentum={false}
                             dragElastic={0}
                             dragConstraints={{
-                                left: 100 - dialoguePosition.left,
-                                right: window.innerWidth - dialoguePosition.left - dialogueDimensions.width - 100,
-                                top: -400,
+                                left: 70 - dialoguePosition.left,
+                                right: window.innerWidth - dialoguePosition.left - dialogueDimensions.width - 70,
+                                top: Math.min(-300, -(window.innerHeight - dialogueDimensions.height - 150)),
                                 bottom: 0
                             }}
                             whileDrag={{ scale: 1.02, boxShadow: '0 -8px 40px rgba(0, 0, 0, 0.5)' }}
@@ -403,7 +408,7 @@ function GameScreen() {
                             <div className="resize-handle resize-handle-nw" onMouseDown={(e) => startResize('nw', e)} />
                             <div className="resize-handle resize-handle-se" onMouseDown={(e) => startResize('se', e)} />
                             <div className="resize-handle resize-handle-sw" onMouseDown={(e) => startResize('sw', e)} />
-                            
+
                             <div className="dialogue-header">
                                 <span className="dialogue-speaker">{currentPatient.name}</span>
                                 <button
