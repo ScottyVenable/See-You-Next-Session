@@ -36,13 +36,13 @@ six feet—with striking orange-red hair that seems at odds with his otherwise
 meticulously controlled appearance.*
 
 NARRATOR
-*He wears all black, %every crease perfect<label:Clothes carefully maintained>%, 
-but his %hands shake slightly<label:Shaking hands>% as he extends one in greeting.*
+*He wears all black, %every crease perfect%<observation:meticulous_appearance>, 
+but his %hands shake slightly%<symptom:trembling_hands> as he extends one in greeting.*
 
 NARRATOR
-*As he sits, you notice the %dark circles under his eyes<label:Dark circles under eyes>% that no amount of 
-careful grooming can hide. His fingers drum against his leg, nails bitten 
-to the quick despite his otherwise polished appearance.*
+*As he sits, you notice the %dark circles under his eyes%<symptom:bags_under_eyes> that no amount of 
+careful grooming can hide. His %fingers drum against his leg%<symptom:fidgeting>, nails %bitten 
+to the quick%<symptom:nail_biting> despite his otherwise polished appearance.*
 
 PATIENT (guarded)
 "Thank you for... for seeing me..."
@@ -61,12 +61,12 @@ PATIENT
 
 @if rapport >= 30
     PATIENT (nervous)
-    "I've been meaning to come for a while now. [Months, actually]. But I 
+    "I've been meaning to come for a while now. [Months, actually]<keyword:gregory.duration.months_delay>. But I 
     kept thinking maybe I was overreacting."
     
     PATIENT (hesitant)
     "Do people often feel like they're overreacting? I don't want to waste 
-    your time if this is [nothing serious]."
+    your time if this is [nothing serious]<keyword:gregory.minimizing.nothing_serious>."
 @else
     PATIENT (guarded)
     "I wasn't sure if I should even make an appointment. My issues probably 
@@ -80,7 +80,7 @@ PATIENT
 
 === reason_for_visit ===
 NARRATOR
-*Gregory's %eyes dart briefly<label:Darting eyes>% to the window, then back to you. His %leg starts bouncing<label:Bouncing leg>%, though he seems unaware of it.*
+*Gregory's %eyes dart briefly%<symptom:darting_eyes> to the window, then back to you. His %leg starts bouncing%<symptom:leg_bouncing>, though he seems unaware of it.*
 
 @pause 1
 
@@ -90,7 +90,7 @@ PATIENT (thoughtful)
 @pause 0.5
 
 PATIENT (hesitant)
-"The truth is, I've been having some... [difficulties]. Well, maybe 
+"The truth is, I've been having some... [difficulties]<keyword:gregory.emotion.difficulties>. Well, maybe 
 'difficulties' is too strong a word. Concerns, perhaps?"
 
 PATIENT
@@ -100,12 +100,12 @@ people deal with worse."
 @pause 1
 
 PATIENT (nervous)
-"But they've been [accumulating]. That's the word I used in my email. 
+"But they've been [accumulating]<keyword:gregory.pattern.accumulating>. That's the word I used in my email. 
 Accumulating."
 
 PATIENT (guarded)
 "I thought it would be... responsible... to speak with someone. Rather 
-than just [hoping they go away on their own]."
+than just [hoping they go away on their own]<keyword:gregory.coping.hoping_away>."
 
 @pause 0.5
 
@@ -123,35 +123,35 @@ His eyes look tired despite his alert posture.*
 
 PATIENT (hesitant)
 "One of the things—and this might sound minor—is that I've been having 
-some trouble with sleep. [Well, not trouble exactly]."
+some trouble with sleep. [Well, not trouble exactly]<keyword:gregory.minimizing.not_trouble>."
 
 @pause 0.5
 
 @if rapport >= 40
     PATIENT (nervous)
-    "I mean, I sleep. I [do sleep]<contradicts:bags-under-eyes>. Everyone 
+    "I mean, I sleep. I [do sleep]<keyword:gregory.sleep.claims_sleep><contradicts:bags_under_eyes>. Everyone 
     has trouble sleeping sometimes, don't they?"
     
     PATIENT (hedging)
     "I just... sometimes it takes a while. To fall asleep. My mind 
-    doesn't always want to [shut off]."
+    doesn't always want to [shut off]<keyword:gregory.sleep.cant_shut_off>."
     
     @pause 1
     
     PATIENT (vulnerable)
     "Sometimes I think about things I said during the day. Whether I said 
-    them [correctly]. If people noticed anything... off."
+    them [correctly]<keyword:gregory.perfectionism.said_correctly>. If people noticed anything... off."
 @elseif rapport >= 25
     PATIENT (defensive)
-    "My sleep is [fine, really]<contradicts:bags-under-eyes>. I mean, 
+    "My sleep is [fine, really]<keyword:gregory.sleep.claims_fine><contradicts:bags_under_eyes>. I mean, 
     not perfect, but who sleeps perfectly?"
     
     PATIENT
-    "I get enough hours. [I think]. Unless the recommended amount has 
+    "I get enough hours. [I think]<keyword:gregory.uncertainty.i_think>. Unless the recommended amount has 
     changed? I try to stay informed about these things."
 @else
     PATIENT (guarded)
-    "[I sleep fine]<contradicts:bags-under-eyes>. That's probably not 
+    "[I sleep fine]<keyword:gregory.sleep.claims_fine><contradicts:bags_under_eyes>. That's probably not 
     even worth discussing."
     
     PATIENT (dismissive)
@@ -181,15 +181,15 @@ NARRATOR
     
     PATIENT (hesitant)
     "There are these things that have been bothering me. Small things, 
-    mostly. But they [keep adding up]."
+    mostly. But they [keep adding up]<keyword:gregory.pattern.adding_up>."
     
     PATIENT
-    "Sleep. Feeling... watched, sometimes. Like people are noticing 
+    "Sleep. Feeling... [watched]<keyword:gregory.hypervigilance.feeling_watched>, sometimes. Like people are noticing 
     things about me."
     
     PATIENT (vulnerable)
     "I spend a lot of time thinking about whether I'm [doing things 
-    correctly]. Whether I said the right thing."
+    correctly]<keyword:gregory.perfectionism.doing_correctly>. Whether I said the right thing."
     
     @pause 0.5
     
@@ -204,7 +204,7 @@ NARRATOR
     "I mentioned in my email—there have been some difficulties."
     
     PATIENT
-    "Nothing severe. Just... [persistent]."
+    "Nothing severe. Just... [persistent]<keyword:gregory.pattern.persistent>."
     
     PATIENT (hedging)
     "I thought it would be responsible to talk to someone. Before things 
@@ -238,17 +238,17 @@ NARRATOR
     
     PATIENT (hesitant)
     "I've read about therapy. Done research. But I don't know if I'm 
-    [doing it correctly]."
+    [doing it correctly]<keyword:gregory.perfectionism.doing_correctly>."
     
     @pause 1
     
     PATIENT (nervous)
-    "I keep wondering if I'm saying the [right things]. If I'm being 
+    "I keep wondering if I'm saying the [right things]<keyword:gregory.perfectionism.right_things>. If I'm being 
     a good... patient? Client? I don't even know the right term."
     
     PATIENT (seeking validation)
     "Am I supposed to just talk? Or do you ask questions? I want to 
-    make sure I'm [following the process correctly]."
+    make sure I'm [following the process correctly]<keyword:gregory.perfectionism.process_correctly>."
     
     @rapport +6
     @reveal perfectionism-therapy
@@ -282,10 +282,10 @@ against his knee.*
     @pause 0.5
     
     PATIENT (honest)
-    "Many. I have [many concerns]."
+    "Many. I have [many concerns]<keyword:gregory.anxiety.many_concerns>."
     
     PATIENT
-    "What if I'm wasting your time? What if my problems are [too small] 
+    "What if I'm wasting your time? What if my problems are [too small]<keyword:gregory.minimizing.too_small> 
     for therapy?"
     
     PATIENT (anxious)
@@ -296,7 +296,7 @@ against his knee.*
     
     PATIENT (sad)
     "What if there's something actually wrong with me? Something [more 
-    serious] than I thought?"
+    serious]<keyword:gregory.fear.more_serious> than I thought?"
     
     PATIENT (quietly)
     "I don't know which answer scares me more."
@@ -336,11 +336,11 @@ then stops midway as if he caught himself.*
     @pause 1
     
     PATIENT (honest)
-    "Not great. [Not great at all], actually."
+    "Not great. [Not great at all]<keyword:gregory.sleep.not_great>, actually."
     
     PATIENT
     "I lie awake for hours sometimes. Going over things in my head. 
-    [Replaying conversations]."
+    [Replaying conversations]<keyword:gregory.rumination.replaying>."
     
     PATIENT (anxious)
     "Did I phrase that email correctly? Did my voice sound weird in 
@@ -350,7 +350,7 @@ then stops midway as if he caught himself.*
     
     PATIENT (exhausted)
     "By the time I finally fall asleep, it's almost time to wake up. 
-    And then I'm tired all day, which makes everything [harder to manage]."
+    And then I'm tired all day, which makes everything [harder to manage]<keyword:gregory.coping.harder_manage>."
     
     @rapport +12
     @reveal insomnia
@@ -362,13 +362,13 @@ then stops midway as if he caught himself.*
     "It's... complicated."
     
     PATIENT
-    "Some nights are better than others. I [do sleep]. Just not 
+    "Some nights are better than others. I [do sleep]<keyword:gregory.sleep.claims_sleep>. Just not 
     always when I want to."
     
     @pause 0.5
     
     PATIENT (hedging)
-    "My mind has trouble [settling down] sometimes. But that's 
+    "My mind has trouble [settling down]<keyword:gregory.sleep.cant_settle> sometimes. But that's 
     probably normal?"
     
     PATIENT (seeking validation)
@@ -378,7 +378,7 @@ then stops midway as if he caught himself.*
     
 @else
     PATIENT (defensive)
-    "I mentioned this already—my sleep is [fine]<contradicts:bags-under-eyes>."
+    "I mentioned this already—my sleep is [fine]<keyword:gregory.sleep.claims_fine><contradicts:bags_under_eyes>."
     
     PATIENT
     "I mean, not perfect. But I don't think I need sleep medication or 
@@ -393,12 +393,12 @@ then stops midway as if he caught himself.*
 === @response:sleep.routine ===
 @if rapport >= 50
     PATIENT (thoughtful)
-    "Routine? I have one. A very [specific one], actually."
+    "Routine? I have one. A very [specific one]<keyword:gregory.behavior.specific_routine>, actually."
     
     @pause 0.5
     
     PATIENT
-    "I check that everything is locked. Usually [multiple times]. Then I 
+    "I check that everything is locked. Usually [multiple times]<keyword:gregory.compulsion.multiple_checks>. Then I 
     check my phone for any emails I might have missed."
     
     PATIENT (anxious)
@@ -407,13 +407,13 @@ then stops midway as if he caught himself.*
     tomorrow."
     
     PATIENT (frustrated)
-    "The routine doesn't seem to [help]. I've tried chamomile tea. 
+    "The routine doesn't seem to [help]<keyword:gregory.coping.routine_fails>. I've tried chamomile tea. 
     White noise. Everything the articles suggest."
     
     @pause 1
     
     PATIENT (vulnerable)
-    "Sometimes I just stay up and [triple-check my work for the next day]. 
+    "Sometimes I just stay up and [triple-check my work for the next day]<keyword:gregory.compulsion.triple_check>. 
     At least then I feel like I'm being productive."
     
     @rapport +8
@@ -439,7 +439,7 @@ then stops midway as if he caught himself.*
     @pause 1.5
     
     PATIENT (anxious)
-    "Everything. [Everything I did wrong that day]."
+    "Everything. [Everything I did wrong that day]<keyword:gregory.rumination.everything_wrong>."
     
     PATIENT
     "That thing I said in the meeting—did it come across as stupid? 
@@ -452,7 +452,7 @@ then stops midway as if he caught himself.*
     @pause 1
     
     PATIENT (sad)
-    "And then the bigger things. What if I'm [not good enough]? What if 
+    "And then the bigger things. What if I'm [not good enough]<keyword:gregory.core.not_good_enough>? What if 
     people figure out that I'm just... pretending to have it together?"
     
     PATIENT (quietly)
@@ -485,11 +485,11 @@ then stops midway as if he caught himself.*
     @pause 1
     
     PATIENT (sad)
-    "I have friends. I [think] I have friends. People I know."
+    "I have friends. I [think]<keyword:gregory.uncertainty.i_think> I have friends. People I know."
     
     PATIENT
     "But I don't see them as often as I probably should. It's 
-    [exhausting], somehow."
+    [exhausting]<keyword:gregory.social.exhausting>, somehow."
     
     PATIENT (thoughtful)
     "Being around people requires so much... management. Making sure 
@@ -498,7 +498,7 @@ then stops midway as if he caught himself.*
     @pause 0.5
     
     PATIENT (vulnerable)
-    "Afterwards I'm [drained]. And then I spend the rest of the night 
+    "Afterwards I'm [drained]<keyword:gregory.social.drained>. And then I spend the rest of the night 
     analyzing everything I said."
     
     @rapport +8
@@ -522,21 +522,21 @@ then stops midway as if he caught himself.*
     @pause 1
     
     PATIENT (anxious)
-    "Like I'm [constantly being watched]. Evaluated."
+    "Like I'm [constantly being watched]<keyword:gregory.hypervigilance.constantly_watched>. Evaluated."
     
     PATIENT
     "I'm always aware of how I'm standing. Whether my posture looks 
     confident enough. Whether my voice sounds normal."
     
     PATIENT (vulnerable)
-    "It's like there's this [running commentary] in my head. 'Don't 
+    "It's like there's this [running commentary]<keyword:gregory.cognition.running_commentary> in my head. 'Don't 
     fidget. Make eye contact. Not too much eye contact. Say something 
     intelligent.'"
     
     @pause 0.5
     
     PATIENT (exhausted)
-    "It never stops. Even now. [Especially now]."
+    "It never stops. Even now. [Especially now]<keyword:gregory.hypervigilance.especially_now>."
     
     @rapport +10
     @reveal hypervigilance-social
@@ -560,11 +560,11 @@ then stops midway as if he caught himself.*
     @pause 1
     
     PATIENT (reconsidering)
-    "Well. Maybe I [avoid some things]."
+    "Well. Maybe I [avoid some things]<keyword:gregory.avoidance.avoid_things>."
     
     PATIENT
     "Large gatherings. Places where I might run into people unexpectedly. 
-    Situations where I haven't had time to [prepare what to say]."
+    Situations where I haven't had time to [prepare what to say]<keyword:gregory.coping.prepare_script>."
     
     PATIENT (vulnerable)
     "I tell myself I'm just an introvert. But sometimes I wonder if it's 
@@ -574,7 +574,7 @@ then stops midway as if he caught himself.*
     
     PATIENT (quietly)
     "I've turned down job promotions because they involved more 
-    [public speaking]. More visibility."
+    [public speaking]<keyword:gregory.avoidance.public_speaking>. More visibility."
     
     @rapport +12
     @reveal avoidance-pattern
@@ -600,14 +600,14 @@ then stops midway as if he caught himself.*
     @pause 1
     
     PATIENT (hesitant)
-    "On edge, I suppose. Like I'm [waiting for something to go wrong]."
+    "On edge, I suppose. Like I'm [waiting for something to go wrong]<keyword:gregory.anxiety.waiting_wrong>."
     
     PATIENT
     "Even when things are going well, I can't enjoy it. Because I'm 
     thinking about what might happen next."
     
     PATIENT (sad)
-    "I'm tired. [Really tired]. But also too wound up to rest."
+    "I'm tired. [Really tired]<keyword:gregory.fatigue.really_tired>. But also too wound up to rest."
     
     @pause 0.5
     
@@ -635,7 +635,7 @@ then stops midway as if he caught himself.*
     @pause 0.5
     
     PATIENT (overwhelmed)
-    "[Everything]. Genuinely, everything."
+    "[Everything]<keyword:gregory.anxiety.worry_everything>. Genuinely, everything."
     
     PATIENT
     "Big things—my career, my health, whether I'm where I should be 
@@ -648,7 +648,7 @@ then stops midway as if he caught himself.*
     @pause 1
     
     PATIENT (vulnerable)
-    "I check things [over and over]. And even after I check, part of 
+    "I check things [over and over]<keyword:gregory.compulsion.over_and_over>. And even after I check, part of 
     me isn't sure. What if I missed something?"
     
     PATIENT (quietly)
@@ -679,7 +679,7 @@ then stops midway as if he caught himself.*
     "I'm not sure I remember what that feels like."
     
     PATIENT (hesitant)
-    "Maybe... alone? When I can just... [stop performing]."
+    "Maybe... alone? When I can just... [stop performing]<keyword:gregory.insight.stop_performing>."
     
     PATIENT
     "When no one is watching. When I don't have to worry about how 
@@ -688,7 +688,7 @@ then stops midway as if he caught himself.*
     @pause 0.5
     
     PATIENT (vulnerable)
-    "But even then, my mind doesn't really [quiet down]. It just 
+    "But even then, my mind doesn't really [quiet down]<keyword:gregory.cognition.cant_quiet>. It just 
     finds other things to worry about."
     
     @rapport +8
@@ -718,12 +718,12 @@ was already perfectly straight.*
     "Put-together?"
     
     PATIENT
-    "I... try to be. It takes [quite a bit of effort], actually."
+    "I... try to be. It takes [quite a bit of effort]<keyword:gregory.appearance.effort>, actually."
     
     @pause 0.5
     
     PATIENT (vulnerable)
-    "I'm very aware of how I look. How I might be [perceived]."
+    "I'm very aware of how I look. How I might be [perceived]<keyword:gregory.hypervigilance.perceived>."
     
     PATIENT
     "If there's a wrinkle. If a hair is out of place. These things 
@@ -731,7 +731,7 @@ was already perfectly straight.*
     
     PATIENT (hesitant)
     "I know that probably sounds shallow. But if I look put-together, 
-    maybe people won't notice that I [don't feel put-together]."
+    maybe people won't notice that I [don't feel put-together]<keyword:gregory.core.dont_feel_together>."
     
     @rapport +10
     @reveal appearance-as-armor
@@ -739,7 +739,7 @@ was already perfectly straight.*
     
 @else
     PATIENT (guarded)
-    "Thank you. I try to present myself [professionally]."
+    "Thank you. I try to present myself [professionally]<keyword:gregory.appearance.professionally>."
     
     @rapport +2
 @endif
@@ -765,7 +765,7 @@ was already perfectly straight.*
     @pause 0.5
     
     PATIENT (vulnerable)
-    "I spent [twenty minutes] this morning making sure my hair was 
+    "I spent [twenty minutes]<keyword:gregory.appearance.twenty_minutes> this morning making sure my hair was 
     right. Twenty minutes, and I still wasn't sure."
     
     @rapport +12
@@ -787,7 +787,7 @@ was already perfectly straight.*
     @pause 1.5
     
     PATIENT (quietly)
-    "Constantly. [Every moment]."
+    "Constantly. [Every moment]<keyword:gregory.hypervigilance.every_moment>."
     
     PATIENT (anxious)
     "I can feel eyes on me. Even when there probably aren't any. 
@@ -795,13 +795,13 @@ was already perfectly straight.*
     
     PATIENT
     "Noticing that my nails are bitten. That I look tired. That I'm 
-    not as [together as I'm pretending to be]."
+    not as [together as I'm pretending to be]<keyword:gregory.core.pretending_together>."
     
     @pause 1
     
     PATIENT (sad)
     "I try so hard to be... correct. To not stand out. But I'm 
-    [six foot one with red hair]. I always stand out."
+    [six foot one with red hair]<keyword:gregory.identity.stands_out>. I always stand out."
     
     PATIENT (vulnerable)
     "I can never just... blend in. Be invisible."
@@ -833,19 +833,19 @@ was already perfectly straight.*
     @pause 1.5
     
     PATIENT (hesitant)
-    "I don't know. I [genuinely don't know]."
+    "I don't know. I [genuinely don't know]<keyword:gregory.identity.dont_know>."
     
     PATIENT
     "I know what I want people to see. Competent. Put-together. 
     Reliable."
     
     PATIENT (vulnerable)
-    "But underneath that... I'm not sure there's anything [solid]."
+    "But underneath that... I'm not sure there's anything [solid]<keyword:gregory.identity.nothing_solid>."
     
     @pause 0.5
     
     PATIENT (sad)
-    "Just... worry. Constant worry. And this [exhausting performance] 
+    "Just... worry. Constant worry. And this [exhausting performance]<keyword:gregory.insight.exhausting_performance> 
     of being okay."
     
     @rapport +12
@@ -867,21 +867,21 @@ was already perfectly straight.*
     @pause 1
     
     PATIENT (intense)
-    "[Perfection]. Nothing less than perfection."
+    "[Perfection]<keyword:gregory.perfectionism.perfection>. Nothing less than perfection."
     
     PATIENT
     "Every email has to be worded exactly right. Every interaction 
-    has to go smoothly. Every appearance has to be [flawless]."
+    has to go smoothly. Every appearance has to be [flawless]<keyword:gregory.perfectionism.flawless>."
     
     PATIENT (frustrated)
-    "I know that's impossible. I [know] that. But the standard is 
+    "I know that's impossible. I [know]<keyword:gregory.insight.knows_impossible> that. But the standard is 
     there anyway."
     
     @pause 0.5
     
     PATIENT (vulnerable)
     "And every time I fall short—which is always—I feel like I've 
-    failed. Like everyone can see that I'm [not good enough]."
+    failed. Like everyone can see that I'm [not good enough]<keyword:gregory.core.not_good_enough>."
     
     @rapport +15
     @reveal perfectionism-core
@@ -902,20 +902,20 @@ was already perfectly straight.*
     @pause 1.5
     
     PATIENT (quietly)
-    "Not at all. [Not even a little]."
+    "Not at all. [Not even a little]<keyword:gregory.core.no_confidence>."
     
     PATIENT
     "I second-guess everything. Every decision. Every word I say."
     
     PATIENT (vulnerable)
-    "That's why I keep asking you if I'm [doing this right]. If my 
-    reasons for being here are [valid]. If my experiences are [normal]."
+    "That's why I keep asking you if I'm [doing this right]<keyword:gregory.reassurance.doing_right>. If my 
+    reasons for being here are [valid]<keyword:gregory.reassurance.valid>. If my experiences are [normal]<keyword:gregory.reassurance.normal>."
     
     @pause 0.5
     
     PATIENT (desperate)
     "I need someone else to tell me. Because I genuinely don't 
-    [trust my own perception anymore]."
+    [trust my own perception anymore]<keyword:gregory.core.no_trust_self>."
     
     @rapport +18
     @reveal deep-self-doubt
@@ -939,7 +939,7 @@ was already perfectly straight.*
 === @response:work.job ===
 @if rapport >= 35
     PATIENT
-    "I work in [redacted for now]. Administrative work, mostly."
+    "I work in [redacted for now]<keyword:gregory.work.job>. Administrative work, mostly."
     
     PATIENT
     "It's... fine. Stable. The kind of job where attention to detail 
@@ -948,7 +948,7 @@ was already perfectly straight.*
     @pause 0.5
     
     PATIENT (thoughtful)
-    "Maybe [too much] attention to detail sometimes. I tend to 
+    "Maybe [too much]<keyword:gregory.perfectionism.too_much> attention to detail sometimes. I tend to 
     check things over. Multiple times."
     
     @rapport +3
@@ -968,10 +968,10 @@ was already perfectly straight.*
     @pause 1
     
     PATIENT
-    "My reviews are good. [Objectively good]. But I never believe them."
+    "My reviews are good. [Objectively good]<keyword:gregory.work.objectively_good>. But I never believe them."
     
     PATIENT (vulnerable)
-    "I keep waiting for someone to realize I [don't know what I'm doing]. 
+    "I keep waiting for someone to realize I [don't know what I'm doing]<keyword:gregory.impostor.dont_know>. 
     That I've been faking competence this whole time."
     
     PATIENT
@@ -982,7 +982,7 @@ was already perfectly straight.*
     
     PATIENT (sad)
     "The good reviews almost make it worse. Because now I have 
-    [expectations to live up to]."
+    [expectations to live up to]<keyword:gregory.perfectionism.expectations>."
     
     @rapport +12
     @reveal impostor-syndrome
@@ -1006,7 +1006,7 @@ was already perfectly straight.*
     "Yes. But probably not in the way you'd expect."
     
     PATIENT
-    "The work itself isn't hard. It's everything [around] the work."
+    "The work itself isn't hard. It's everything [around]<keyword:gregory.work.around_work> the work."
     
     PATIENT (anxious)
     "Meetings. Interactions with colleagues. Making sure my emails 
@@ -1015,7 +1015,7 @@ was already perfectly straight.*
     @pause 1
     
     PATIENT (exhausted)
-    "I spend more energy [managing how I come across] than I do 
+    "I spend more energy [managing how I come across]<keyword:gregory.work.managing_impression> than I do 
     actually working."
     
     @rapport +8
@@ -1040,7 +1040,7 @@ was already perfectly straight.*
     @pause 1
     
     PATIENT
-    "They're fine. [Good people]. We're not estranged or anything."
+    "They're fine. [Good people]<keyword:gregory.family.good_people>. We're not estranged or anything."
     
     PATIENT (thoughtful)
     "They had... high expectations. For how things should be done. 
@@ -1050,7 +1050,7 @@ was already perfectly straight.*
     
     PATIENT (quietly)
     "I learned early that the best way to avoid criticism was to be 
-    [perfect]. Or at least to appear perfect."
+    [perfect]<keyword:gregory.family.learned_perfect>. Or at least to appear perfect."
     
     @rapport +8
     @reveal family-expectations
@@ -1070,20 +1070,20 @@ was already perfectly straight.*
     @pause 1.5
     
     PATIENT (vulnerable)
-    "I was always careful. [Always watching]."
+    "I was always careful. [Always watching]<keyword:gregory.childhood.always_watching>."
     
     PATIENT
     "Making sure I was behaving correctly. That I wasn't doing 
     anything that would draw negative attention."
     
     PATIENT (sad)
-    "I remember being [terrified of making mistakes]. Because 
+    "I remember being [terrified of making mistakes]<keyword:gregory.childhood.terrified_mistakes>. Because 
     mistakes meant disappointment. Correction."
     
     @pause 0.5
     
     PATIENT (quietly)
-    "I think I've been performing [my whole life]. I just didn't 
+    "I think I've been performing [my whole life]<keyword:gregory.insight.whole_life>. I just didn't 
     realize it wasn't supposed to feel this exhausting."
     
     @rapport +15
@@ -1105,7 +1105,7 @@ was already perfectly straight.*
     @pause 1
     
     PATIENT (intense)
-    "[Everything to be done correctly]. Always."
+    "[Everything to be done correctly]<keyword:gregory.family.everything_correct>. Always."
     
     PATIENT
     "Good grades. Good behavior. Good appearance. No mistakes. 
@@ -1118,7 +1118,7 @@ was already perfectly straight.*
     @pause 1
     
     PATIENT (sad)
-    "I'm still doing it. [Still trying to be correct]. Still 
+    "I'm still doing it. [Still trying to be correct]<keyword:gregory.insight.still_trying>. Still 
     unsure if I'm allowed to just... be."
     
     @rapport +18
