@@ -104,19 +104,40 @@
                 "markup.bold.keyword.text.sdns"
             ],
             "settings": {
-                "foreground": "#dc2626",
-                "fontStyle": "bold underline"
+                "foreground": "#2563eb",
+                "fontStyle": "bold"
             }
         },
         {
-            "name": "Observations",
+            "name": "Observations - styled like keywords",
             "scope": [
-                "markup.italic.observation.sdns",
-                "markup.italic.observation.text.sdns"
+                "markup.bold.observation.sdns"
             ],
             "settings": {
-                "foreground": "#0f766e",
-                "fontStyle": "italic"
+                "foreground": "#2563eb",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Observation/Keyword punctuation (% and [])",
+            "scope": [
+                "punctuation.definition.observation.begin.sdns",
+                "punctuation.definition.observation.end.sdns"
+            ],
+            "settings": {
+                "foreground": "#2563eb",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Metadata Angle Brackets - Yellow/Orange",
+            "scope": [
+                "punctuation.definition.tag.begin.sdns",
+                "punctuation.definition.tag.end.sdns"
+            ],
+            "settings": {
+                "foreground": "#d97706",
+                "fontStyle": ""
             }
         },
         {
@@ -127,6 +148,56 @@
             ],
             "settings": {
                 "foreground": "#9333ea"
+            }
+        },
+        {
+            "name": "Type References (keyword, anim, symptom, etc.)",
+            "scope": [
+                "storage.type.reference.sdns"
+            ],
+            "settings": {
+                "foreground": "#db2777",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "Source/Category names in metadata",
+            "scope": [
+                "entity.name.type.source.sdns",
+                "entity.name.type.category.sdns"
+            ],
+            "settings": {
+                "foreground": "#7c3aed"
+            }
+        },
+        {
+            "name": "Reference IDs in metadata",
+            "scope": [
+                "variable.other.reference-id.sdns",
+                "variable.other.keyword-id.sdns"
+            ],
+            "settings": {
+                "foreground": "#0891b2"
+            }
+        },
+        {
+            "name": "Animation IDs",
+            "scope": [
+                "support.function.animation.sdns"
+            ],
+            "settings": {
+                "foreground": "#ca8a04",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "Symptom/Observation IDs",
+            "scope": [
+                "constant.other.symptom-id.sdns",
+                "constant.other.observation-id.sdns"
+            ],
+            "settings": {
+                "foreground": "#0f766e"
             }
         },
         {

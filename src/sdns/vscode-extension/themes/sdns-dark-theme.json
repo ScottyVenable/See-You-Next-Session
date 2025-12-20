@@ -105,19 +105,40 @@
                 "markup.bold.keyword.text.sdns"
             ],
             "settings": {
-                "foreground": "#f87171",
-                "fontStyle": "bold underline"
+                "foreground": "#60a5fa",
+                "fontStyle": "bold"
             }
         },
         {
-            "name": "Observations",
+            "name": "Observations - styled like keywords",
             "scope": [
-                "markup.italic.observation.sdns",
-                "markup.italic.observation.text.sdns"
+                "markup.bold.observation.sdns"
             ],
             "settings": {
-                "foreground": "#5eead4",
-                "fontStyle": "italic"
+                "foreground": "#60a5fa",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Observation/Keyword punctuation (% and [])",
+            "scope": [
+                "punctuation.definition.observation.begin.sdns",
+                "punctuation.definition.observation.end.sdns"
+            ],
+            "settings": {
+                "foreground": "#60a5fa",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Metadata Angle Brackets - Yellow",
+            "scope": [
+                "punctuation.definition.tag.begin.sdns",
+                "punctuation.definition.tag.end.sdns"
+            ],
+            "settings": {
+                "foreground": "#fbbf24",
+                "fontStyle": ""
             }
         },
         {
@@ -128,6 +149,56 @@
             ],
             "settings": {
                 "foreground": "#c084fc"
+            }
+        },
+        {
+            "name": "Type References (keyword, anim, symptom, etc.)",
+            "scope": [
+                "storage.type.reference.sdns"
+            ],
+            "settings": {
+                "foreground": "#f472b6",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "Source/Category names in metadata",
+            "scope": [
+                "entity.name.type.source.sdns",
+                "entity.name.type.category.sdns"
+            ],
+            "settings": {
+                "foreground": "#a78bfa"
+            }
+        },
+        {
+            "name": "Reference IDs in metadata",
+            "scope": [
+                "variable.other.reference-id.sdns",
+                "variable.other.keyword-id.sdns"
+            ],
+            "settings": {
+                "foreground": "#22d3ee"
+            }
+        },
+        {
+            "name": "Animation IDs",
+            "scope": [
+                "support.function.animation.sdns"
+            ],
+            "settings": {
+                "foreground": "#fde047",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "Symptom/Observation IDs",
+            "scope": [
+                "constant.other.symptom-id.sdns",
+                "constant.other.observation-id.sdns"
+            ],
+            "settings": {
+                "foreground": "#5eead4"
             }
         },
         {

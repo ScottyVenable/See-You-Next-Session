@@ -204,19 +204,25 @@
         "observations": {
             "patterns": [
                 {
-                    "name": "markup.italic.observation.sdns",
-                    "begin": "%",
-                    "end": "%",
+                    "comment": "Observation markers %text% styled like keywords (bold/blue)",
+                    "name": "markup.bold.observation.sdns",
+                    "begin": "(%)",
+                    "end": "(%)",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.observation.begin.sdns"
+                        }
+                    },
+                    "endCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.observation.end.sdns"
+                        }
+                    },
                     "patterns": [
                         {
                             "include": "#keyword-metadata"
                         }
-                    ],
-                    "captures": {
-                        "0": {
-                            "name": "markup.italic.observation.text.sdns"
-                        }
-                    }
+                    ]
                 }
             ]
         },
@@ -225,10 +231,35 @@
                 {
                     "comment": "Universal type:source.category.id syntax - keyword, anim, symptom, observation, etc.",
                     "name": "entity.other.attribute-name.typed-reference.sdns",
-                    "match": "<(keyword|anim|symptom|observation|action|effect):([a-zA-Z][a-zA-Z0-9_-]*)\\.([a-zA-Z][a-zA-Z0-9_-]*)\\.([a-zA-Z][a-zA-Z0-9_-]*)>",
+                    "match": "(<)(keyword|anim|symptom|observation|action|effect):([a-zA-Z][a-zA-Z0-9_-]*)\\.([a-zA-Z][a-zA-Z0-9_-]*)\\.([a-zA-Z][a-zA-Z0-9_-]*)(>)",
                     "captures": {
                         "1": {
+                            "name": "punctuation.definition.tag.begin.sdns constant.character.escape.sdns"
+                        },
+                        "2": {
                             "name": "storage.type.reference.sdns"
+                        },
+                        "3": {
+                            "name": "entity.name.type.source.sdns"
+                        },
+                        "4": {
+                            "name": "entity.name.type.category.sdns"
+                        },
+                        "5": {
+                            "name": "variable.other.reference-id.sdns"
+                        },
+                        "6": {
+                            "name": "punctuation.definition.tag.end.sdns constant.character.escape.sdns"
+                        }
+                    }
+                },
+                {
+                    "comment": "Shorthand keyword syntax: <keyword:source.category.id>",
+                    "name": "entity.other.attribute-name.keyword-link.sdns",
+                    "match": "(<)keyword:([a-z]+)\\.([a-z]+)\\.([a-zA-Z_-]+)(>)",
+                    "captures": {
+                        "1": {
+                            "name": "punctuation.definition.tag.begin.sdns constant.character.escape.sdns"
                         },
                         "2": {
                             "name": "entity.name.type.source.sdns"
@@ -237,61 +268,76 @@
                             "name": "entity.name.type.category.sdns"
                         },
                         "4": {
-                            "name": "variable.other.reference-id.sdns"
-                        }
-                    }
-                },
-                {
-                    "comment": "Shorthand keyword syntax: <keyword:source.category.id>",
-                    "name": "entity.other.attribute-name.keyword-link.sdns",
-                    "match": "<keyword:([a-z]+)\\.([a-z]+)\\.([a-zA-Z_-]+)>",
-                    "captures": {
-                        "1": {
-                            "name": "entity.name.type.source.sdns"
-                        },
-                        "2": {
-                            "name": "entity.name.type.category.sdns"
-                        },
-                        "3": {
                             "name": "variable.other.keyword-id.sdns"
+                        },
+                        "5": {
+                            "name": "punctuation.definition.tag.end.sdns constant.character.escape.sdns"
                         }
                     }
                 },
                 {
                     "comment": "Animation syntax: <anim:animId> or <anim:shake>",
                     "name": "entity.other.attribute-name.animation.sdns",
-                    "match": "<anim:([a-zA-Z][a-zA-Z0-9_-]*)>",
+                    "match": "(<)anim:([a-zA-Z][a-zA-Z0-9_-]*)(>)",
                     "captures": {
                         "1": {
+                            "name": "punctuation.definition.tag.begin.sdns constant.character.escape.sdns"
+                        },
+                        "2": {
                             "name": "support.function.animation.sdns"
+                        },
+                        "3": {
+                            "name": "punctuation.definition.tag.end.sdns constant.character.escape.sdns"
                         }
                     }
                 },
                 {
                     "comment": "Symptom reference syntax: <symptom:id>",
                     "name": "entity.other.attribute-name.symptom.sdns",
-                    "match": "<symptom:([a-zA-Z][a-zA-Z0-9_-]*)>",
+                    "match": "(<)symptom:([a-zA-Z][a-zA-Z0-9_-]*)(>)",
                     "captures": {
                         "1": {
+                            "name": "punctuation.definition.tag.begin.sdns constant.character.escape.sdns"
+                        },
+                        "2": {
                             "name": "constant.other.symptom-id.sdns"
+                        },
+                        "3": {
+                            "name": "punctuation.definition.tag.end.sdns constant.character.escape.sdns"
                         }
                     }
                 },
                 {
                     "comment": "Observation reference syntax: <observation:id>",
                     "name": "entity.other.attribute-name.observation.sdns",
-                    "match": "<observation:([a-zA-Z][a-zA-Z0-9_-]*)>",
+                    "match": "(<)observation:([a-zA-Z][a-zA-Z0-9_-]*)(>)",
                     "captures": {
                         "1": {
+                            "name": "punctuation.definition.tag.begin.sdns constant.character.escape.sdns"
+                        },
+                        "2": {
                             "name": "constant.other.observation-id.sdns"
+                        },
+                        "3": {
+                            "name": "punctuation.definition.tag.end.sdns constant.character.escape.sdns"
                         }
                     }
                 },
                 {
                     "comment": "Legacy metadata syntax: <type:value>",
                     "name": "entity.other.attribute-name.metadata.sdns",
-                    "begin": "<",
-                    "end": ">",
+                    "begin": "(<)",
+                    "end": "(>)",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.tag.begin.sdns constant.character.escape.sdns"
+                        }
+                    },
+                    "endCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.tag.end.sdns constant.character.escape.sdns"
+                        }
+                    },
                     "patterns": [
                         {
                             "name": "entity.other.attribute-name.type.sdns",
