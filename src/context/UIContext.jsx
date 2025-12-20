@@ -83,6 +83,7 @@ export function UIProvider({ children }) {
             spriteRatio: '3:4',
             showDimensionOverlay: false,
             showGridLines: false,
+            devMode: false, // Dev mode toggle for context menus and debug features
         };
     };
 
@@ -176,6 +177,18 @@ export function UIProvider({ children }) {
         updateSettings({ showGridLines: !settings.showGridLines });
     }, [settings.showGridLines, updateSettings]);
 
+    // Generic toggle setting helper
+    const toggleSetting = useCallback((settingKey) => {
+        if (typeof settings[settingKey] === 'boolean') {
+            updateSettings({ [settingKey]: !settings[settingKey] });
+        }
+    }, [settings, updateSettings]);
+
+    // Toggle dev mode
+    const toggleDevMode = useCallback(() => {
+        updateSettings({ devMode: !settings.devMode });
+    }, [settings.devMode, updateSettings]);
+
     const currentLayout = UI_LAYOUTS[settings.currentLayout] || UI_LAYOUTS['fullscreen-center'];
     const currentSpriteRatio = SPRITE_RATIOS[settings.spriteRatio] || SPRITE_RATIOS['3:4'];
     const currentDialoguePosition = DIALOGUE_POSITIONS[settings.dialoguePosition] || DIALOGUE_POSITIONS['center-float'];
@@ -194,6 +207,8 @@ export function UIProvider({ children }) {
         setSpriteRatio,
         toggleDimensionOverlay,
         toggleGridLines,
+        toggleSetting,
+        toggleDevMode,
         updateSettings,
         // Drawers (session state)
         drawers: DRAWERS,

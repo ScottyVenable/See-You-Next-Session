@@ -152,6 +152,9 @@
                             "include": "#keyword-metadata"
                         },
                         {
+                            "include": "#markdown"
+                        },
+                        {
                             "include": "#observations"
                         },
                         {
@@ -220,7 +223,26 @@
         "keyword-metadata": {
             "patterns": [
                 {
-                    "comment": "New keyword link syntax: <keyword:source.category.id>",
+                    "comment": "Universal type:source.category.id syntax - keyword, anim, symptom, observation, etc.",
+                    "name": "entity.other.attribute-name.typed-reference.sdns",
+                    "match": "<(keyword|anim|symptom|observation|action|effect):([a-zA-Z][a-zA-Z0-9_-]*)\\.([a-zA-Z][a-zA-Z0-9_-]*)\\.([a-zA-Z][a-zA-Z0-9_-]*)>",
+                    "captures": {
+                        "1": {
+                            "name": "storage.type.reference.sdns"
+                        },
+                        "2": {
+                            "name": "entity.name.type.source.sdns"
+                        },
+                        "3": {
+                            "name": "entity.name.type.category.sdns"
+                        },
+                        "4": {
+                            "name": "variable.other.reference-id.sdns"
+                        }
+                    }
+                },
+                {
+                    "comment": "Shorthand keyword syntax: <keyword:source.category.id>",
                     "name": "entity.other.attribute-name.keyword-link.sdns",
                     "match": "<keyword:([a-z]+)\\.([a-z]+)\\.([a-zA-Z_-]+)>",
                     "captures": {
@@ -236,12 +258,32 @@
                     }
                 },
                 {
-                    "comment": "Animation syntax: <anim:shake>, <anim:pulse>, etc.",
+                    "comment": "Animation syntax: <anim:animId> or <anim:shake>",
                     "name": "entity.other.attribute-name.animation.sdns",
-                    "match": "<anim:(shake|pulse|glow|fade|highlight|wiggle|wave|typewriter|glitch|bounce)>",
+                    "match": "<anim:([a-zA-Z][a-zA-Z0-9_-]*)>",
                     "captures": {
                         "1": {
                             "name": "support.function.animation.sdns"
+                        }
+                    }
+                },
+                {
+                    "comment": "Symptom reference syntax: <symptom:id>",
+                    "name": "entity.other.attribute-name.symptom.sdns",
+                    "match": "<symptom:([a-zA-Z][a-zA-Z0-9_-]*)>",
+                    "captures": {
+                        "1": {
+                            "name": "constant.other.symptom-id.sdns"
+                        }
+                    }
+                },
+                {
+                    "comment": "Observation reference syntax: <observation:id>",
+                    "name": "entity.other.attribute-name.observation.sdns",
+                    "match": "<observation:([a-zA-Z][a-zA-Z0-9_-]*)>",
+                    "captures": {
+                        "1": {
+                            "name": "constant.other.observation-id.sdns"
                         }
                     }
                 },
@@ -268,6 +310,43 @@
                             "match": ";"
                         }
                     ]
+                }
+            ]
+        },
+        "markdown": {
+            "patterns": [
+                {
+                    "comment": "Bold text **text**",
+                    "name": "markup.bold.sdns",
+                    "match": "\\*\\*([^*]+)\\*\\*",
+                    "captures": {
+                        "1": {
+                            "name": "markup.bold.content.sdns"
+                        }
+                    }
+                },
+                {
+                    "comment": "Italic text *text* or _text_",
+                    "name": "markup.italic.sdns",
+                    "match": "(?<!\\*)\\*([^*]+)\\*(?!\\*)|_([^_]+)_",
+                    "captures": {
+                        "1": {
+                            "name": "markup.italic.content.sdns"
+                        },
+                        "2": {
+                            "name": "markup.italic.content.sdns"
+                        }
+                    }
+                },
+                {
+                    "comment": "Strikethrough text ~~text~~",
+                    "name": "markup.strikethrough.sdns",
+                    "match": "~~([^~]+)~~",
+                    "captures": {
+                        "1": {
+                            "name": "markup.strikethrough.content.sdns"
+                        }
+                    }
                 }
             ]
         },

@@ -15,6 +15,7 @@ const TABS = {
     state: { id: 'state', label: 'State', icon: '{.}' },
     cheats: { id: 'cheats', label: 'Cheats', icon: '*' },
     dialogue: { id: 'dialogue', label: 'Dialogue', icon: '"' },
+    animations: { id: 'animations', label: 'Animations', icon: '~' },
 };
 
 function DevConsole() {
@@ -28,6 +29,7 @@ function DevConsole() {
     const outputRef = useRef(null);
 
     const { gameState, actions } = useGame();
+    const { settings, toggleDevMode } = useUI();
 
     // Load command history from localStorage
     useEffect(() => {
@@ -87,6 +89,7 @@ function DevConsole() {
                 log('help              - Show this help message');
                 log('version           - Show game version');
                 log('state             - Show current game state');
+                log('devmode           - Toggle dev mode (enables context menu)');
                 log('focus [amount]    - Set focus to amount (or show current)');
                 log('addfocus [n]      - Add n focus points');
                 log('rapport [n]       - Set rapport to n');
@@ -102,6 +105,19 @@ function DevConsole() {
                 log('todo              - Open TODO manager');
                 log('errors            - Show error log');
                 log('clear             - Clear console output');
+                break;
+
+            case 'devmode':
+                if (typeof toggleDevMode === 'function') {
+                    toggleDevMode();
+                    const newMode = !settings?.devMode;
+                    log(`Dev mode ${newMode ? 'ENABLED' : 'DISABLED'}`, newMode ? 'success' : 'warn');
+                    if (newMode) {
+                        log('Right-click anywhere for dev context menu');
+                    }
+                } else {
+                    log('Dev mode toggle not available', 'error');
+                }
                 break;
 
             case 'version':
@@ -425,6 +441,7 @@ function DevConsole() {
                         {activeTab === 'state' && <StateTab />}
                         {activeTab === 'cheats' && <CheatsTab log={log} />}
                         {activeTab === 'dialogue' && <DialogueTab log={log} />}
+                        {activeTab === 'animations' && <AnimationsTab log={log} />}
                     </div>
                 </motion.div>
             )}
@@ -903,6 +920,331 @@ function DialogueTab({ log }) {
                 {status && (
                     <div className="dialogue-status">{status}</div>
                 )}
+            </div>
+        </div>
+    );
+}
+
+// Available animation presets
+const ANIMATION_PRESETS = {
+    shake: {
+        id: 'shake',
+        name: 'Shake',
+        description: 'Subtle trembling for distress or emphasis',
+        cssClass: 'anim-shake',
+        keyframes: `@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}`,
+        style: { animation: 'shake 0.5s ease-in-out' },
+        useCases: ['Fear', 'Distress', 'Emphasis', 'Nervous words']
+    },
+    pulse: {
+        id: 'pulse',
+        name: 'Pulse',
+        description: 'Gentle scale pulse for revelations',
+        cssClass: 'anim-pulse',
+        keyframes: `@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}`,
+        style: { animation: 'pulse 1s ease-in-out' },
+        useCases: ['Breakthroughs', 'Important words', 'Revelations']
+    },
+    glow: {
+        id: 'glow',
+        name: 'Glow',
+        description: 'Soft glow effect for breakthroughs',
+        cssClass: 'anim-glow',
+        keyframes: `@keyframes glow {
+  0%, 100% { text-shadow: 0 0 5px transparent; }
+  50% { text-shadow: 0 0 15px #f39c12, 0 0 25px #f39c12; }
+}`,
+        style: { animation: 'glow 0.8s ease-out' },
+        useCases: ['Breakthroughs', 'Insights', 'Key moments']
+    },
+    fade: {
+        id: 'fade',
+        name: 'Fade In',
+        description: 'Fade in effect for gradual reveals',
+        cssClass: 'anim-fade',
+        keyframes: `@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}`,
+        style: { animation: 'fadeIn 0.6s ease-in' },
+        useCases: ['Gradual reveals', 'Memory flashbacks', 'Soft entries']
+    },
+    highlight: {
+        id: 'highlight',
+        name: 'Highlight',
+        description: 'Quick highlight flash for attention',
+        cssClass: 'anim-highlight',
+        keyframes: `@keyframes highlight {
+  0% { background-color: transparent; }
+  30% { background-color: rgba(255, 243, 205, 0.8); }
+  100% { background-color: transparent; }
+}`,
+        style: { animation: 'highlight 0.4s ease-out' },
+        useCases: ['Key terms', 'Drawing attention', 'Important info']
+    },
+    wiggle: {
+        id: 'wiggle',
+        name: 'Wiggle',
+        description: 'Small wiggle for nervous or uncertain words',
+        cssClass: 'anim-wiggle',
+        keyframes: `@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-2deg); }
+  75% { transform: rotate(2deg); }
+}`,
+        style: { animation: 'wiggle 0.3s linear' },
+        useCases: ['Uncertainty', 'Hedging', 'Nervousness']
+    },
+    bounce: {
+        id: 'bounce',
+        name: 'Bounce',
+        description: 'Bounce animation for emphasis',
+        cssClass: 'anim-bounce',
+        keyframes: `@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}`,
+        style: { animation: 'bounce 0.4s ease' },
+        useCases: ['Excited words', 'Important points', 'Emphasis']
+    },
+    typewriter: {
+        id: 'typewriter',
+        name: 'Typewriter',
+        description: 'Letter-by-letter appearance effect',
+        cssClass: 'anim-typewriter',
+        keyframes: `/* Applied via JS character reveal */`,
+        style: {},
+        useCases: ['Dramatic reveals', 'Slow realization', 'Building tension']
+    },
+    glitch: {
+        id: 'glitch',
+        name: 'Glitch',
+        description: 'Digital glitch effect for distortion',
+        cssClass: 'anim-glitch',
+        keyframes: `@keyframes glitch {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-1px, 2px); }
+  80% { transform: translate(1px, -2px); }
+}`,
+        style: { animation: 'glitch 0.3s ease-in-out' },
+        useCases: ['Confusion', 'Dissociation', 'Memory distortion']
+    },
+    wave: {
+        id: 'wave',
+        name: 'Wave',
+        description: 'Flowing wave motion',
+        cssClass: 'anim-wave',
+        keyframes: `@keyframes wave {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}`,
+        style: { animation: 'wave 1s ease-in-out infinite' },
+        useCases: ['Calm moments', 'Breathing', 'Flowing text']
+    }
+};
+
+// Animations Tab - preview and test text animations
+function AnimationsTab({ log }) {
+    const [selectedAnim, setSelectedAnim] = useState('shake');
+    const [previewText, setPreviewText] = useState('Sample text');
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [customDuration, setCustomDuration] = useState(500);
+    const [customIntensity, setCustomIntensity] = useState(1);
+    const previewRef = useRef(null);
+
+    const playAnimation = () => {
+        if (!previewRef.current) return;
+
+        setIsPlaying(true);
+        const anim = ANIMATION_PRESETS[selectedAnim];
+
+        // Reset animation
+        previewRef.current.style.animation = 'none';
+        previewRef.current.offsetHeight; // Force reflow
+
+        // Apply animation with custom duration
+        const animStyle = anim.style.animation;
+        if (animStyle) {
+            const modifiedAnim = animStyle.replace(/(\d+\.?\d*)s/, `${customDuration / 1000}s`);
+            previewRef.current.style.animation = modifiedAnim;
+        }
+
+        setTimeout(() => {
+            setIsPlaying(false);
+        }, customDuration + 100);
+    };
+
+    const copySnippet = (type) => {
+        const anim = ANIMATION_PRESETS[selectedAnim];
+        let snippet = '';
+
+        switch (type) {
+            case 'sdns':
+                snippet = `[${previewText}]<anim:${selectedAnim}>`;
+                break;
+            case 'css':
+                snippet = anim.keyframes;
+                break;
+            case 'class':
+                snippet = anim.cssClass;
+                break;
+        }
+
+        navigator.clipboard.writeText(snippet);
+        log(`Copied ${type} snippet for ${anim.name}`, 'success');
+    };
+
+    const anim = ANIMATION_PRESETS[selectedAnim];
+
+    // Inject keyframes dynamically
+    useEffect(() => {
+        const styleId = 'dev-console-anim-keyframes';
+        let styleEl = document.getElementById(styleId);
+        if (!styleEl) {
+            styleEl = document.createElement('style');
+            styleEl.id = styleId;
+            document.head.appendChild(styleEl);
+        }
+
+        const keyframes = Object.values(ANIMATION_PRESETS)
+            .map(a => a.keyframes)
+            .filter(k => k && !k.includes('Applied via JS'))
+            .join('\n\n');
+
+        styleEl.textContent = keyframes;
+
+        return () => {
+            if (styleEl.parentNode) {
+                styleEl.parentNode.removeChild(styleEl);
+            }
+        };
+    }, []);
+
+    return (
+        <div className="animations-tab-content">
+            <div className="animations-section">
+                <h3 className="animations-section-title">Animation Library</h3>
+                <div className="animations-grid">
+                    {Object.values(ANIMATION_PRESETS).map(preset => (
+                        <button
+                            key={preset.id}
+                            className={`animation-preset-btn ${selectedAnim === preset.id ? 'active' : ''}`}
+                            onClick={() => setSelectedAnim(preset.id)}
+                        >
+                            <span className="preset-name">{preset.name}</span>
+                            <span className="preset-desc">{preset.description}</span>
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            <div className="animations-section">
+                <h3 className="animations-section-title">Preview</h3>
+                <div className="animation-preview-container">
+                    <div className="preview-text-wrapper">
+                        <span
+                            ref={previewRef}
+                            className={`preview-text ${isPlaying ? anim.cssClass : ''}`}
+                        >
+                            {previewText}
+                        </span>
+                    </div>
+                    <div className="preview-controls">
+                        <input
+                            type="text"
+                            value={previewText}
+                            onChange={(e) => setPreviewText(e.target.value)}
+                            placeholder="Enter preview text..."
+                            className="preview-text-input"
+                        />
+                        <button onClick={playAnimation} disabled={isPlaying}>
+                            {isPlaying ? 'Playing...' : 'Play Animation'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div className="animations-section">
+                <h3 className="animations-section-title">Settings</h3>
+                <div className="animation-settings">
+                    <div className="setting-row">
+                        <label>Duration (ms):</label>
+                        <input
+                            type="number"
+                            min="100"
+                            max="3000"
+                            step="100"
+                            value={customDuration}
+                            onChange={(e) => setCustomDuration(parseInt(e.target.value) || 500)}
+                        />
+                    </div>
+                    <div className="setting-row">
+                        <label>Intensity:</label>
+                        <input
+                            type="range"
+                            min="0.5"
+                            max="2"
+                            step="0.1"
+                            value={customIntensity}
+                            onChange={(e) => setCustomIntensity(parseFloat(e.target.value))}
+                        />
+                        <span>{customIntensity}x</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="animations-section">
+                <h3 className="animations-section-title">Details: {anim.name}</h3>
+                <div className="animation-details">
+                    <div className="detail-row">
+                        <span className="detail-label">ID:</span>
+                        <code>{anim.id}</code>
+                    </div>
+                    <div className="detail-row">
+                        <span className="detail-label">CSS Class:</span>
+                        <code>{anim.cssClass}</code>
+                    </div>
+                    <div className="detail-row">
+                        <span className="detail-label">Use Cases:</span>
+                        <div className="use-cases">
+                            {anim.useCases.map((use, i) => (
+                                <span key={i} className="use-case-tag">{use}</span>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="detail-row code-block">
+                        <span className="detail-label">Keyframes:</span>
+                        <pre className="keyframes-code">{anim.keyframes}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div className="animations-section">
+                <h3 className="animations-section-title">Copy Snippets</h3>
+                <div className="snippet-buttons">
+                    <button onClick={() => copySnippet('sdns')}>
+                        Copy SDNS Syntax
+                    </button>
+                    <button onClick={() => copySnippet('css')}>
+                        Copy CSS Keyframes
+                    </button>
+                    <button onClick={() => copySnippet('class')}>
+                        Copy CSS Class
+                    </button>
+                </div>
+                <div className="snippet-preview">
+                    <span className="snippet-label">SDNS:</span>
+                    <code>[{previewText}]&lt;anim:{selectedAnim}&gt;</code>
+                </div>
             </div>
         </div>
     );
