@@ -32,6 +32,11 @@ function GameScreen() {
     const [breakthroughDialogue, setBreakthroughDialogue] = useState(null);
     const [showTutorialHint, setShowTutorialHint] = useState(true);
     const [selectedPrompt, setSelectedPrompt] = useState(null);
+    const [dialogueDimensions, setDialogueDimensions] = useState({ width: 500, height: 200 });
+    const [isResizing, setIsResizing] = useState(false);
+
+    const resizeRef = useRef(null);
+    const startPosRef = useRef({ x: 0, y: 0, width: 0, height: 0 });
 
     // Dialogue box position - calculated once on mount
     const [dialoguePosition] = useState(() => ({
@@ -43,6 +48,66 @@ function GameScreen() {
     // Get rapport-based patient state
     const rapportLevel = getRapportLevelName(rapport);
     const bodyLanguage = getBodyLanguage(rapport);
+
+    // Resize handlers
+    const startResize = useCallback((edge, e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsResizing(true);
+        resizeRef.current = edge;
+        startPosRef.current = {
+            x: e.clientX,
+            y: e.clientY,
+            width: dialogueDimensions.width,
+            height: dialogueDimensions.height
+        };
+    }, [dialogueDimensions]);
+
+    useEffect(() => {
+        if (!isResizing) return;
+
+        const handleMouseMove = (e) => {
+            if (!resizeRef.current) return;
+
+            const deltaX = e.clientX - startPosRef.current.x;
+            const deltaY = e.clientY - startPosRef.current.y;
+            const edge = resizeRef.current;
+
+            let newWidth = startPosRef.current.width;
+            let newHeight = startPosRef.current.height;
+
+            if (edge.includes('e')) {
+                newWidth = startPosRef.current.width + deltaX;
+            }
+            if (edge.includes('w')) {
+                newWidth = startPosRef.current.width - deltaX;
+            }
+            if (edge.includes('s')) {
+                newHeight = startPosRef.current.height + deltaY;
+            }
+            if (edge.includes('n')) {
+                newHeight = startPosRef.current.height - deltaY;
+            }
+
+            newWidth = Math.max(300, Math.min(800, newWidth));
+            newHeight = Math.max(120, Math.min(600, newHeight));
+
+            setDialogueDimensions({ width: newWidth, height: newHeight });
+        };
+
+        const handleMouseUp = () => {
+            setIsResizing(false);
+            resizeRef.current = null;
+        };
+
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [isResizing]);
 
     // Handle dialogue prompt selection from selector
     const handleSelectPrompt = useCallback((prompt) => {
@@ -309,7 +374,11 @@ function GameScreen() {
                     {dialogueVisible && (
                         <motion.div
                             className="dialogue-floating draggable"
-                            style={{ left: dialoguePosition.left }}
+                            style={{ 
+                                left: dialoguePosition.left,
+                                width: `${dialogueDimensions.width}px`,
+                                height: `${dialogueDimensions.height}px`
+                            }}
                             initial={{ opacity: 0, y: 100 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 100 }}
@@ -318,13 +387,23 @@ function GameScreen() {
                             dragElastic={0}
                             dragConstraints={{
                                 left: 100 - dialoguePosition.left,
-                                right: window.innerWidth - dialoguePosition.left - 600,
+                                right: window.innerWidth - dialoguePosition.left - dialogueDimensions.width - 100,
                                 top: -400,
                                 bottom: 0
                             }}
                             whileDrag={{ scale: 1.02, boxShadow: '0 -8px 40px rgba(0, 0, 0, 0.5)' }}
                             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                         >
+                            {/* Resize handles */}
+                            <div className="resize-handle resize-handle-n" onMouseDown={(e) => startResize('n', e)} />
+                            <div className="resize-handle resize-handle-s" onMouseDown={(e) => startResize('s', e)} />
+                            <div className="resize-handle resize-handle-e" onMouseDown={(e) => startResize('e', e)} />
+                            <div className="resize-handle resize-handle-w" onMouseDown={(e) => startResize('w', e)} />
+                            <div className="resize-handle resize-handle-ne" onMouseDown={(e) => startResize('ne', e)} />
+                            <div className="resize-handle resize-handle-nw" onMouseDown={(e) => startResize('nw', e)} />
+                            <div className="resize-handle resize-handle-se" onMouseDown={(e) => startResize('se', e)} />
+                            <div className="resize-handle resize-handle-sw" onMouseDown={(e) => startResize('sw', e)} />
+                            
                             <div className="dialogue-header">
                                 <span className="dialogue-speaker">{currentPatient.name}</span>
                                 <button

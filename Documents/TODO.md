@@ -172,6 +172,11 @@
 17. Transition from emojis to Phospher/Material icons but make sure they are still viewable
 
 
+## Layout Optimizations
+- [ ] Optimize layout for 16:9 and mobile devices.
+- [ ] Ensure all UI elements scale properly with different resolutions.
+- [ ] Make the `draggable-
+
 ## [BUILD] Requirements
 
 - Must be uploadable to Itch.io

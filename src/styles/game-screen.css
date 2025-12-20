@@ -309,27 +309,90 @@
 .dialogue-floating {
     position: fixed;
     bottom: 70px;
-    /* Above the tray */
-    width: 500px;
-    min-width: 300px;
-    min-height: 120px;
-    max-height: 400px;
     background: rgba(15, 25, 45, 0.97);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 12px;
     box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(12px);
-    overflow: auto;
+    overflow: hidden;
     z-index: 75;
-    /* Above patient, below drawers */
-    resize: both;
     display: flex;
     flex-direction: column;
 }
 
-/* Resize handle styling */
-.dialogue-floating::-webkit-resizer {
-    background: linear-gradient(135deg, transparent 50%, rgba(255, 255, 255, 0.3) 50%);
+/* Resize handles */
+.resize-handle {
+    position: absolute;
+    background: transparent;
+    z-index: 10;
+}
+
+.resize-handle:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.resize-handle-n {
+    top: 0;
+    left: 8px;
+    right: 8px;
+    height: 4px;
+    cursor: ns-resize;
+}
+
+.resize-handle-s {
+    bottom: 0;
+    left: 8px;
+    right: 8px;
+    height: 4px;
+    cursor: ns-resize;
+}
+
+.resize-handle-e {
+    top: 8px;
+    right: 0;
+    bottom: 8px;
+    width: 4px;
+    cursor: ew-resize;
+}
+
+.resize-handle-w {
+    top: 8px;
+    left: 0;
+    bottom: 8px;
+    width: 4px;
+    cursor: ew-resize;
+}
+
+.resize-handle-ne {
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    cursor: nesw-resize;
+}
+
+.resize-handle-nw {
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    cursor: nwse-resize;
+}
+
+.resize-handle-se {
+    bottom: 0;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    cursor: nwse-resize;
+}
+
+.resize-handle-sw {
+    bottom: 0;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    cursor: nesw-resize;
 }
 
 /* Draggable dialogue cursor */
