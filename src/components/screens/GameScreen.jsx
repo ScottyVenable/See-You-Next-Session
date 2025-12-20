@@ -1,10 +1,11 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useGame } from '../../context/GameContext.jsx';
 import { useUI, DRAWERS } from '../../context/UIContext.jsx';
 import PatientView from '../game/PatientView.jsx';
 import DialogueBox from '../game/DialogueBox.jsx';
 import SynsDialogueBox from '../game/SynsDialogueBox.jsx';
+import FloatingDialogue from '../game/FloatingDialogue.jsx';
 import DialogueSelector from '../game/DialogueSelector.jsx';
 import Clipboard from '../game/Clipboard.jsx';
 import FocusMeter from '../game/FocusMeter.jsx';
@@ -31,7 +32,11 @@ function GameScreen() {
     const [breakthroughDialogue, setBreakthroughDialogue] = useState(null);
     const [showTutorialHint, setShowTutorialHint] = useState(true);
     const [selectedPrompt, setSelectedPrompt] = useState(null);
-    const [useSynsDialogue, setUseSynsDialogue] = useState(true);
+
+    // Dialogue box position - calculated once on mount
+    const [dialoguePosition] = useState(() => ({
+        left: Math.max(100, (window.innerWidth - 500) / 2)
+    }));
 
     const { currentPatient, currentTurn, focus, isFocusMode, rapport } = gameState;
 
@@ -303,14 +308,20 @@ function GameScreen() {
                 <AnimatePresence>
                     {dialogueVisible && (
                         <motion.div
-                            className={`dialogue-floating draggable position-${settings.dialoguePosition}`}
+                            className="dialogue-floating draggable"
+                            style={{ left: dialoguePosition.left }}
                             initial={{ opacity: 0, y: 100 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 100 }}
                             drag
                             dragMomentum={false}
-                            dragElastic={0.1}
-                            dragConstraints={{ left: -400, right: 400, top: -300, bottom: 50 }}
+                            dragElastic={0}
+                            dragConstraints={{
+                                left: 100 - dialoguePosition.left,
+                                right: window.innerWidth - dialoguePosition.left - 600,
+                                top: -400,
+                                bottom: 0
+                            }}
                             whileDrag={{ scale: 1.02, boxShadow: '0 -8px 40px rgba(0, 0, 0, 0.5)' }}
                             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                         >
@@ -324,64 +335,19 @@ function GameScreen() {
                                     ▼
                                 </button>
                             </div>
-                            {useSynsDialogue ? (
-                                <SynsDialogueBox
-                                    patientId={currentPatient.id}
-                                    turn={currentTurn}
-                                    isFocusMode={isFocusMode}
-                                    patientName={currentPatient.name}
-                                    fallbackDialogue={currentPhase?.dialogue || []}
-                                    compact={true}
-                                    onKeywordCollected={(token) => {
-                                        actions.collectToken(token);
-                                        actions.addToClipboard(token);
-                                        setShowTutorialHint(false);
-                                    }}
-                                    onSpeechChange={(speech) => {
-                                        console.log('Current speech:', speech);
-                                    }}
-                                    onDialogueEnd={() => {
-                                        console.log('Dialogue block ended');
-                                    }}
-                                    onAskAbout={(keyword) => {
-                                        console.log('Ask about keyword:', keyword);
-                                    }}
-                                    onHighlightInHandbook={(keyword) => {
-                                        toggleDrawer('handbook');
-                                    }}
-                                    onExploreBackground={(keyword) => {
-                                        console.log('Explore background:', keyword);
-                                    }}
-                                />
-                            ) : (
-                                <DialogueBox
-                                    dialogue={currentPhase?.dialogue || []}
-                                    isFocusMode={isFocusMode}
-                                    patientName={currentPatient.name}
-                                    compact={true}
-                                    onKeywordCollected={(keyword) => {
-                                        const token = {
-                                            id: keyword.id,
-                                            type: 'text',
-                                            content: keyword.text,
-                                            contradicts: keyword.contradicts,
-                                            relatedSymptom: keyword.relatedSymptom,
-                                        };
-                                        actions.collectToken(token);
-                                        actions.addToClipboard(token);
-                                        setShowTutorialHint(false);
-                                    }}
-                                    onAskAbout={(keyword) => {
-                                        console.log('Ask about keyword:', keyword);
-                                    }}
-                                    onHighlightInHandbook={(keyword) => {
-                                        toggleDrawer('handbook');
-                                    }}
-                                    onExploreBackground={(keyword) => {
-                                        console.log('Explore background:', keyword);
-                                    }}
-                                />
-                            )}
+                            <FloatingDialogue
+                                patientId={currentPatient.id}
+                                turn={currentTurn}
+                                fallbackDialogue={currentPhase?.dialogue || []}
+                                onKeywordCollected={(token) => {
+                                    actions.collectToken(token);
+                                    actions.addToClipboard(token);
+                                    setShowTutorialHint(false);
+                                }}
+                                onDialogueEnd={() => {
+                                    console.log('Dialogue block ended');
+                                }}
+                            />
                         </motion.div>
                     )}
                 </AnimatePresence>

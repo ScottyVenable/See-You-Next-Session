@@ -1,0 +1,313 @@
+/**
+ * FloatingDialogue - Clean, minimal dialogue display for the floating panel
+ * Shows just the essential: quoted text and continue hint
+ */
+
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { useDialogue, loadPatientDialogue } from '../../sdns/index.js';
+import { useGame } from '../../context/GameContext.jsx';
+import '../../styles/dialogue-box.css';
+
+// Helper function to get keyword type
+function getKeywordType(keyword) {
+    if (keyword.contradicts) return 'contradiction';
+    if (keyword.reveals) return 'reveal';
+
+    const text = (keyword.text || '').toLowerCase();
+
+    if (/\b(always|never|constantly|weeks?|months?|years?|lately|recently)\b/.test(text)) {
+        return 'duration';
+    }
+    if (/\b(very|extremely|really|so much|intense|severe|overwhelming)\b/.test(text)) {
+        return 'intensity';
+    }
+    if (/\b(worried|anxious|scared|nervous|stressed|depressed|hopeful)\b/.test(text)) {
+        return 'emotion';
+    }
+    if (/\b(can't|cannot|avoid|stop|sleep|eat|work|focus)\b/.test(text)) {
+        return 'behavior';
+    }
+    if (/\b(job|work|family|relationship|friend|home)\b/.test(text)) {
+        return 'background';
+    }
+
+    return 'general';
+}
+
+// Parse text with keywords into renderable segments
+function parseDialogueText(text, keywords = []) {
+    if (!keywords || keywords.length === 0) {
+        return [{ type: 'text', content: text }];
+    }
+
+    const segments = [];
+    let remaining = text;
+
+    // Sort keywords by their position in text (first occurrence)
+    const sortedKeywords = [...keywords].sort((a, b) => {
+        const posA = text.indexOf(a.text);
+        const posB = text.indexOf(b.text);
+        return posA - posB;
+    });
+
+    for (const keyword of sortedKeywords) {
+        const index = remaining.indexOf(keyword.text);
+        if (index === -1) continue;
+
+        // Add text before keyword
+        if (index > 0) {
+            segments.push({ type: 'text', content: remaining.slice(0, index) });
+        }
+
+        // Add keyword
+        segments.push({ type: 'keyword', keyword, content: keyword.text });
+
+        // Continue with remaining text
+        remaining = remaining.slice(index + keyword.text.length);
+    }
+
+    // Add any remaining text
+    if (remaining) {
+        segments.push({ type: 'text', content: remaining });
+    }
+
+    return segments;
+}
+
+function FloatingDialogue({
+    patientId,
+    turn,
+    onKeywordCollected,
+    onDialogueEnd,
+    fallbackDialogue = []
+}) {
+    const { gameState, actions } = useGame();
+    const dialogueState = useDialogue(gameState, actions);
+
+    const {
+        currentSpeech,
+        loadDialogue,
+        startBlock,
+        advance,
+    } = dialogueState;
+
+    // Local state
+    const [displayedText, setDisplayedText] = useState('');
+    const [isTyping, setIsTyping] = useState(false);
+    const [collectedKeywords, setCollectedKeywords] = useState(new Set());
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [useFallback, setUseFallback] = useState(false);
+    const [fallbackIndex, setFallbackIndex] = useState(0);
+
+    const typingRef = useRef(null);
+    const loadedRef = useRef(false);
+
+    // Load SYNS dialogue on mount or when turn changes
+    useEffect(() => {
+        if (loadedRef.current) return;
+
+        async function loadSynsDialogue() {
+            try {
+                const forceReload = import.meta.env?.DEV ?? false;
+                const source = await loadPatientDialogue(patientId, turn, forceReload);
+                if (source) {
+                    loadDialogue(source);
+                    setIsLoaded(true);
+                    setUseFallback(false);
+                    loadedRef.current = true;
+                    startBlock('START');
+                } else {
+                    setUseFallback(true);
+                    setIsLoaded(true);
+                }
+            } catch (error) {
+                console.error('Error loading dialogue:', error);
+                setUseFallback(true);
+                setIsLoaded(true);
+            }
+        }
+
+        if (patientId && turn) {
+            loadSynsDialogue();
+        }
+
+        return () => {
+            loadedRef.current = false;
+        };
+    }, [patientId, turn]);
+
+    // Get current display content
+    const currentContent = useMemo(() => {
+        if (useFallback) {
+            return fallbackDialogue[fallbackIndex] || null;
+        }
+        return currentSpeech;
+    }, [useFallback, fallbackDialogue, fallbackIndex, currentSpeech]);
+
+    // Typewriter effect
+    useEffect(() => {
+        if (!currentContent?.text) {
+            setDisplayedText('');
+            return;
+        }
+
+        const fullText = currentContent.text;
+        setDisplayedText('');
+        setIsTyping(true);
+
+        let index = 0;
+        const speed = 30;
+
+        typingRef.current = setInterval(() => {
+            if (index < fullText.length) {
+                setDisplayedText(fullText.slice(0, index + 1));
+                index++;
+            } else {
+                clearInterval(typingRef.current);
+                setIsTyping(false);
+            }
+        }, speed);
+
+        return () => {
+            if (typingRef.current) clearInterval(typingRef.current);
+        };
+    }, [currentContent?.text, currentContent?.id]);
+
+    // Handle click to advance dialogue
+    const handleClick = useCallback(() => {
+        if (isTyping) {
+            if (typingRef.current) clearInterval(typingRef.current);
+            setDisplayedText(currentContent?.text || '');
+            setIsTyping(false);
+            return;
+        }
+
+        if (useFallback) {
+            if (fallbackIndex < fallbackDialogue.length - 1) {
+                setFallbackIndex(prev => prev + 1);
+            } else if (onDialogueEnd) {
+                onDialogueEnd();
+            }
+        } else {
+            const result = advance();
+            if (!result || result.type === 'end') {
+                if (onDialogueEnd) {
+                    onDialogueEnd();
+                }
+            }
+        }
+    }, [isTyping, useFallback, fallbackIndex, fallbackDialogue.length, advance, currentContent, onDialogueEnd]);
+
+    // Handle keyword collection
+    const handleKeywordClick = useCallback((keyword, event) => {
+        event.stopPropagation();
+
+        if (collectedKeywords.has(keyword.id)) return;
+
+        setCollectedKeywords(prev => new Set([...prev, keyword.id]));
+
+        const token = {
+            id: keyword.id,
+            type: 'text',
+            content: keyword.text,
+            contradicts: keyword.contradicts,
+            reveals: keyword.reveals,
+            relatedSymptom: keyword.relatedSymptom,
+        };
+
+        if (onKeywordCollected) {
+            onKeywordCollected(token);
+        }
+
+        if (keyword.contradicts) {
+            actions.collectToken(token);
+            actions.addToClipboard(token);
+        }
+    }, [collectedKeywords, onKeywordCollected, actions]);
+
+    // Parse text segments
+    const textSegments = useMemo(() => {
+        if (!currentContent?.text) return [];
+        return parseDialogueText(displayedText, currentContent.keywords || []);
+    }, [displayedText, currentContent?.keywords]);
+
+    // Loading state
+    if (!isLoaded) {
+        return (
+            <div className="dialogue-content-container" onClick={handleClick}>
+                <div className="dialogue-text">
+                    <span style={{ opacity: 0.5, fontStyle: 'italic' }}>Loading...</span>
+                </div>
+            </div>
+        );
+    }
+
+    // Empty state
+    if (!currentContent) {
+        return (
+            <div className="dialogue-content-container" onClick={handleClick}>
+                <div className="dialogue-text">
+                    <span style={{ opacity: 0.5, fontStyle: 'italic' }}>Waiting for patient...</span>
+                </div>
+            </div>
+        );
+    }
+
+    const isNarrator = currentContent.speaker === 'NARRATOR';
+    const isAction = currentContent.isAction;
+
+    return (
+        <div className="dialogue-content-container" onClick={handleClick}>
+            <div className="dialogue-text">
+                {isNarrator || isAction ? (
+                    <em>{displayedText}</em>
+                ) : (
+                    <>
+                        <span className="dialogue-quote">"</span>
+                        {textSegments.map((segment, idx) => {
+                            if (segment.type === 'keyword') {
+                                const keyword = segment.keyword;
+                                const isCollected = collectedKeywords.has(keyword.id);
+                                const keywordType = getKeywordType(keyword);
+
+                                return (
+                                    <motion.span
+                                        key={keyword.id || idx}
+                                        className={`dialogue-keyword ${isCollected ? 'collected' : 'available'} keyword-type-${keywordType}`}
+                                        onClick={(e) => handleKeywordClick(keyword, e)}
+                                        whileHover={!isCollected ? { scale: 1.02 } : undefined}
+                                        whileTap={!isCollected ? { scale: 0.98 } : undefined}
+                                    >
+                                        {segment.content}
+                                        {!isCollected && <span className="keyword-hint">+</span>}
+                                    </motion.span>
+                                );
+                            }
+                            return <span key={idx}>{segment.content}</span>;
+                        })}
+                        <span className="dialogue-quote">"</span>
+                    </>
+                )}
+                {isTyping && <span className="typing-cursor">|</span>}
+            </div>
+
+            <AnimatePresence>
+                {!isTyping && (
+                    <motion.div
+                        className="continue-hint"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ delay: 0.3 }}
+                    >
+                        <span>Click to continue</span>
+                        <span className="continue-arrow">▶</span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+}
+
+export default FloatingDialogue;

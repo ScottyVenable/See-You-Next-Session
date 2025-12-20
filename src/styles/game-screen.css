@@ -308,20 +308,28 @@
 
 .dialogue-floating {
     position: fixed;
-    left: 50%;
     bottom: 70px;
     /* Above the tray */
-    transform: translateX(-50%);
-    width: 750px;
-    max-width: 70%;
-    background: rgba(15, 25, 45, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 12px 12px 0 0;
+    width: 500px;
+    min-width: 300px;
+    min-height: 120px;
+    max-height: 400px;
+    background: rgba(15, 25, 45, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
     box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(12px);
-    overflow: hidden;
+    overflow: auto;
     z-index: 75;
     /* Above patient, below drawers */
+    resize: both;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Resize handle styling */
+.dialogue-floating::-webkit-resizer {
+    background: linear-gradient(135deg, transparent 50%, rgba(255, 255, 255, 0.3) 50%);
 }
 
 /* Draggable dialogue cursor */
@@ -337,83 +345,110 @@
     cursor: grabbing;
 }
 
-/* Position: Center Float (default) */
-.dialogue-floating.position-center-float {
-    width: 600px;
-    max-width: 70%;
-}
-
-/* Position: Left Inline - positioned to the left */
-.dialogue-floating.position-left-inline {
-    left: 70px;
-    /* After sidebar */
-    transform: none;
-    width: 400px;
-    max-width: 35%;
-}
-
-/* Position: Bottom Wide - wider drawer */
-.dialogue-floating.position-bottom-wide {
-    width: 85%;
-    max-width: 1100px;
-}
-
 .dialogue-header {
-    height: 53.2px;
     display: flex;
     align-items: center;
-    gap: 8px;
     justify-content: space-between;
-    padding: 8px 14px;
-    background: rgba(0, 0, 0, 0.3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 10px 16px 5px 16px;
+    background: rgba(0, 0, 0, 0.25);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    flex-shrink: 0;
 }
 
 .dialogue-speaker {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     font-weight: 600;
     color: var(--color-accent);
+    letter-spacing: 0.02em;
 }
 
 .dialogue-hide-btn {
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.4);
     cursor: pointer;
     padding: 4px 8px;
-    font-size: 0.8rem;
-    transition: color 0.2s;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+    border-radius: 4px;
 }
 
 .dialogue-hide-btn:hover {
     color: var(--color-text);
+    background: rgba(255, 255, 255, 0.1);
 }
 
-/* Dialogue content area - compact for floating views */
+/* Dialogue content container */
+.dialogue-content-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0 2px 8px 2px;
+    flex: 1;
+    min-height: 60px;
+    overflow-y: auto;
+}
+
+/* Dialogue text within floating box */
+.dialogue-floating .dialogue-text,
+.dialogue-floating .syns-dialogue-text {
+    font-size: 12px;
+    line-height: 1.5;
+    letter-spacing: 0.3px;
+    color: var(--color-text);
+    margin-bottom: 8px;
+    flex: 1;
+    text-align: justify;
+}
+
+.dialogue-floating .dialogue-quote {
+    color: rgba(108, 92, 231, 0.6);
+    font-size: 1.1em;
+    font-weight: 300;
+}
+
+/* Continue hint styling */
+.dialogue-floating .continue-hint {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    transition: color 0.2s;
+}
+
+.dialogue-floating:hover .continue-hint {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.dialogue-floating .continue-arrow {
+    font-size: 0.7rem;
+    opacity: 0.8;
+    animation: pulse-arrow 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-arrow {
+
+    0%,
+    100% {
+        transform: translateX(0);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: translateX(3px);
+        opacity: 1;
+    }
+}
+
+/* Legacy content styles */
 .dialogue-floating .dialogue-content,
 .dialogue-floating .syns-dialogue-content {
-    padding: 10px 14px;
-    max-height: 120px;
-    overflow-y: auto;
-    font-size: 0.82rem;
-    line-height: 1.45;
-}
-
-/* Even more compact for inline */
-.dialogue-floating.position-left-inline .dialogue-content,
-.dialogue-floating.position-left-inline .syns-dialogue-content {
-    padding: 6px 10px;
-    max-height: 60px;
-    font-size: 0.75rem;
-    line-height: 1.35;
-}
-
-.dialogue-floating.position-left-inline .dialogue-header {
-    padding: 4px 10px;
-}
-
-.dialogue-floating.position-left-inline .dialogue-speaker {
-    font-size: 0.7rem;
+    padding: 16px 20px;
+    font-size: 0.92rem;
+    line-height: 1.55;
 }
 
 /* Show dialogue button (when hidden) */
