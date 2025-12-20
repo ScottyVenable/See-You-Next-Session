@@ -455,13 +455,13 @@
 .dialogue-floating .dialogue-text,
 .dialogue-floating .syns-dialogue-text {
     font-size: 12px;
-    line-height: 1.5;
+    line-height: 1.6;
     letter-spacing: 0.3px;
     color: var(--color-text);
     margin-bottom: 8px;
-    padding: 0 8px;
+    padding: 4px 12px;
     flex: 1;
-    text-align: justify;
+    text-align: left;
 }
 
 .dialogue-floating .dialogue-quote {

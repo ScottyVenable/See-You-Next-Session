@@ -183,6 +183,13 @@
 - [x] Ensure the `draggable-dialogue` component cannot be dragged offscreen or overlap the bottom interaction tray when expanded or moved.
 - [x] Ensure the `draggable-dialogue` component resizes properly without breaking layout or overflowing content.
 - [x] Turn off dragging when resizing the `draggable-dialogue` component to prevent accidental movement.
+- [ ] Improve padding for dialogue text.
+- [ ] Remove justified text alignment for better readability.
+- [ ] Add markdown support for dialogue text (bold, italics, etc.) and make sure keywords with `[brackets]` are not rendered with the brackets.
+- [ ] Markdown formatting does not wait until typewriter effect is finished to render properly.
+### Bugs
+- [ ] Resizing the dialogue box from the bottom or left side causes it to resize from the opposite side instead of the intended side.
+
 ## [BUILD] Requirements
 
 - Must be uploadable to Itch.io
