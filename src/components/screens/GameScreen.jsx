@@ -387,13 +387,13 @@ function GameScreen() {
                             initial={{ opacity: 0, y: 100 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 100 }}
-                            drag
+                            drag={!isResizing}
                             dragMomentum={false}
                             dragElastic={0}
                             dragConstraints={{
                                 left: 70 - dialoguePosition.left,
-                                right: window.innerWidth - dialoguePosition.left - dialogueDimensions.width - 70,
-                                top: Math.min(-300, -(window.innerHeight - dialogueDimensions.height - 150)),
+                                right: Math.max(0, window.innerWidth - dialoguePosition.left - dialogueDimensions.width - 70),
+                                top: Math.max(-(window.innerHeight - dialogueDimensions.height - 150), -window.innerHeight + 200),
                                 bottom: 0
                             }}
                             whileDrag={{ scale: 1.02, boxShadow: '0 -8px 40px rgba(0, 0, 0, 0.5)' }}
