@@ -1,0 +1,187 @@
+{
+    "Keyword Section": {
+        "prefix": "keyword-section",
+        "body": [
+            "===KEYWORDS===",
+            "",
+            "[${1:keyword_id}] {",
+            "    category: ${2|time,emotion,behavior,cognition,relationship,background,symptom|}",
+            "    displayText: \"${3:Display Text}\"",
+            "    description: \"${4:Description of the keyword}\"",
+            "    importance: ${5|medium,low,high,critical|}",
+            "    ",
+            "    style: {",
+            "        color: \"${6:#6b7fd7}\"",
+            "        icon: \"${7:circle}\"",
+            "    }",
+            "    ",
+            "    effects: {",
+            "        focusCost: ${8:5}",
+            "        reveals: [\"${9:symptom-id}\"]",
+            "    }",
+            "}",
+            "$0"
+        ],
+        "description": "Create a new keyword section with a keyword definition"
+    },
+    "Keyword Definition": {
+        "prefix": "keyword",
+        "body": [
+            "[${1:keyword_id}] {",
+            "    category: ${2|time,emotion,behavior,cognition,relationship,background,symptom|}",
+            "    displayText: \"${3:Display Text}\"",
+            "    description: \"${4:Description}\"",
+            "    importance: ${5|medium,low,high,critical|}",
+            "    ",
+            "    style: {",
+            "        color: \"${6:#6b7fd7}\"",
+            "    }",
+            "    ",
+            "    effects: {",
+            "        focusCost: ${7:5}",
+            "    }",
+            "}",
+            "$0"
+        ],
+        "description": "Create a new keyword definition"
+    },
+    "Action Section": {
+        "prefix": "action-section",
+        "body": [
+            "===ACTIONS===",
+            "",
+            "@${1:action_id} {",
+            "    label: \"${2:Action Label}\"",
+            "    description: \"${3:What this action does}\"",
+            "    ",
+            "    dialogueOptions: [",
+            "        {",
+            "            text: \"${4:What the player says}\"",
+            "            response: \"${5:Patient's response}\"",
+            "            effects: {",
+            "                rapportChange: ${6:0}",
+            "                focusCost: ${7:5}",
+            "            }",
+            "        }",
+            "    ]",
+            "}",
+            "$0"
+        ],
+        "description": "Create a new action section"
+    },
+    "Action Definition": {
+        "prefix": "action",
+        "body": [
+            "@${1:action_id} {",
+            "    label: \"${2:Action Label}\"",
+            "    description: \"${3:Description}\"",
+            "    ",
+            "    dialogueOptions: [",
+            "        {",
+            "            text: \"${4:Player text}\"",
+            "            response: \"${5:Response}\"",
+            "        }",
+            "    ]",
+            "}",
+            "$0"
+        ],
+        "description": "Create a new action definition"
+    },
+    "Animation Section": {
+        "prefix": "animation-section",
+        "body": [
+            "===ANIMATIONS===",
+            "",
+            "@${1:anim_id} {",
+            "    type: \"${2|shake,pulse,glow,fade,bounce,wiggle,highlight|}\"",
+            "    duration: ${3:500}",
+            "    easing: \"${4|ease,ease-in,ease-out,ease-in-out,linear|}\"",
+            "    description: \"${5:Animation description}\"",
+            "}",
+            "$0"
+        ],
+        "description": "Create an animation definitions section"
+    },
+    "Animation Definition": {
+        "prefix": "anim",
+        "body": [
+            "@${1:anim_id} {",
+            "    type: \"${2|shake,pulse,glow,fade,bounce,wiggle,highlight|}\"",
+            "    duration: ${3:500}",
+            "    easing: \"${4|ease-in-out|}\"",
+            "}",
+            "$0"
+        ],
+        "description": "Create an animation definition"
+    },
+    "Meta Section": {
+        "prefix": "meta-section",
+        "body": [
+            "===META===",
+            "",
+            "source: \"${1:patient_id}\"",
+            "displayName: \"${2:Patient Name Keywords}\"",
+            "version: \"${3:1.0.0}\"",
+            "",
+            "patientInfo: {",
+            "    name: \"${4:Patient Name}\"",
+            "    diagnosis: \"${5:Diagnosis}\"",
+            "    keyTraits: [\"${6:trait1}\", \"${7:trait2}\"]",
+            "}",
+            "$0"
+        ],
+        "description": "Create a meta information section"
+    },
+    "Dialogue Option": {
+        "prefix": "dialogue-option",
+        "body": [
+            "{",
+            "    text: \"${1:What the player says}\"",
+            "    response: \"${2:Patient's response}\"",
+            "    mood: \"${3|neutral,nervous,defensive,vulnerable,angry,sad|}\"",
+            "    effects: {",
+            "        rapportChange: ${4:0}",
+            "        focusCost: ${5:5}",
+            "        unlocks: [\"${6:topic_id}\"]",
+            "    }",
+            "}$0"
+        ],
+        "description": "Create a dialogue option for an action"
+    },
+    "Effects Block": {
+        "prefix": "effects",
+        "body": [
+            "effects: {",
+            "    focusCost: ${1:5}",
+            "    rapportChange: ${2:0}",
+            "    reveals: [\"${3:symptom}\"]",
+            "    triggers: [\"${4:event}\"]",
+            "}$0"
+        ],
+        "description": "Create an effects block"
+    },
+    "Style Block": {
+        "prefix": "style",
+        "body": [
+            "style: {",
+            "    color: \"${1:#6b7fd7}\"",
+            "    bgColor: \"${2:rgba(107, 127, 215, 0.15)}\"",
+            "    icon: \"${3:circle}\"",
+            "    animation: \"${4|none,pulse,glow,shake|}\"",
+            "}$0"
+        ],
+        "description": "Create a style block"
+    },
+    "Menu Option": {
+        "prefix": "menu-option",
+        "body": [
+            "{",
+            "    id: \"${1:option_id}\"",
+            "    label: \"${2:Option Label}\"",
+            "    icon: \"${3:edit-3}\"",
+            "    action: \"${4|note,collect,ask-about,highlight-handbook,explore|}\"",
+            "}$0"
+        ],
+        "description": "Create a menu option"
+    }
+}

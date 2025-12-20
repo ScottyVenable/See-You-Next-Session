@@ -9,24 +9,29 @@
  * 4. Override:   [keyword text](category.identifier, {overrides})
  * 5. Inline:     [keyword text](@keyword{...definition...})
  * 6. Legacy:     [keyword text]<metadata>
+ * 7. NEW Linked: [keyword text]<keyword:source.category.keywordId>
  * 
  * @module sdns/keyword-parser
- * @version 1.0.0
+ * @version 2.0.0
  */
 
 import { getKeyword, getKeywordWithText, DEFAULT_KEYWORD, validateKeyword } from '../data/keywords/index.js';
 import { getMenuOption } from '../data/menu-options/index.js';
+import keywordLoader from '../data/keywords/KeywordLoader.js';
 
 // ============================================================================
 // REGEX PATTERNS
 // ============================================================================
 
 const PATTERNS = {
+    // NEW: Match [text]<keyword:source.category.id>
+    LINKED_KEYWORD: /\[([^\]]+)\]<keyword:([^>]+)>/g,
+
     // Match [text](reference) - standard markdown-like format
     REFERENCE: /\[([^\]]+)\]\(([^)]+)\)/g,
 
-    // Match [text]<metadata> - legacy format
-    LEGACY_META: /\[([^\]]+)\]<([^>]+)>/g,
+    // Match [text]<metadata> - legacy format (not keyword link)
+    LEGACY_META: /\[([^\]]+)\]<(?!keyword:)([^>]+)>/g,
 
     // Match [text] alone - simple keyword
     SIMPLE: /\[([^\]]+)\](?![(<])/g,
@@ -60,6 +65,7 @@ const PATTERNS = {
  * @property {Object} [overrides] - Any overrides applied
  * @property {boolean} isInline - Whether defined inline
  * @property {boolean} isDefault - Whether using fallback
+ * @property {boolean} [isLinked] - Whether using new linked format
  * @property {number} startIndex - Start position in original text
  * @property {number} endIndex - End position in original text
  * @property {string} originalMatch - Original matched text
@@ -82,6 +88,7 @@ export function parseKeywords(text, context = {}) {
     const { patientId } = context;
 
     // Reset regex lastIndex
+    PATTERNS.LINKED_KEYWORD.lastIndex = 0;
     PATTERNS.REFERENCE.lastIndex = 0;
     PATTERNS.LEGACY_META.lastIndex = 0;
     PATTERNS.SIMPLE.lastIndex = 0;
@@ -89,9 +96,27 @@ export function parseKeywords(text, context = {}) {
     // Track positions to avoid double-matching
     const matchedRanges = [];
 
-    // 1. Parse [text](reference) format
+    // 0. Parse [text]<keyword:source.category.id> format (NEW - highest priority)
     let match;
+    while ((match = PATTERNS.LINKED_KEYWORD.exec(text)) !== null) {
+        const [fullMatch, displayText, keywordId] = match;
+        const parsed = parseLinkedKeyword(keywordId, displayText);
+
+        keywords.push({
+            ...parsed,
+            startIndex: match.index,
+            endIndex: match.index + fullMatch.length,
+            originalMatch: fullMatch
+        });
+
+        matchedRanges.push([match.index, match.index + fullMatch.length]);
+    }
+
+    // 1. Parse [text](reference) format
     while ((match = PATTERNS.REFERENCE.exec(text)) !== null) {
+        // Skip if already matched
+        if (isInRange(match.index, matchedRanges)) continue;
+
         const [fullMatch, displayText, reference] = match;
         const parsed = parseReference(reference, displayText, patientId);
 
@@ -143,6 +168,55 @@ export function parseKeywords(text, context = {}) {
     keywords.sort((a, b) => a.startIndex - b.startIndex);
 
     return keywords;
+}
+
+/**
+ * Parse a linked keyword reference (new format)
+ * Format: <keyword:source.category.keywordId>
+ * 
+ * @param {string} keywordId - Full keyword ID
+ * @param {string} displayText - Display text
+ * @returns {Object} Parsed keyword info
+ */
+function parseLinkedKeyword(keywordId, displayText) {
+    // Look up keyword from the new loader
+    const keyword = keywordLoader.getKeywordById(keywordId);
+
+    if (keyword) {
+        return {
+            displayText,
+            referenceId: keywordId,
+            keyword: {
+                ...keyword,
+                // Override display text with what's in the dialogue
+                displayText
+            },
+            overrides: null,
+            isInline: false,
+            isDefault: false,
+            isLinked: true
+        };
+    }
+
+    // Keyword not found - create a fallback
+    const parts = keywordId.split('.');
+    return {
+        displayText,
+        referenceId: keywordId,
+        keyword: {
+            id: keywordId,
+            displayText,
+            description: `Keyword not found: ${keywordId}`,
+            importance: 'medium',
+            category: parts[1] || 'unknown',
+            source: parts[0] || 'unknown',
+            _isDefault: true
+        },
+        overrides: null,
+        isInline: false,
+        isDefault: true,
+        isLinked: true
+    };
 }
 
 /**
@@ -525,9 +599,31 @@ export function renderKeywords(text, keywords, renderer) {
  */
 export function stripKeywordMarkup(text) {
     return text
+        .replace(PATTERNS.LINKED_KEYWORD, '$1')
         .replace(PATTERNS.REFERENCE, '$1')
         .replace(PATTERNS.LEGACY_META, '$1')
         .replace(PATTERNS.SIMPLE, '$1');
+}
+
+/**
+ * Initialize the keyword system
+ * Must be called before parsing keywords with the new linked format
+ * 
+ * @returns {Promise<boolean>} Success status
+ */
+export async function initKeywordParser() {
+    if (keywordLoader.loaded) {
+        return true;
+    }
+    return keywordLoader.loadAll();
+}
+
+/**
+ * Get the keyword loader instance for direct access
+ * @returns {KeywordLoader}
+ */
+export function getKeywordLoader() {
+    return keywordLoader;
 }
 
 // ============================================================================
@@ -538,5 +634,7 @@ export default {
     parseKeywords,
     renderKeywords,
     stripKeywordMarkup,
+    initKeywordParser,
+    getKeywordLoader,
     PATTERNS
 };

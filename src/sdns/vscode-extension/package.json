@@ -20,9 +20,7 @@
         "session",
         "sdns"
     ],
-    "activationEvents": [
-        "onLanguage:sdns"
-    ],
+    "activationEvents": [],
     "main": "./out/extension.js",
     "contributes": {
         "languages": [
@@ -34,7 +32,24 @@
                     "Session Dialogue and Narration System"
                 ],
                 "extensions": [
-                    ".session"
+                    ".session",
+                    ".sdns",
+                    ".turn"
+                ],
+                "configuration": "./language-configuration.json",
+                "icon": {
+                    "light": "./images/sdns-file-light.svg",
+                    "dark": "./images/sdns-file-dark.svg"
+                }
+            },
+            {
+                "id": "sdns-keys",
+                "aliases": [
+                    "SDNS Keywords",
+                    "Keyword Definitions"
+                ],
+                "extensions": [
+                    ".keys"
                 ],
                 "configuration": "./language-configuration.json",
                 "icon": {
@@ -48,12 +63,21 @@
                 "language": "sdns",
                 "scopeName": "source.sdns",
                 "path": "./syntaxes/sdns.tmLanguage.json"
+            },
+            {
+                "language": "sdns-keys",
+                "scopeName": "source.sdns-keys",
+                "path": "./syntaxes/sdns-keys.tmLanguage.json"
             }
         ],
         "snippets": [
             {
                 "language": "sdns",
                 "path": "./snippets/sdns.snippets.json"
+            },
+            {
+                "language": "sdns-keys",
+                "path": "./snippets/sdns-keys.snippets.json"
             }
         ],
         "themes": [
@@ -110,8 +134,34 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Show directive suggestions after @ symbol"
+                },
+                "sdns.keywords.definitionsPath": {
+                    "type": "string",
+                    "default": "src/data/keywords/definitions",
+                    "description": "Path to keyword definition JSON files (relative to workspace)"
                 }
             }
+        },
+        "commands": [
+            {
+                "command": "sdns.reloadKeywords",
+                "title": "SDNS: Reload Keyword Definitions",
+                "category": "SDNS"
+            },
+            {
+                "command": "sdns.showKeywordInfo",
+                "title": "SDNS: Show Keyword Info",
+                "category": "SDNS"
+            }
+        ],
+        "menus": {
+            "editor/context": [
+                {
+                    "command": "sdns.showKeywordInfo",
+                    "when": "editorLangId == sdns",
+                    "group": "navigation"
+                }
+            ]
         }
     },
     "scripts": {

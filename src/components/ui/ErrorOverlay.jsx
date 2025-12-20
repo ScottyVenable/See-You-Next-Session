@@ -48,7 +48,7 @@ function ErrorOverlay() {
             const time = new Date(e.timestamp).toLocaleTimeString();
             return `[${time}] [${e.level}] [${e.category}] ${e.message}${e.context ? `\n  Context: ${JSON.stringify(e.context)}` : ''}`;
         }).join('\n');
-        
+
         navigator.clipboard.writeText(logText).then(() => {
             console.log('Debug logs copied to clipboard');
         }).catch(err => {

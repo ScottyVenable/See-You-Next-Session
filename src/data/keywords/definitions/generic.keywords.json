@@ -1,0 +1,572 @@
+{
+    "$schema": "./keyword-schema.json",
+    "source": "generic",
+    "displayName": "Generic Keywords",
+    "description": "Common keywords that can be used across multiple patients",
+    "version": "1.0.0",
+    "keywords": {
+        "time": {
+            "_category": {
+                "label": "Time & Duration",
+                "icon": "calendar",
+                "description": "Keywords related to time and duration of symptoms"
+            },
+            "months": {
+                "id": "generic.time.months",
+                "displayText": "months",
+                "aliases": [
+                    "a few months",
+                    "several months",
+                    "couple months"
+                ],
+                "description": "Duration spanning months - indicates chronic presentation",
+                "importance": "medium",
+                "style": {
+                    "color": "#6b7fd7",
+                    "bgColor": "rgba(107, 127, 215, 0.15)",
+                    "icon": "calendar"
+                },
+                "effects": {
+                    "reveals": [
+                        "chronicity"
+                    ],
+                    "focusCost": 3
+                }
+            },
+            "weeks": {
+                "id": "generic.time.weeks",
+                "displayText": "weeks",
+                "aliases": [
+                    "a few weeks",
+                    "several weeks",
+                    "couple weeks"
+                ],
+                "description": "Duration spanning weeks",
+                "importance": "low",
+                "style": {
+                    "color": "#6b7fd7",
+                    "bgColor": "rgba(107, 127, 215, 0.12)"
+                },
+                "effects": {
+                    "focusCost": 2
+                }
+            },
+            "years": {
+                "id": "generic.time.years",
+                "displayText": "years",
+                "aliases": [
+                    "a few years",
+                    "several years",
+                    "many years"
+                ],
+                "description": "Years-long duration - chronic condition",
+                "importance": "high",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.15)",
+                    "icon": "alert-triangle"
+                },
+                "effects": {
+                    "reveals": [
+                        "chronic-condition"
+                    ],
+                    "focusCost": 5
+                }
+            },
+            "always": {
+                "id": "generic.time.always",
+                "displayText": "always",
+                "aliases": [
+                    "all my life",
+                    "as long as I can remember",
+                    "forever"
+                ],
+                "description": "Lifelong pattern - developmental or characterological",
+                "importance": "critical",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.2)",
+                    "animation": "pulse"
+                },
+                "effects": {
+                    "reveals": [
+                        "lifelong-pattern"
+                    ],
+                    "focusCost": 6
+                }
+            },
+            "everyNight": {
+                "id": "generic.time.everyNight",
+                "displayText": "every night",
+                "aliases": [
+                    "nightly",
+                    "each night",
+                    "night after night"
+                ],
+                "description": "Nightly occurrence pattern",
+                "importance": "high",
+                "style": {
+                    "color": "#3498db",
+                    "bgColor": "rgba(52, 152, 219, 0.15)"
+                },
+                "effects": {
+                    "reveals": [
+                        "sleep-disturbance"
+                    ],
+                    "focusCost": 4
+                }
+            },
+            "constantly": {
+                "id": "generic.time.constantly",
+                "displayText": "constantly",
+                "aliases": [
+                    "all the time",
+                    "non-stop",
+                    "continuously"
+                ],
+                "description": "Continuous occurrence - pervasive symptom",
+                "importance": "high",
+                "style": {
+                    "color": "#e67e22",
+                    "bgColor": "rgba(230, 126, 34, 0.15)"
+                },
+                "effects": {
+                    "focusCost": 4
+                }
+            },
+            "recently": {
+                "id": "generic.time.recently",
+                "displayText": "recently",
+                "aliases": [
+                    "lately",
+                    "these days",
+                    "in the past few days"
+                ],
+                "description": "Recent onset - may indicate acute episode",
+                "importance": "medium",
+                "style": {
+                    "color": "#2ecc71",
+                    "bgColor": "rgba(46, 204, 113, 0.12)"
+                },
+                "effects": {
+                    "focusCost": 2
+                }
+            }
+        },
+        "emotion": {
+            "_category": {
+                "label": "Emotions",
+                "icon": "heart",
+                "description": "Emotional expressions and feeling states"
+            },
+            "anxious": {
+                "id": "generic.emotion.anxious",
+                "displayText": "anxious",
+                "aliases": [
+                    "anxiety",
+                    "worried",
+                    "nervous"
+                ],
+                "description": "Expression of anxiety or nervousness",
+                "importance": "high",
+                "style": {
+                    "color": "#f39c12",
+                    "bgColor": "rgba(243, 156, 18, 0.15)",
+                    "icon": "alert-circle"
+                },
+                "effects": {
+                    "reveals": [
+                        "anxiety-acknowledged"
+                    ],
+                    "focusCost": 4
+                }
+            },
+            "terrified": {
+                "id": "generic.emotion.terrified",
+                "displayText": "terrified",
+                "aliases": [
+                    "scared to death",
+                    "petrified",
+                    "paralyzed with fear"
+                ],
+                "description": "Intense fear expression - indicates severity",
+                "importance": "critical",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.2)",
+                    "animation": "shake"
+                },
+                "effects": {
+                    "reveals": [
+                        "severe-anxiety"
+                    ],
+                    "focusCost": 6
+                }
+            },
+            "hopeless": {
+                "id": "generic.emotion.hopeless",
+                "displayText": "hopeless",
+                "aliases": [
+                    "no hope",
+                    "pointless",
+                    "no way out"
+                ],
+                "description": "SAFETY FLAG - Hopelessness, assess for SI",
+                "importance": "critical",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.25)",
+                    "animation": "pulse",
+                    "icon": "alert-triangle"
+                },
+                "effects": {
+                    "reveals": [
+                        "depression-marker",
+                        "safety-concern"
+                    ],
+                    "triggers": [
+                        "safety-assessment"
+                    ],
+                    "focusCost": 8
+                },
+                "safetyFlag": true
+            },
+            "worthless": {
+                "id": "generic.emotion.worthless",
+                "displayText": "worthless",
+                "aliases": [
+                    "no good",
+                    "useless",
+                    "waste of space"
+                ],
+                "description": "SAFETY FLAG - Worthlessness, assess for SI",
+                "importance": "critical",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.25)",
+                    "animation": "pulse",
+                    "icon": "alert-triangle"
+                },
+                "effects": {
+                    "reveals": [
+                        "depression-marker",
+                        "safety-concern"
+                    ],
+                    "triggers": [
+                        "safety-assessment"
+                    ],
+                    "focusCost": 8
+                },
+                "safetyFlag": true
+            },
+            "numb": {
+                "id": "generic.emotion.numb",
+                "displayText": "numb",
+                "aliases": [
+                    "can't feel anything",
+                    "emotionally flat",
+                    "empty"
+                ],
+                "description": "Emotional numbness - dissociation or depression",
+                "importance": "high",
+                "style": {
+                    "color": "#7f8c8d",
+                    "bgColor": "rgba(127, 140, 141, 0.2)"
+                },
+                "effects": {
+                    "reveals": [
+                        "emotional-blunting"
+                    ],
+                    "focusCost": 5
+                }
+            }
+        },
+        "behavior": {
+            "_category": {
+                "label": "Behaviors",
+                "icon": "activity",
+                "description": "Observable behaviors and patterns"
+            },
+            "avoiding": {
+                "id": "generic.behavior.avoiding",
+                "displayText": "avoiding",
+                "aliases": [
+                    "stay away from",
+                    "can't go",
+                    "won't do"
+                ],
+                "description": "Avoidance behavior - common in anxiety",
+                "importance": "medium",
+                "style": {
+                    "color": "#e67e22",
+                    "bgColor": "rgba(230, 126, 34, 0.15)"
+                },
+                "effects": {
+                    "reveals": [
+                        "avoidance-pattern"
+                    ],
+                    "focusCost": 3
+                }
+            },
+            "cantSleep": {
+                "id": "generic.behavior.cantSleep",
+                "displayText": "can't sleep",
+                "aliases": [
+                    "insomnia",
+                    "trouble sleeping",
+                    "don't sleep",
+                    "barely sleep"
+                ],
+                "description": "Sleep difficulties",
+                "importance": "high",
+                "style": {
+                    "color": "#3498db",
+                    "bgColor": "rgba(52, 152, 219, 0.15)",
+                    "icon": "moon"
+                },
+                "effects": {
+                    "reveals": [
+                        "sleep-disturbance"
+                    ],
+                    "focusCost": 4
+                }
+            },
+            "racingMind": {
+                "id": "generic.behavior.racingMind",
+                "displayText": "racing mind",
+                "aliases": [
+                    "thoughts won't stop",
+                    "can't turn off my brain",
+                    "mind won't shut off"
+                ],
+                "description": "Racing thoughts - anxiety/mania marker",
+                "importance": "high",
+                "style": {
+                    "color": "#f39c12",
+                    "bgColor": "rgba(243, 156, 18, 0.15)"
+                },
+                "effects": {
+                    "reveals": [
+                        "racing-thoughts"
+                    ],
+                    "focusCost": 4
+                }
+            },
+            "checking": {
+                "id": "generic.behavior.checking",
+                "displayText": "checking",
+                "aliases": [
+                    "have to check",
+                    "keep checking",
+                    "check again and again"
+                ],
+                "description": "Repetitive checking behavior - OCD marker",
+                "importance": "high",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.15)"
+                },
+                "effects": {
+                    "reveals": [
+                        "compulsive-checking"
+                    ],
+                    "focusCost": 5
+                }
+            }
+        },
+        "cognition": {
+            "_category": {
+                "label": "Thoughts & Beliefs",
+                "icon": "brain",
+                "description": "Cognitive patterns and core beliefs"
+            },
+            "overreacting": {
+                "id": "generic.cognition.overreacting",
+                "displayText": "overreacting",
+                "aliases": [
+                    "being dramatic",
+                    "making a big deal",
+                    "too sensitive"
+                ],
+                "description": "Self-minimization pattern",
+                "importance": "medium",
+                "style": {
+                    "color": "#7f8c8d",
+                    "bgColor": "rgba(127, 140, 141, 0.15)"
+                },
+                "effects": {
+                    "reveals": [
+                        "minimization"
+                    ],
+                    "focusCost": 3
+                }
+            },
+            "nothingSerious": {
+                "id": "generic.cognition.nothingSerious",
+                "displayText": "nothing serious",
+                "aliases": [
+                    "not a big deal",
+                    "probably fine",
+                    "shouldn't complain"
+                ],
+                "description": "Downplaying symptoms",
+                "importance": "medium",
+                "style": {
+                    "color": "#7f8c8d",
+                    "bgColor": "rgba(127, 140, 141, 0.12)"
+                },
+                "effects": {
+                    "reveals": [
+                        "minimization"
+                    ],
+                    "focusCost": 2
+                }
+            },
+            "goingCrazy": {
+                "id": "generic.cognition.goingCrazy",
+                "displayText": "going crazy",
+                "aliases": [
+                    "losing my mind",
+                    "losing it",
+                    "going insane"
+                ],
+                "description": "Fear of losing control - common in anxiety",
+                "importance": "critical",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.2)"
+                },
+                "effects": {
+                    "reveals": [
+                        "fear-of-losing-control"
+                    ],
+                    "focusCost": 6
+                }
+            },
+            "betterOff": {
+                "id": "generic.cognition.betterOff",
+                "displayText": "better off",
+                "aliases": [
+                    "everyone would be better",
+                    "they'd be happier without me"
+                ],
+                "description": "CRITICAL SAFETY FLAG - Suicidal ideation indicator",
+                "importance": "critical",
+                "style": {
+                    "color": "#c0392b",
+                    "bgColor": "rgba(192, 57, 43, 0.3)",
+                    "animation": "pulse",
+                    "icon": "alert-octagon"
+                },
+                "effects": {
+                    "reveals": [
+                        "suicidal-ideation"
+                    ],
+                    "triggers": [
+                        "immediate-safety-assessment"
+                    ],
+                    "focusCost": 10
+                },
+                "safetyFlag": true,
+                "criticalAction": "immediate-safety-assessment"
+            }
+        },
+        "relationship": {
+            "_category": {
+                "label": "Relationships",
+                "icon": "users",
+                "description": "Interpersonal and relationship references"
+            },
+            "noOne": {
+                "id": "generic.relationship.noOne",
+                "displayText": "no one",
+                "aliases": [
+                    "nobody",
+                    "all alone",
+                    "have no one"
+                ],
+                "description": "Feeling isolated",
+                "importance": "high",
+                "style": {
+                    "color": "#3498db",
+                    "bgColor": "rgba(52, 152, 219, 0.15)"
+                },
+                "effects": {
+                    "reveals": [
+                        "social-isolation"
+                    ],
+                    "focusCost": 4
+                }
+            },
+            "burden": {
+                "id": "generic.relationship.burden",
+                "displayText": "burden",
+                "aliases": [
+                    "weighing them down",
+                    "too much for them",
+                    "problem for everyone"
+                ],
+                "description": "SAFETY FLAG - Feeling like a burden",
+                "importance": "critical",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.25)",
+                    "animation": "pulse"
+                },
+                "effects": {
+                    "reveals": [
+                        "burdensomeness",
+                        "safety-concern"
+                    ],
+                    "triggers": [
+                        "safety-assessment"
+                    ],
+                    "focusCost": 7
+                },
+                "safetyFlag": true
+            }
+        }
+    },
+    "menuOptions": {
+        "default": [
+            {
+                "id": "collect",
+                "label": "Collect as Token",
+                "icon": "plus-circle",
+                "action": "collect"
+            },
+            {
+                "id": "note",
+                "label": "Add Note",
+                "icon": "edit-3",
+                "action": "note"
+            },
+            {
+                "id": "highlight",
+                "label": "Highlight in Handbook",
+                "icon": "book-open",
+                "action": "highlight-handbook"
+            }
+        ],
+        "safetyFlag": [
+            {
+                "id": "collect",
+                "label": "Collect as Token",
+                "icon": "plus-circle",
+                "action": "collect"
+            },
+            {
+                "id": "safety-note",
+                "label": "Flag for Safety Assessment",
+                "icon": "alert-triangle",
+                "action": "safety-flag"
+            },
+            {
+                "id": "assess",
+                "label": "Begin Safety Assessment",
+                "icon": "shield",
+                "action": "safety-assessment"
+            }
+        ]
+    }
+}

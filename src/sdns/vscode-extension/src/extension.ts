@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
+import * as fs from 'fs';
 
 // SDNS Language Constants
 const SPEAKERS = ['PATIENT', 'THERAPIST', 'NARRATOR', 'SYSTEM'];
@@ -36,10 +38,173 @@ const VARIABLES = ['rapport', 'focus', 'turn', 'breakthroughs'];
 const METADATA_TYPES = ['symptom', 'contradicts', 'reveals', 'links', 'observation', 'keyword', 'breakthrough'];
 
 // ============================================================================
-// KEYWORD DATABASE (IntelliSense data)
+// KEYWORD SYSTEM - Dynamic loading from JSON files
 // ============================================================================
 
+interface KeywordStyle {
+    color?: string;
+    bgColor?: string;
+    icon?: string;
+    animation?: string;
+}
+
+interface KeywordEffects {
+    focusCost?: number;
+    reveals?: string[];
+    rapportChange?: number;
+    triggers?: string[];
+    setVars?: Record<string, unknown>;
+    contradicts?: string[];
+    unlocks?: string[];
+}
+
+interface MenuOption {
+    id: string;
+    label: string;
+    icon?: string;
+    action: string;
+    params?: Record<string, unknown>;
+}
+
 interface KeywordDefinition {
+    id: string;
+    displayText: string;
+    aliases?: string[];
+    description: string;
+    importance: 'low' | 'medium' | 'high' | 'critical';
+    style?: KeywordStyle;
+    effects?: KeywordEffects;
+    menuOptions?: MenuOption[];
+    note?: string;
+    safety?: boolean;
+}
+
+interface KeywordCategory {
+    _category: {
+        label: string;
+        icon?: string;
+        description?: string;
+    };
+    [keywordId: string]: KeywordDefinition | { label: string; icon?: string; description?: string };
+}
+
+interface KeywordFile {
+    source: string;
+    displayName: string;
+    description?: string;
+    version?: string;
+    patientInfo?: {
+        name: string;
+        diagnosis?: string;
+        keyTraits?: string[];
+    };
+    keywords: Record<string, KeywordCategory>;
+    menuOptions?: {
+        default?: MenuOption[];
+        contradiction?: MenuOption[];
+        breakthrough?: MenuOption[];
+    };
+}
+
+// Keyword database - populated from JSON files
+let keywordSources: Map<string, KeywordFile> = new Map();
+let allKeywords: Map<string, KeywordDefinition> = new Map();
+
+const KEYWORD_CATEGORIES = [
+    { id: 'time', label: 'Time & Duration', icon: 'calendar' },
+    { id: 'emotion', label: 'Emotions', icon: 'heart' },
+    { id: 'behavior', label: 'Behaviors', icon: 'activity' },
+    { id: 'symptom', label: 'Symptoms', icon: 'alert-circle' },
+    { id: 'relationship', label: 'Relationships', icon: 'users' },
+    { id: 'cognition', label: 'Thoughts & Beliefs', icon: 'brain' },
+    { id: 'background', label: 'Background & History', icon: 'book' }
+];
+
+/**
+ * Load keyword definitions from JSON files
+ */
+function loadKeywordFiles(workspaceRoot: string): void {
+    const keywordDefPath = path.join(workspaceRoot, 'src', 'data', 'keywords', 'definitions');
+
+    keywordSources.clear();
+    allKeywords.clear();
+
+    if (!fs.existsSync(keywordDefPath)) {
+        console.log('SDNS: Keyword definitions directory not found:', keywordDefPath);
+        return;
+    }
+
+    const files = fs.readdirSync(keywordDefPath).filter(f => f.endsWith('.keywords.json'));
+
+    for (const file of files) {
+        try {
+            const filePath = path.join(keywordDefPath, file);
+            const content = fs.readFileSync(filePath, 'utf-8');
+            const keywordFile: KeywordFile = JSON.parse(content);
+
+            keywordSources.set(keywordFile.source, keywordFile);
+
+            // Index all keywords by their full ID
+            for (const [categoryId, category] of Object.entries(keywordFile.keywords)) {
+                for (const [keywordId, keyword] of Object.entries(category)) {
+                    if (keywordId === '_category') continue;
+                    const kw = keyword as KeywordDefinition;
+                    if (kw.id) {
+                        allKeywords.set(kw.id, kw);
+                    }
+                }
+            }
+
+            console.log(`SDNS: Loaded ${file} with source '${keywordFile.source}'`);
+        } catch (err) {
+            console.error(`SDNS: Error loading ${file}:`, err);
+        }
+    }
+
+    console.log(`SDNS: Loaded ${keywordSources.size} keyword sources, ${allKeywords.size} total keywords`);
+}
+
+/**
+ * Get all available keyword sources (patient IDs + 'generic')
+ */
+function getKeywordSources(): string[] {
+    return Array.from(keywordSources.keys());
+}
+
+/**
+ * Get categories available for a source
+ */
+function getCategoriesForSource(source: string): string[] {
+    const file = keywordSources.get(source);
+    if (!file) return [];
+    return Object.keys(file.keywords);
+}
+
+/**
+ * Get keywords for a specific source and category
+ */
+function getKeywordsForCategory(source: string, category: string): KeywordDefinition[] {
+    const file = keywordSources.get(source);
+    if (!file || !file.keywords[category]) return [];
+
+    const keywords: KeywordDefinition[] = [];
+    for (const [id, kw] of Object.entries(file.keywords[category])) {
+        if (id !== '_category') {
+            keywords.push(kw as KeywordDefinition);
+        }
+    }
+    return keywords;
+}
+
+/**
+ * Get a keyword by its full ID (source.category.keywordId)
+ */
+function getKeywordById(fullId: string): KeywordDefinition | undefined {
+    return allKeywords.get(fullId);
+}
+
+// Legacy interface for backwards compatibility
+interface LegacyKeywordDefinition {
     id: string;
     category: string;
     description: string;
@@ -47,121 +212,74 @@ interface KeywordDefinition {
     effects?: string[];
 }
 
-const KEYWORD_CATEGORIES = [
-    { id: 'time', label: 'Time & Duration', icon: '🕐' },
-    { id: 'emotion', label: 'Emotions', icon: '❤️' },
-    { id: 'behavior', label: 'Behaviors', icon: '🎭' },
-    { id: 'symptom', label: 'Symptoms', icon: '⚕️' },
-    { id: 'relationship', label: 'Relationships', icon: '👥' },
-    { id: 'cognition', label: 'Thoughts & Beliefs', icon: '🧠' }
-];
-
-const KEYWORDS_DATABASE: KeywordDefinition[] = [
-    // Time keywords
-    { id: 'time.months', category: 'time', description: 'Duration spanning months', importance: 'medium', effects: ['reveals: chronicity'] },
-    { id: 'time.weeks', category: 'time', description: 'Duration spanning weeks', importance: 'low' },
-    { id: 'time.years', category: 'time', description: 'Years-long duration (chronic)', importance: 'high', effects: ['reveals: chronic-issue'] },
-    { id: 'time.always', category: 'time', description: 'Lifelong pattern', importance: 'critical', effects: ['reveals: lifelong-pattern'] },
-    { id: 'time.every-night', category: 'time', description: 'Nightly occurrence', importance: 'high' },
-    { id: 'time.constantly', category: 'time', description: 'Continuous occurrence', importance: 'high' },
-    { id: 'time.sometimes', category: 'time', description: 'Occasional (may be minimizing)', importance: 'low' },
-    { id: 'time.recently', category: 'time', description: 'Recent onset', importance: 'medium' },
-
-    // Emotion keywords
-    { id: 'emotion.worried', category: 'emotion', description: 'Expression of worry', importance: 'medium' },
-    { id: 'emotion.anxious', category: 'emotion', description: 'Anxiety expression', importance: 'high', effects: ['reveals: anxiety-acknowledged'] },
-    { id: 'emotion.terrified', category: 'emotion', description: 'Intense fear', importance: 'critical' },
-    { id: 'emotion.on-edge', category: 'emotion', description: 'Feeling tense', importance: 'medium' },
-    { id: 'emotion.sad', category: 'emotion', description: 'Sadness expression', importance: 'medium' },
-    { id: 'emotion.hopeless', category: 'emotion', description: 'Hopelessness (⚠️ safety)', importance: 'critical', effects: ['triggers: depression-marker'] },
-    { id: 'emotion.numb', category: 'emotion', description: 'Emotional numbness', importance: 'high' },
-    { id: 'emotion.worthless', category: 'emotion', description: 'Feeling worthless (⚠️ safety)', importance: 'critical' },
-    { id: 'emotion.ashamed', category: 'emotion', description: 'Shame expression', importance: 'high' },
-    { id: 'emotion.guilty', category: 'emotion', description: 'Guilt expression', importance: 'medium' },
-    { id: 'emotion.angry', category: 'emotion', description: 'Anger expression', importance: 'medium' },
-    { id: 'emotion.relieved', category: 'emotion', description: 'Relief (positive sign)', importance: 'medium' },
-    { id: 'emotion.hopeful', category: 'emotion', description: 'Hope (therapeutic gain)', importance: 'high' },
-
-    // Behavior keywords
-    { id: 'behavior.avoiding', category: 'behavior', description: 'Avoidance behavior', importance: 'medium' },
-    { id: 'behavior.isolation', category: 'behavior', description: 'Social withdrawal', importance: 'high' },
-    { id: 'behavior.checking', category: 'behavior', description: 'Repetitive checking', importance: 'high' },
-    { id: 'behavior.over-and-over', category: 'behavior', description: 'Compulsive pattern', importance: 'high' },
-    { id: 'behavior.reassurance-seeking', category: 'behavior', description: 'Seeking validation', importance: 'medium' },
-    { id: 'behavior.cant-sleep', category: 'behavior', description: 'Sleep difficulties', importance: 'high' },
-    { id: 'behavior.racing-mind', category: 'behavior', description: 'Racing thoughts', importance: 'high' },
-    { id: 'behavior.not-eating', category: 'behavior', description: 'Appetite decrease', importance: 'medium' },
-    { id: 'behavior.self-harm', category: 'behavior', description: '⚠️ CRITICAL: Self-harm', importance: 'critical' },
-    { id: 'behavior.drinking', category: 'behavior', description: 'Alcohol use', importance: 'high' },
-    { id: 'behavior.perfectionism', category: 'behavior', description: 'Perfectionist tendencies', importance: 'medium' },
-
-    // Symptom keywords
-    { id: 'symptom.heart-racing', category: 'symptom', description: 'Palpitations', importance: 'high' },
-    { id: 'symptom.sweating', category: 'symptom', description: 'Excessive sweating', importance: 'medium' },
-    { id: 'symptom.trembling', category: 'symptom', description: 'Shaking/tremors', importance: 'medium' },
-    { id: 'symptom.chest-pain', category: 'symptom', description: 'Chest pain (rule out medical)', importance: 'critical' },
-    { id: 'symptom.dizzy', category: 'symptom', description: 'Dizziness', importance: 'medium' },
-    { id: 'symptom.insomnia', category: 'symptom', description: 'Chronic sleep difficulty', importance: 'high' },
-    { id: 'symptom.nightmares', category: 'symptom', description: 'Disturbing dreams', importance: 'high' },
-    { id: 'symptom.fatigue', category: 'symptom', description: 'Persistent tiredness', importance: 'medium' },
-    { id: 'symptom.cant-concentrate', category: 'symptom', description: 'Concentration problems', importance: 'medium' },
-    { id: 'symptom.brain-fog', category: 'symptom', description: 'Mental cloudiness', importance: 'medium' },
-    { id: 'symptom.unreal', category: 'symptom', description: 'Derealization', importance: 'high' },
-    { id: 'symptom.outside-body', category: 'symptom', description: 'Depersonalization', importance: 'critical' },
-
-    // Relationship keywords
-    { id: 'relationship.no-one', category: 'relationship', description: 'Feeling alone', importance: 'high' },
-    { id: 'relationship.burden', category: 'relationship', description: 'Feeling like a burden (⚠️)', importance: 'critical' },
-    { id: 'relationship.support', category: 'relationship', description: 'Has support system', importance: 'medium' },
-    { id: 'relationship.family', category: 'relationship', description: 'Family reference', importance: 'low' },
-    { id: 'relationship.parents', category: 'relationship', description: 'Parent reference', importance: 'medium' },
-    { id: 'relationship.childhood', category: 'relationship', description: 'Childhood experience', importance: 'high' },
-    { id: 'relationship.breakup', category: 'relationship', description: 'End of relationship', importance: 'high' },
-    { id: 'relationship.death', category: 'relationship', description: 'Loss/death reference', importance: 'critical' },
-    { id: 'relationship.fighting', category: 'relationship', description: 'Interpersonal conflict', importance: 'medium' },
-    { id: 'relationship.abuse', category: 'relationship', description: '⚠️ CRITICAL: Abuse history', importance: 'critical' },
-    { id: 'relationship.no-friends', category: 'relationship', description: 'Lack of friendships', importance: 'high' },
-
-    // Cognition keywords
-    { id: 'cognition.not-good-enough', category: 'cognition', description: 'Core belief: inadequacy', importance: 'critical' },
-    { id: 'cognition.failure', category: 'cognition', description: 'Belief of being a failure', importance: 'high' },
-    { id: 'cognition.unlovable', category: 'cognition', description: 'Core belief: unlovable', importance: 'critical' },
-    { id: 'cognition.always-wrong', category: 'cognition', description: 'All-or-nothing thinking', importance: 'medium' },
-    { id: 'cognition.should', category: 'cognition', description: 'Should statements', importance: 'medium' },
-    { id: 'cognition.mind-reading', category: 'cognition', description: 'Assuming others\' thoughts', importance: 'medium' },
-    { id: 'cognition.catastrophizing', category: 'cognition', description: 'Expecting worst case', importance: 'high' },
-    { id: 'cognition.what-if', category: 'cognition', description: 'Anticipatory worry', importance: 'medium' },
-    { id: 'cognition.going-crazy', category: 'cognition', description: 'Fear of losing control', importance: 'critical' },
-    { id: 'cognition.fake', category: 'cognition', description: 'Imposter feelings', importance: 'high' },
-    { id: 'cognition.better-off', category: 'cognition', description: '⚠️ CRITICAL: SI indicator', importance: 'critical' },
-    { id: 'cognition.end-it', category: 'cognition', description: '⚠️ CRITICAL: Active SI', importance: 'critical' }
-];
-
-// Patient-specific keywords
-const PATIENT_KEYWORDS: Record<string, KeywordDefinition[]> = {
-    'gregory': [
-        { id: 'gregory.time.months-actually', category: 'time', description: 'Gregory admits duration', importance: 'high' },
-        { id: 'gregory.cognition.overreacting', category: 'cognition', description: 'Self-minimization', importance: 'medium' },
-        { id: 'gregory.behavior.sleep-fine', category: 'behavior', description: 'Denial (contradicts appearance)', importance: 'high' },
-        { id: 'gregory.behavior.mind-wont-shutoff', category: 'behavior', description: 'Racing thoughts at night', importance: 'high' },
-        { id: 'gregory.behavior.replaying-conversations', category: 'behavior', description: 'Rumination', importance: 'high' },
-        { id: 'gregory.emotion.being-watched', category: 'emotion', description: 'Hypervigilance', importance: 'high' },
-        { id: 'gregory.cognition.doing-correctly', category: 'cognition', description: 'Perfectionism', importance: 'high' },
-        { id: 'gregory.cognition.trust-perception', category: 'cognition', description: 'Deep self-doubt (breakthrough)', importance: 'critical' },
-        { id: 'gregory.behavior.performing', category: 'behavior', description: 'Masking/performing normalcy', importance: 'critical' },
-        { id: 'gregory.emotion.terrified-mistakes', category: 'emotion', description: 'Childhood fear', importance: 'critical' },
-        { id: 'gregory.cognition.feelings-didnt-matter', category: 'cognition', description: 'Childhood invalidation', importance: 'critical' }
-    ]
-};
+// Convert new format to legacy format for existing code paths
+function toLegacyFormat(kw: KeywordDefinition): LegacyKeywordDefinition {
+    return {
+        id: kw.id,
+        category: kw.id.split('.')[1] || 'general',
+        description: kw.description,
+        importance: kw.importance,
+        effects: kw.effects?.reveals
+    };
+}
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('SDNS Language Extension activated');
+
+    // Create diagnostic collection for validation
+    const diagnosticCollection = vscode.languages.createDiagnosticCollection('sdns');
+    context.subscriptions.push(diagnosticCollection);
+
+    // Load keyword files from workspace
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    if (workspaceFolders && workspaceFolders.length > 0) {
+        loadKeywordFiles(workspaceFolders[0].uri.fsPath);
+
+        // Watch for changes to keyword files
+        const keywordWatcher = vscode.workspace.createFileSystemWatcher(
+            new vscode.RelativePattern(workspaceFolders[0], 'src/data/keywords/definitions/*.keywords.json')
+        );
+
+        keywordWatcher.onDidChange(() => {
+            console.log('SDNS: Keyword files changed, reloading...');
+            loadKeywordFiles(workspaceFolders[0].uri.fsPath);
+        });
+
+        keywordWatcher.onDidCreate(() => {
+            console.log('SDNS: New keyword file detected, reloading...');
+            loadKeywordFiles(workspaceFolders[0].uri.fsPath);
+        });
+
+        keywordWatcher.onDidDelete(() => {
+            console.log('SDNS: Keyword file deleted, reloading...');
+            loadKeywordFiles(workspaceFolders[0].uri.fsPath);
+        });
+
+        context.subscriptions.push(keywordWatcher);
+
+        // Watch for .keys files too
+        const keysWatcher = vscode.workspace.createFileSystemWatcher(
+            new vscode.RelativePattern(workspaceFolders[0], 'src/patients/**/*.keys')
+        );
+
+        keysWatcher.onDidChange((uri) => {
+            console.log('SDNS: .keys file changed:', uri.fsPath);
+            validateKeysFile(uri, diagnosticCollection);
+        });
+
+        keysWatcher.onDidCreate((uri) => {
+            console.log('SDNS: New .keys file detected:', uri.fsPath);
+            validateKeysFile(uri, diagnosticCollection);
+        });
+
+        context.subscriptions.push(keysWatcher);
+    }
 
     // Register completion provider
     const completionProvider = vscode.languages.registerCompletionItemProvider(
         'sdns',
         new SDNSCompletionProvider(),
-        '@', '(', '<', '>', '='
+        '@', '(', '<', '>', '=', ':', '.'
     );
 
     // Register hover provider
@@ -188,13 +306,417 @@ export function activate(context: vscode.ExtensionContext) {
         new SDNSFoldingRangeProvider()
     );
 
+    // Register validation on document change
+    const validateOnChange = vscode.workspace.onDidChangeTextDocument(event => {
+        if (event.document.languageId === 'sdns' || event.document.languageId === 'sdns-keys') {
+            validateDocument(event.document, diagnosticCollection);
+        }
+    });
+
+    // Validate on document open
+    const validateOnOpen = vscode.workspace.onDidOpenTextDocument(document => {
+        if (document.languageId === 'sdns' || document.languageId === 'sdns-keys') {
+            validateDocument(document, diagnosticCollection);
+        }
+    });
+
+    // Register keyword context menu command
+    const keywordInfoCommand = vscode.commands.registerCommand('sdns.showKeywordInfo', (keywordId: string) => {
+        const keyword = getKeywordById(keywordId);
+        if (keyword) {
+            const panel = vscode.window.createWebviewPanel(
+                'sdnsKeywordInfo',
+                `Keyword: ${keyword.displayText}`,
+                vscode.ViewColumn.Beside,
+                {}
+            );
+            panel.webview.html = getKeywordInfoHtml(keyword);
+        }
+    });
+
+    // Register reload keywords command
+    const reloadKeywordsCommand = vscode.commands.registerCommand('sdns.reloadKeywords', () => {
+        if (workspaceFolders && workspaceFolders.length > 0) {
+            loadKeywordFiles(workspaceFolders[0].uri.fsPath);
+            vscode.window.showInformationMessage(`SDNS: Loaded ${keywordSources.size} keyword sources, ${allKeywords.size} total keywords`);
+        }
+    });
+
     context.subscriptions.push(
         completionProvider,
         hoverProvider,
         symbolProvider,
         definitionProvider,
-        foldingProvider
+        foldingProvider,
+        keywordInfoCommand,
+        reloadKeywordsCommand,
+        validateOnChange,
+        validateOnOpen
     );
+
+    // Validate all open documents on activation
+    vscode.workspace.textDocuments.forEach(document => {
+        if (document.languageId === 'sdns' || document.languageId === 'sdns-keys') {
+            validateDocument(document, diagnosticCollection);
+        }
+    });
+}
+
+// ============================================================================
+// VALIDATION
+// ============================================================================
+
+/**
+ * Validate a .keys file
+ */
+function validateKeysFile(uri: vscode.Uri, diagnostics: vscode.DiagnosticCollection): void {
+    try {
+        const content = fs.readFileSync(uri.fsPath, 'utf-8');
+        const document = vscode.workspace.textDocuments.find(d => d.uri.fsPath === uri.fsPath);
+        if (document) {
+            validateDocument(document, diagnostics);
+        }
+    } catch (err) {
+        console.error('SDNS: Error validating .keys file:', err);
+    }
+}
+
+/**
+ * Validate a document and report diagnostics
+ */
+function validateDocument(document: vscode.TextDocument, diagnostics: vscode.DiagnosticCollection): void {
+    const problems: vscode.Diagnostic[] = [];
+
+    if (document.languageId === 'sdns') {
+        validateSdnsDocument(document, problems);
+    } else if (document.languageId === 'sdns-keys') {
+        validateKeysDocument(document, problems);
+    }
+
+    diagnostics.set(document.uri, problems);
+}
+
+/**
+ * Validate an SDNS (.session, .sdns, .turn) document
+ */
+function validateSdnsDocument(document: vscode.TextDocument, problems: vscode.Diagnostic[]): void {
+    const text = document.getText();
+    const lines = text.split('\n');
+
+    // Track block structure
+    const openBlocks: { name: string; line: number }[] = [];
+    let ifDepth = 0;
+    let whenDepth = 0;
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const trimmed = line.trim();
+
+        // Skip comments
+        if (trimmed.startsWith('//')) continue;
+
+        // Check block definitions
+        const blockMatch = trimmed.match(/^===\s*(@?[\w.:_-]+)\s*===\s*$/);
+        if (blockMatch) {
+            openBlocks.push({ name: blockMatch[1], line: i });
+        }
+
+        // Check @if/@elseif/@else/@endif balance
+        if (trimmed.startsWith('@if ') || trimmed === '@if') {
+            ifDepth++;
+        } else if (trimmed === '@endif') {
+            ifDepth--;
+            if (ifDepth < 0) {
+                problems.push(new vscode.Diagnostic(
+                    new vscode.Range(i, 0, i, trimmed.length),
+                    'Unexpected @endif without matching @if',
+                    vscode.DiagnosticSeverity.Error
+                ));
+                ifDepth = 0;
+            }
+        }
+
+        // Check @when/@end balance
+        if (trimmed.startsWith('@when ') || trimmed.startsWith('@when(')) {
+            whenDepth++;
+        } else if (trimmed === '@end') {
+            whenDepth--;
+            if (whenDepth < 0) {
+                problems.push(new vscode.Diagnostic(
+                    new vscode.Range(i, 0, i, trimmed.length),
+                    'Unexpected @end without matching @when',
+                    vscode.DiagnosticSeverity.Error
+                ));
+                whenDepth = 0;
+            }
+        }
+
+        // Check for unclosed strings in dialogue
+        const quoteCount = (line.match(/"/g) || []).length;
+        if (quoteCount % 2 !== 0) {
+            // Check if it's actually unclosed (not escaped)
+            const unescapedQuotes = (line.match(/(?<!\\)"/g) || []).length;
+            if (unescapedQuotes % 2 !== 0) {
+                problems.push(new vscode.Diagnostic(
+                    new vscode.Range(i, 0, i, line.length),
+                    'Unclosed string literal',
+                    vscode.DiagnosticSeverity.Warning
+                ));
+            }
+        }
+
+        // Validate keyword references
+        const keywordRefs = line.matchAll(/<keyword:([^>]+)>/g);
+        for (const match of keywordRefs) {
+            const keywordId = match[1];
+            if (!getKeywordById(keywordId)) {
+                const startCol = line.indexOf(match[0]);
+                problems.push(new vscode.Diagnostic(
+                    new vscode.Range(i, startCol, i, startCol + match[0].length),
+                    `Unknown keyword: ${keywordId}`,
+                    vscode.DiagnosticSeverity.Warning
+                ));
+            }
+        }
+
+        // Validate animation references
+        const animRefs = line.matchAll(/<anim:([^>]+)>/g);
+        const validAnims = ['shake', 'pulse', 'glow', 'fade', 'highlight', 'wiggle', 'wave', 'typewriter', 'glitch', 'bounce'];
+        for (const match of animRefs) {
+            const animId = match[1];
+            if (!validAnims.includes(animId)) {
+                const startCol = line.indexOf(match[0]);
+                problems.push(new vscode.Diagnostic(
+                    new vscode.Range(i, startCol, i, startCol + match[0].length),
+                    `Unknown animation: ${animId}. Valid animations: ${validAnims.join(', ')}`,
+                    vscode.DiagnosticSeverity.Warning
+                ));
+            }
+        }
+
+        // Validate goto targets
+        const gotoMatch = trimmed.match(/^->\s*(@?[\w.:/-]+)\s*$/);
+        if (gotoMatch) {
+            const target = gotoMatch[1];
+            // Check if target block exists (basic check)
+            const targetPattern = new RegExp(`===\\s*${target.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*===`, 'm');
+            if (!targetPattern.test(text) && !target.includes('/')) {
+                problems.push(new vscode.Diagnostic(
+                    new vscode.Range(i, trimmed.indexOf(target), i, trimmed.indexOf(target) + target.length),
+                    `Goto target not found: ${target}`,
+                    vscode.DiagnosticSeverity.Information
+                ));
+            }
+        }
+    }
+
+    // Report unclosed @if blocks
+    if (ifDepth > 0) {
+        problems.push(new vscode.Diagnostic(
+            new vscode.Range(0, 0, 0, 1),
+            `${ifDepth} unclosed @if block(s) - missing @endif`,
+            vscode.DiagnosticSeverity.Error
+        ));
+    }
+
+    // Report unclosed @when blocks
+    if (whenDepth > 0) {
+        problems.push(new vscode.Diagnostic(
+            new vscode.Range(0, 0, 0, 1),
+            `${whenDepth} unclosed @when block(s) - missing @end`,
+            vscode.DiagnosticSeverity.Error
+        ));
+    }
+}
+
+/**
+ * Validate a .keys document
+ */
+function validateKeysDocument(document: vscode.TextDocument, problems: vscode.Diagnostic[]): void {
+    const text = document.getText();
+    const lines = text.split('\n');
+
+    let currentSection: string | null = null;
+    let braceDepth = 0;
+    let currentBlockStart = -1;
+    let hasSource = false;
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const trimmed = line.trim();
+
+        // Skip comments and empty lines
+        if (trimmed === '' || trimmed.startsWith('//')) continue;
+
+        // Section headers
+        const sectionMatch = trimmed.match(/^===\s*(\w+)\s*===$/);
+        if (sectionMatch) {
+            currentSection = sectionMatch[1].toUpperCase();
+            continue;
+        }
+
+        // Track brace depth
+        const openBraces = (line.match(/{/g) || []).length;
+        const closeBraces = (line.match(/}/g) || []).length;
+
+        if (openBraces > 0 && braceDepth === 0) {
+            currentBlockStart = i;
+        }
+
+        braceDepth += openBraces - closeBraces;
+
+        if (braceDepth < 0) {
+            problems.push(new vscode.Diagnostic(
+                new vscode.Range(i, 0, i, line.length),
+                'Unexpected closing brace',
+                vscode.DiagnosticSeverity.Error
+            ));
+            braceDepth = 0;
+        }
+
+        // Check for source in META section
+        if (currentSection === 'META' && trimmed.startsWith('source:')) {
+            hasSource = true;
+        }
+
+        // Validate keyword definition format
+        if (currentSection === 'KEYWORDS' && braceDepth === 0) {
+            const keywordDefMatch = trimmed.match(/^\[([^\]]+)\]\s*\{?\s*$/);
+            if (keywordDefMatch) {
+                const keywordId = keywordDefMatch[1];
+                // Check for proper format: category.id
+                if (!keywordId.includes('.')) {
+                    problems.push(new vscode.Diagnostic(
+                        new vscode.Range(i, trimmed.indexOf('['), i, trimmed.indexOf(']') + 1),
+                        `Keyword ID should include category: [category.keywordId]`,
+                        vscode.DiagnosticSeverity.Warning
+                    ));
+                }
+            }
+        }
+
+        // Validate action definition format
+        if (currentSection === 'ACTIONS' && braceDepth === 0) {
+            const actionDefMatch = trimmed.match(/^@([a-zA-Z0-9_.]+)\s*\{?\s*$/);
+            if (actionDefMatch) {
+                const actionId = actionDefMatch[1];
+                // Check for proper format
+                if (!actionId.includes('.') && !['shake', 'pulse', 'glow', 'fade', 'highlight', 'wiggle'].includes(actionId)) {
+                    problems.push(new vscode.Diagnostic(
+                        new vscode.Range(i, 1, i, 1 + actionId.length),
+                        `Action ID should follow naming convention: @category.actionId`,
+                        vscode.DiagnosticSeverity.Information
+                    ));
+                }
+            }
+        }
+
+        // Validate importance values
+        if (trimmed.startsWith('importance:')) {
+            const value = trimmed.split(':')[1]?.trim();
+            const validImportance = ['low', 'medium', 'high', 'critical'];
+            if (value && !validImportance.includes(value)) {
+                problems.push(new vscode.Diagnostic(
+                    new vscode.Range(i, trimmed.indexOf(':') + 1, i, trimmed.length),
+                    `Invalid importance value. Valid values: ${validImportance.join(', ')}`,
+                    vscode.DiagnosticSeverity.Warning
+                ));
+            }
+        }
+    }
+
+    // Report unclosed braces
+    if (braceDepth > 0) {
+        problems.push(new vscode.Diagnostic(
+            new vscode.Range(currentBlockStart, 0, currentBlockStart, 1),
+            `Unclosed brace - ${braceDepth} brace(s) not closed`,
+            vscode.DiagnosticSeverity.Error
+        ));
+    }
+
+    // Warn if no source defined
+    if (!hasSource) {
+        problems.push(new vscode.Diagnostic(
+            new vscode.Range(0, 0, 0, 1),
+            'Missing "source" property in META section',
+            vscode.DiagnosticSeverity.Warning
+        ));
+    }
+}
+
+/**
+ * Generate HTML for keyword info panel
+ */
+function getKeywordInfoHtml(keyword: KeywordDefinition): string {
+    const importanceColors: Record<string, string> = {
+        'low': '#7f8c8d',
+        'medium': '#f1c40f',
+        'high': '#e67e22',
+        'critical': '#e74c3c'
+    };
+
+    const color = importanceColors[keyword.importance] || '#3498db';
+
+    let effectsHtml = '';
+    if (keyword.effects) {
+        effectsHtml = `
+            <h3>Effects</h3>
+            <ul>
+                ${keyword.effects.focusCost ? `<li>Focus Cost: ${keyword.effects.focusCost}</li>` : ''}
+                ${keyword.effects.rapportChange ? `<li>Rapport Change: ${keyword.effects.rapportChange > 0 ? '+' : ''}${keyword.effects.rapportChange}</li>` : ''}
+                ${keyword.effects.reveals?.length ? `<li>Reveals: ${keyword.effects.reveals.join(', ')}</li>` : ''}
+                ${keyword.effects.triggers?.length ? `<li>Triggers: ${keyword.effects.triggers.join(', ')}</li>` : ''}
+            </ul>
+        `;
+    }
+
+    let menuHtml = '';
+    if (keyword.menuOptions?.length) {
+        menuHtml = `
+            <h3>Context Menu Options</h3>
+            <ul>
+                ${keyword.menuOptions.map(opt => `<li><strong>${opt.label}</strong> (${opt.action})</li>`).join('')}
+            </ul>
+        `;
+    }
+
+    return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body { font-family: system-ui, -apple-system, sans-serif; padding: 20px; color: #e0e0e0; }
+                h1 { color: ${keyword.style?.color || color}; }
+                .importance { 
+                    display: inline-block; 
+                    padding: 2px 8px; 
+                    border-radius: 4px; 
+                    background: ${color}; 
+                    color: white;
+                    font-size: 12px;
+                    text-transform: uppercase;
+                }
+                .id { color: #888; font-family: monospace; }
+                .description { font-size: 16px; line-height: 1.5; margin: 16px 0; }
+                .note { background: rgba(255,255,255,0.1); padding: 12px; border-radius: 4px; margin: 16px 0; }
+                .aliases { color: #888; }
+                h3 { color: #aaa; margin-top: 24px; }
+                ul { padding-left: 20px; }
+                li { margin: 4px 0; }
+            </style>
+        </head>
+        <body>
+            <h1>${keyword.displayText}</h1>
+            <span class="importance">${keyword.importance}</span>
+            <p class="id">${keyword.id}</p>
+            <p class="description">${keyword.description}</p>
+            ${keyword.aliases?.length ? `<p class="aliases">Also: ${keyword.aliases.join(', ')}</p>` : ''}
+            ${keyword.note ? `<div class="note"><strong>Note:</strong> ${keyword.note}</div>` : ''}
+            ${effectsHtml}
+            ${menuHtml}
+        </body>
+        </html>
+    `;
 }
 
 class SDNSCompletionProvider implements vscode.CompletionItemProvider {
@@ -291,110 +813,143 @@ class SDNSCompletionProvider implements vscode.CompletionItemProvider {
         }
 
         // ================================================================
-        // KEYWORD REFERENCE COMPLETIONS
+        // KEYWORD REFERENCE COMPLETIONS - New syntax: [text]<keyword:source.category.id>
         // ================================================================
 
-        // Keyword reference after [text](
-        if (/\[[^\]]+\]\($/.test(linePrefix)) {
-            // Add category suggestions
-            KEYWORD_CATEGORIES.forEach(cat => {
-                const item = new vscode.CompletionItem(`${cat.icon} ${cat.id}`, vscode.CompletionItemKind.Module);
-                item.detail = cat.label;
-                item.insertText = `${cat.id}.`;
-                item.documentation = `${cat.label} keywords`;
+        // After <keyword: - suggest sources (patient IDs and 'generic')
+        const keywordSourceMatch = linePrefix.match(/\[[^\]]+\]<keyword:$/);
+        if (keywordSourceMatch) {
+            // Suggest all available keyword sources
+            const sources = getKeywordSources();
+            sources.forEach(source => {
+                const sourceFile = keywordSources.get(source);
+                const isPatient = source !== 'generic';
+                const icon = isPatient ? 'person' : 'globe';
+
+                const item = new vscode.CompletionItem(source, vscode.CompletionItemKind.Module);
+                item.detail = sourceFile?.displayName || source;
+                item.documentation = new vscode.MarkdownString(
+                    sourceFile?.patientInfo
+                        ? `**${sourceFile.patientInfo.name}**\n\nDiagnosis: ${sourceFile.patientInfo.diagnosis || 'N/A'}\n\nTraits: ${sourceFile.patientInfo.keyTraits?.join(', ') || 'N/A'}`
+                        : sourceFile?.description || `Keywords from ${source}`
+                );
+                item.insertText = `${source}.`;
                 item.command = { command: 'editor.action.triggerSuggest', title: 'Trigger Suggest' };
                 items.push(item);
             });
 
-            // Add @keyword for inline definition
-            const inlineItem = new vscode.CompletionItem('@keyword{...}', vscode.CompletionItemKind.Snippet);
-            inlineItem.detail = 'Inline Keyword Definition';
-            inlineItem.insertText = new vscode.SnippetString('@keyword{\n\tid: "${1:id}",\n\tcategory: "${2:category}",\n\teffects: { reveals: ["${3:symptom}"] }\n}');
-            inlineItem.documentation = 'Define a keyword inline';
-            items.push(inlineItem);
-
-            // Add patient-specific prefix if in patient file
-            const patientId = this.detectPatient(document);
-            if (patientId) {
-                const patientItem = new vscode.CompletionItem(`👤 ${patientId}`, vscode.CompletionItemKind.User);
-                patientItem.detail = `${patientId}'s keywords`;
-                patientItem.insertText = `${patientId}.`;
-                patientItem.documentation = `Patient-specific keywords for ${patientId}`;
-                patientItem.command = { command: 'editor.action.triggerSuggest', title: 'Trigger Suggest' };
-                items.push(patientItem);
+            // Also suggest detected patient if not already in sources
+            const detectedPatient = this.detectPatient(document);
+            if (detectedPatient && !sources.includes(detectedPatient)) {
+                const item = new vscode.CompletionItem(detectedPatient, vscode.CompletionItemKind.User);
+                item.detail = `Detected patient: ${detectedPatient}`;
+                item.insertText = `${detectedPatient}.`;
+                item.command = { command: 'editor.action.triggerSuggest', title: 'Trigger Suggest' };
+                items.push(item);
             }
         }
 
-        // Keyword completion after category prefix: [text](category.
-        const categoryMatch = linePrefix.match(/\[[^\]]+\]\(([a-z]+)\.$/)
-            || linePrefix.match(/\[[^\]]+\]\(([a-z]+)\.([a-z]+)\.$/)  // patient.category.
-            || linePrefix.match(/\[[^\]]+\]\(([a-z_-]+)\.\s*$/);
+        // After <keyword:source. - suggest categories for that source
+        const keywordCategoryMatch = linePrefix.match(/\[[^\]]+\]<keyword:([a-z]+)\.$/);
+        if (keywordCategoryMatch) {
+            const source = keywordCategoryMatch[1];
+            const categories = getCategoriesForSource(source);
 
-        if (categoryMatch) {
-            const prefix = categoryMatch[1];
-
-            // Check if it's a patient prefix
-            if (PATIENT_KEYWORDS[prefix]) {
-                // Patient-specific keywords
-                PATIENT_KEYWORDS[prefix].forEach(kw => {
-                    const item = new vscode.CompletionItem(kw.id, vscode.CompletionItemKind.Value);
-                    item.detail = `${kw.importance.toUpperCase()} | ${kw.category}`;
-                    item.documentation = new vscode.MarkdownString(
-                        `**${kw.id}**\n\n${kw.description}\n\n` +
-                        `Importance: \`${kw.importance}\`` +
-                        (kw.effects ? `\n\nEffects: ${kw.effects.join(', ')}` : '')
-                    );
-                    // Insert just the last part
-                    const parts = kw.id.split('.');
-                    item.insertText = parts.slice(1).join('.');
+            if (categories.length > 0) {
+                categories.forEach(cat => {
+                    const catInfo = KEYWORD_CATEGORIES.find(c => c.id === cat);
+                    const item = new vscode.CompletionItem(cat, vscode.CompletionItemKind.Folder);
+                    item.detail = catInfo?.label || cat;
+                    item.documentation = `${catInfo?.label || cat} keywords for ${source}`;
+                    item.insertText = `${cat}.`;
+                    item.command = { command: 'editor.action.triggerSuggest', title: 'Trigger Suggest' };
                     items.push(item);
                 });
-
-                // Also suggest categories under patient
+            } else {
+                // Fallback to standard categories if source not found
                 KEYWORD_CATEGORIES.forEach(cat => {
-                    const item = new vscode.CompletionItem(cat.id, vscode.CompletionItemKind.Module);
+                    const item = new vscode.CompletionItem(cat.id, vscode.CompletionItemKind.Folder);
                     item.detail = cat.label;
                     item.insertText = `${cat.id}.`;
                     item.command = { command: 'editor.action.triggerSuggest', title: 'Trigger Suggest' };
                     items.push(item);
                 });
-            } else {
-                // Category keywords
-                KEYWORDS_DATABASE.filter(kw => kw.category === prefix).forEach(kw => {
-                    const importanceIcon = kw.importance === 'critical' ? '🔴' :
-                        kw.importance === 'high' ? '🟠' :
-                            kw.importance === 'medium' ? '🟡' : '⚪';
-                    const item = new vscode.CompletionItem(`${importanceIcon} ${kw.id.split('.')[1]}`, vscode.CompletionItemKind.Value);
-                    item.detail = `${kw.importance.toUpperCase()}`;
-                    item.documentation = new vscode.MarkdownString(
-                        `**${kw.id}**\n\n${kw.description}\n\n` +
-                        `Importance: \`${kw.importance}\`` +
-                        (kw.effects ? `\n\nEffects: ${kw.effects.join(', ')}` : '')
-                    );
-                    item.insertText = kw.id.split('.')[1];
-                    items.push(item);
-                });
             }
         }
 
-        // Patient.category. pattern (e.g., gregory.time.)
-        const patientCatMatch = linePrefix.match(/\[[^\]]+\]\(([a-z]+)\.([a-z]+)\.$/);
-        if (patientCatMatch) {
-            const [, patientId, category] = patientCatMatch;
+        // After <keyword:source.category. - suggest keywords for that category
+        const keywordIdMatch = linePrefix.match(/\[[^\]]+\]<keyword:([a-z]+)\.([a-z]+)\.$/);
+        if (keywordIdMatch) {
+            const [, source, category] = keywordIdMatch;
+            const keywords = getKeywordsForCategory(source, category);
 
-            // Get patient-specific keywords for this category
-            const patientKws = PATIENT_KEYWORDS[patientId]?.filter(kw => kw.category === category) || [];
-            patientKws.forEach(kw => {
+            keywords.forEach(kw => {
                 const parts = kw.id.split('.');
-                const kwName = parts[parts.length - 1];
-                const item = new vscode.CompletionItem(kwName, vscode.CompletionItemKind.Value);
-                item.detail = `${kw.importance.toUpperCase()} | ${patientId}`;
-                item.documentation = new vscode.MarkdownString(
-                    `**${kw.id}**\n\n${kw.description}`
+                const keywordId = parts[parts.length - 1]; // Just the last part
+
+                const importanceIcon = kw.importance === 'critical' ? '!!' :
+                    kw.importance === 'high' ? '!' :
+                        kw.importance === 'medium' ? '*' : '';
+
+                const item = new vscode.CompletionItem(
+                    importanceIcon ? `${importanceIcon} ${keywordId}` : keywordId,
+                    vscode.CompletionItemKind.Value
                 );
-                item.insertText = kwName;
+                item.detail = `${kw.importance.toUpperCase()} | ${kw.displayText}`;
+                item.documentation = new vscode.MarkdownString(
+                    `**${kw.displayText}**\n\n${kw.description}\n\n` +
+                    `ID: \`${kw.id}\`\n\n` +
+                    `Importance: \`${kw.importance}\`` +
+                    (kw.effects?.reveals?.length ? `\n\nReveals: ${kw.effects.reveals.join(', ')}` : '') +
+                    (kw.effects?.focusCost ? `\n\nFocus Cost: ${kw.effects.focusCost}` : '') +
+                    (kw.note ? `\n\n*${kw.note}*` : '')
+                );
+                item.insertText = `${keywordId}>`;
+                item.sortText = kw.importance === 'critical' ? '0' :
+                    kw.importance === 'high' ? '1' :
+                        kw.importance === 'medium' ? '2' : '3';
                 items.push(item);
             });
+        }
+
+        // Quick completion: after just typing [ - suggest starting a keyword
+        if (/\[$/.test(linePrefix) && !/\[\[/.test(linePrefix)) {
+            const item = new vscode.CompletionItem('keyword...', vscode.CompletionItemKind.Snippet);
+            item.detail = 'Create linked keyword';
+            item.insertText = new vscode.SnippetString('${1:display text}]<keyword:${2:source}.${3:category}.${4:id}>');
+            item.documentation = 'Create a keyword with linked definition';
+            items.push(item);
+        }
+
+        // Legacy support: [text](category. pattern for backwards compatibility
+        const legacyCategoryMatch = linePrefix.match(/\[[^\]]+\]\(([a-z]+)\.$/);
+        if (legacyCategoryMatch) {
+            const category = legacyCategoryMatch[1];
+
+            // Check if it's a source name first
+            if (keywordSources.has(category)) {
+                const categories = getCategoriesForSource(category);
+                categories.forEach(cat => {
+                    const item = new vscode.CompletionItem(cat, vscode.CompletionItemKind.Folder);
+                    item.detail = `Category in ${category}`;
+                    item.insertText = `${cat}.`;
+                    item.command = { command: 'editor.action.triggerSuggest', title: 'Trigger Suggest' };
+                    items.push(item);
+                });
+            } else {
+                // Search for keywords in this category across all sources
+                for (const [source, file] of keywordSources) {
+                    const keywords = getKeywordsForCategory(source, category);
+                    keywords.forEach(kw => {
+                        const parts = kw.id.split('.');
+                        const keywordId = parts[parts.length - 1];
+                        const item = new vscode.CompletionItem(`${source}.${keywordId}`, vscode.CompletionItemKind.Value);
+                        item.detail = `${kw.importance} | ${source}`;
+                        item.documentation = kw.description;
+                        items.push(item);
+                    });
+                }
+            }
         }
 
         // Block definition suggestion
@@ -442,7 +997,9 @@ class SDNSCompletionProvider implements vscode.CompletionItemProvider {
     private detectPatient(document: vscode.TextDocument): string | null {
         // Check filename for patient ID (e.g., gregory-session-1.session)
         const filename = document.fileName.toLowerCase();
-        const knownPatients = Object.keys(PATIENT_KEYWORDS);
+
+        // Get patient sources (excluding 'generic')
+        const knownPatients = getKeywordSources().filter(s => s !== 'generic');
 
         for (const patient of knownPatients) {
             if (filename.includes(patient)) {
@@ -461,6 +1018,12 @@ class SDNSCompletionProvider implements vscode.CompletionItemProvider {
         const metaMatch = text.match(/\[meta:patient\]\s*id\s*=\s*"?(\w+)"?/i);
         if (metaMatch) {
             return metaMatch[1].toLowerCase();
+        }
+
+        // Check path for patient folder
+        const pathMatch = filename.match(/patients[\/\\]([a-z]+)[\/\\]/);
+        if (pathMatch) {
+            return pathMatch[1];
         }
 
         return null;
@@ -552,7 +1115,87 @@ class SDNSHoverProvider implements vscode.HoverProvider {
             }
         }
 
-        // Keyword reference hover - matches [text](keyword.reference)
+        // Keyword reference hover - NEW syntax: [text]<keyword:source.category.id>
+        const newKeywordMatch = lineText.match(/\[([^\]]+)\]<keyword:([^>]+)>/g);
+        if (newKeywordMatch) {
+            for (const match of newKeywordMatch) {
+                const startIndex = lineText.indexOf(match);
+                const endIndex = startIndex + match.length;
+
+                if (position.character >= startIndex && position.character <= endIndex) {
+                    const parsed = match.match(/\[([^\]]+)\]<keyword:([^>]+)>/);
+                    if (parsed) {
+                        const [, displayText, keywordId] = parsed;
+
+                        // Look up keyword in new database
+                        const keyword = getKeywordById(keywordId);
+
+                        if (keyword) {
+                            const importanceColors: Record<string, string> = {
+                                'low': '#7f8c8d',
+                                'medium': '#f1c40f',
+                                'high': '#e67e22',
+                                'critical': '#e74c3c'
+                            };
+
+                            const parts = keywordId.split('.');
+                            const source = parts[0];
+                            const category = parts[1];
+                            const categoryInfo = KEYWORD_CATEGORIES.find(c => c.id === category);
+
+                            let markdown = new vscode.MarkdownString();
+                            markdown.isTrusted = true;
+                            markdown.supportHtml = true;
+
+                            markdown.appendMarkdown(`### ${keyword.displayText}\n\n`);
+                            markdown.appendMarkdown(`**${keyword.importance.toUpperCase()}** | ${source} > ${categoryInfo?.label || category}\n\n`);
+                            markdown.appendMarkdown(`${keyword.description}\n\n`);
+                            markdown.appendMarkdown(`---\n\n`);
+                            markdown.appendMarkdown(`**ID:** \`${keywordId}\`\n\n`);
+
+                            if (keyword.effects) {
+                                markdown.appendMarkdown(`**Effects:**\n`);
+                                if (keyword.effects.focusCost) {
+                                    markdown.appendMarkdown(`- Focus Cost: ${keyword.effects.focusCost}\n`);
+                                }
+                                if (keyword.effects.rapportChange) {
+                                    markdown.appendMarkdown(`- Rapport: ${keyword.effects.rapportChange > 0 ? '+' : ''}${keyword.effects.rapportChange}\n`);
+                                }
+                                if (keyword.effects.reveals?.length) {
+                                    markdown.appendMarkdown(`- Reveals: ${keyword.effects.reveals.join(', ')}\n`);
+                                }
+                                if (keyword.effects.triggers?.length) {
+                                    markdown.appendMarkdown(`- Triggers: ${keyword.effects.triggers.join(', ')}\n`);
+                                }
+                                markdown.appendMarkdown(`\n`);
+                            }
+
+                            if (keyword.note) {
+                                markdown.appendMarkdown(`*${keyword.note}*\n\n`);
+                            }
+
+                            if (keyword.aliases?.length) {
+                                markdown.appendMarkdown(`**Aliases:** ${keyword.aliases.join(', ')}\n`);
+                            }
+
+                            return new vscode.Hover(markdown);
+                        }
+
+                        // Unknown keyword - still provide some info
+                        return new vscode.Hover([
+                            `**Unknown Keyword Reference**`,
+                            '',
+                            `ID: \`${keywordId}\``,
+                            `Display: "${displayText}"`,
+                            '',
+                            '*Keyword not found in definitions. Run "SDNS: Reload Keywords" or check the ID.*'
+                        ].join('\n'));
+                    }
+                }
+            }
+        }
+
+        // Legacy keyword reference hover - matches [text](keyword.reference)
         const keywordRefMatch = lineText.match(/\[([^\]]+)\]\(([^)]+)\)/g);
         if (keywordRefMatch) {
             for (const match of keywordRefMatch) {

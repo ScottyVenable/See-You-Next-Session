@@ -204,7 +204,39 @@
 - [x] Add an option to "copy all" in the debug logs based on current filters.
 - [ ] Expand on the functionality of the Debug Logs to include more detailed information about game state, errors, warnings, and other useful debugging information.
 
+## SDNS Extension Features
+- [ ] Added other file types like `.sdns` and `.turn` to the VSCode extension for syntax highlighting and support. Then we can link `.turn` files to specific turns in a `.session` file for easier dialogue management if the turns are more complex and need their own files. (what could we use `.sdns` for??? maybe for standalone dialogue snippets that are not part of a full session???)
+- [ ] Implement a `.keys` file type for defining keywords separately from dialogue files. This would allow easier management and reuse of keywords across multiple sessions or dialogues. The `.keys` file could contain definitions for various keywords, their types, descriptions, and any associated effects or actions. The VSCode extension would provide syntax highlighting and validation for these files as well. Instead of using JSON., we could use a custom syntax similar to the `.session` files for consistency. For example:
 
+```===KEYWORD===
+[keyword_id] {
+    type: behavior
+    description: "A behavior keyword representing a specific action or habit."
+    onCollect: "Adds to clipboard"
+}
+```
+or similar structure that is easy to read and write in the SDNS language.
+
+- [ ] Add a place to store actions to link to .session files for onAskAbout, onHighlightInHandbook, onExploreBackground, etc. This could include data for storing pre-written dialogue options for the player to say, what actions it does, and if any effects it has on the game state (mood changes, focus costs, unlocks dialogues, etc.).
+- [ ] Implement a way to link keywords defined in `.keys` files to specific dialogue options in `.session` files. This would allow for easier management of keywords and their associated actions across multiple dialogue sessions. Turn the JSON files into this .keys file format for consistency with the other custom file types.
+- [ ] Create a documentation section within the VSCode extension that provides guidelines and examples for using the new file types and features. This would help users understand how to effectively utilize the extension for dialogue creation and management.
+- [ ] Add validation and error checking for the new file types to ensure proper syntax and structure. This would help prevent issues when importing dialogue files into the game.
+- [ ] Store the keywords file for a specific patient in the path `patients/{patientId}/{patientId}.keys` to keep things organized by patient.
+- [ ] Update the SDNSParser to recognize and parse the new `.keys` file format, extracting keyword definitions and their associated actions for use in dialogue sessions and interactions.
+- [ ] Update the VSCode extension's language server to provide autocomplete and IntelliSense features for the new file types, making it easier for users to write and manage dialogue content.
+- [ ] Make sure that markdown formatting is supported in the dialogue text within the VSCode extension for all relevant file types and does not show the markdown syntax (e.g., **bold**, *italics*) during the typewriter effect in the game. It just renders in the syntax.
+- [ ] Allow linking preset text animations to certain words in the dialogue text via the SDNS syntax, such as shaking for emphasis, fading in/out, or color changes. This could be done with a special markup like `[word]<anim:shake>` or similar and a place where we can define these animations in the VSCode extension for easy reference and use. This should also have a dev console tab to edit and create animations with a preview for testing and tweaking purposes.
+- [ ] Edit the KEYWORD_SYSTEM.md documentation to reflect these new changes and features for the keyword system and SDNS extension.
+
+
+## General Bugs
+- [ ] Right clicking anywhere shows the chrome context menu instead of the custom game context menu. We need to prevent the default context menu from showing up and only show our custom one when right clicking in the game window.
+
+
+## Quick TODO's
+(todos without organized sections yet. Put these where they go if you notice they fit somewhere above)
+- [ ] Create a detailed context menu system activated on right click and populate it with useful options for debugging and testing based on the current game state and selected elements. This could include options for manipulating focus, mood, rapport, keywords, dialogue options, etc. (when dev mode is activated and should be a green context menu button/text. When clicked it opens the dev options with their respective folders of options) The context menu should be dynamic and change based on what is currently selected or hovered over in the game window. It should also have sub-menus for more specific actions or settings related to the selected element. This would greatly improve the workflow for testing and debugging various game features without needing to navigate through multiple menus or panels.
+- [ ] Add VSCode extension formatting for syntax when editing in VSCode for the new keyword system and other SDNS features. Like `[keyword text]<type:source.category.ID>` formatting and highlighting. Where "type" is keyword, anim, symptom, observation, etc but are displayed differently in the VSCode syntax/theme since it's a type (this probably doesnt make sense but I think you know what I mean)
 ## [BUILD] Requirements
 
 - Must be uploadable to Itch.io

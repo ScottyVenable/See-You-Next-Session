@@ -1,0 +1,520 @@
+{
+    "$schema": "./keyword-schema.json",
+    "source": "gregory",
+    "displayName": "Gregory Vigil Keywords",
+    "description": "Keywords specific to Gregory's presentation, story, and dialogue",
+    "version": "1.0.0",
+    "patientInfo": {
+        "name": "Gregory Vigil",
+        "diagnosis": "Generalized Anxiety Disorder (GAD)",
+        "keyTraits": [
+            "hedging",
+            "seeking validation",
+            "perfectionism",
+            "hypervigilance"
+        ]
+    },
+    "keywords": {
+        "time": {
+            "_category": {
+                "label": "Gregory's Time References",
+                "icon": "calendar",
+                "description": "Time-related keywords specific to Gregory's experience"
+            },
+            "monthsActually": {
+                "id": "gregory.time.monthsActually",
+                "displayText": "Months, actually",
+                "aliases": [
+                    "months actually",
+                    "actually months",
+                    "a few months now"
+                ],
+                "description": "Gregory reveals the true duration of his struggles - first honest admission",
+                "importance": "high",
+                "style": {
+                    "color": "#6b7fd7",
+                    "bgColor": "rgba(107, 127, 215, 0.18)",
+                    "icon": "calendar"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "symptom-duration",
+                        "trust-building"
+                    ],
+                    "rapportChange": 3,
+                    "setVars": {
+                        "gregory_admitted_duration": true
+                    }
+                },
+                "menuOptions": [
+                    {
+                        "id": "note-duration",
+                        "label": "Note: Months of struggling",
+                        "icon": "edit-3",
+                        "action": "note",
+                        "params": {
+                            "template": "Gregory has been struggling for months before seeking help"
+                        }
+                    },
+                    {
+                        "id": "ask-why-wait",
+                        "label": "Ask: What made you wait?",
+                        "icon": "message-circle",
+                        "action": "ask-about",
+                        "params": {
+                            "topic": "therapy.delay"
+                        }
+                    }
+                ],
+                "note": "First admission of duration - important trust moment"
+            }
+        },
+        "cognition": {
+            "_category": {
+                "label": "Gregory's Thought Patterns",
+                "icon": "brain",
+                "description": "Gregory's characteristic cognitive patterns and beliefs"
+            },
+            "overreacting": {
+                "id": "gregory.cognition.overreacting",
+                "displayText": "overreacting",
+                "aliases": [
+                    "maybe I'm overreacting",
+                    "probably overreacting"
+                ],
+                "description": "Gregory minimizes his own experiences - classic anxiety presentation",
+                "importance": "medium",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.15)",
+                    "icon": "minimize"
+                },
+                "effects": {
+                    "focusCost": 4,
+                    "reveals": [
+                        "self-doubt",
+                        "minimization"
+                    ],
+                    "rapportChange": 2
+                },
+                "menuOptions": [
+                    {
+                        "id": "validate",
+                        "label": "Validate his concerns",
+                        "icon": "heart",
+                        "action": "note",
+                        "params": {
+                            "template": "Gregory doubts his own experiences - validate"
+                        }
+                    }
+                ],
+                "note": "Classic anxiety presentation - doubting own experiences"
+            },
+            "nothingSerious": {
+                "id": "gregory.cognition.nothingSerious",
+                "displayText": "nothing serious",
+                "aliases": [
+                    "probably nothing serious",
+                    "not serious"
+                ],
+                "description": "Gregory downplays his symptoms",
+                "importance": "medium",
+                "style": {
+                    "color": "#7f8c8d",
+                    "bgColor": "rgba(127, 140, 141, 0.12)",
+                    "icon": "minimize-2"
+                },
+                "effects": {
+                    "focusCost": 3,
+                    "reveals": [
+                        "minimization"
+                    ]
+                }
+            },
+            "doingCorrectly": {
+                "id": "gregory.cognition.doingCorrectly",
+                "displayText": "doing this correctly",
+                "aliases": [
+                    "doing it right",
+                    "doing correctly",
+                    "doing this right"
+                ],
+                "description": "Gregory's perfectionism and fear of getting things wrong",
+                "importance": "high",
+                "style": {
+                    "color": "#e67e22",
+                    "bgColor": "rgba(230, 126, 34, 0.15)"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "perfectionism",
+                        "fear-of-judgment"
+                    ]
+                }
+            },
+            "trustPerception": {
+                "id": "gregory.cognition.trustPerception",
+                "displayText": "trust my own perception",
+                "aliases": [
+                    "trust myself",
+                    "trust what I see",
+                    "believe my own eyes"
+                ],
+                "description": "BREAKTHROUGH: Gregory's deep self-doubt about reality",
+                "importance": "critical",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.2)",
+                    "animation": "pulse"
+                },
+                "effects": {
+                    "focusCost": 8,
+                    "reveals": [
+                        "core-self-doubt",
+                        "breakthrough-trust"
+                    ],
+                    "triggers": [
+                        "breakthrough-trust"
+                    ],
+                    "rapportChange": 5
+                },
+                "note": "Core breakthrough - connects to childhood invalidation"
+            },
+            "feelingsDidntMatter": {
+                "id": "gregory.cognition.feelingsDidntMatter",
+                "displayText": "feelings didn't matter",
+                "aliases": [
+                    "my feelings didn't matter",
+                    "feelings weren't important"
+                ],
+                "description": "BREAKTHROUGH: Childhood emotional invalidation",
+                "importance": "critical",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.25)",
+                    "animation": "pulse"
+                },
+                "effects": {
+                    "focusCost": 10,
+                    "reveals": [
+                        "childhood-invalidation",
+                        "core-belief-formation"
+                    ],
+                    "triggers": [
+                        "breakthrough-childhood"
+                    ],
+                    "rapportChange": 8
+                },
+                "note": "Deep breakthrough - root of self-doubt"
+            }
+        },
+        "behavior": {
+            "_category": {
+                "label": "Gregory's Behaviors",
+                "icon": "activity",
+                "description": "Gregory's observable behavior patterns"
+            },
+            "sleepFine": {
+                "id": "gregory.behavior.sleepFine",
+                "displayText": "sleep fine",
+                "aliases": [
+                    "sleep is fine",
+                    "sleeping fine",
+                    "I sleep okay"
+                ],
+                "description": "Gregory denies sleep issues - contradicts visible exhaustion",
+                "importance": "high",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.15)",
+                    "icon": "alert-circle"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "contradiction-sleep"
+                    ],
+                    "contradicts": [
+                        "observation-dark-circles",
+                        "observation-exhaustion"
+                    ]
+                },
+                "note": "Clear contradiction with visible dark circles"
+            },
+            "mindWontShutOff": {
+                "id": "gregory.behavior.mindWontShutOff",
+                "displayText": "mind won't shut off",
+                "aliases": [
+                    "can't turn off my mind",
+                    "brain won't stop",
+                    "thoughts keep coming"
+                ],
+                "description": "Racing thoughts preventing sleep",
+                "importance": "high",
+                "style": {
+                    "color": "#f39c12",
+                    "bgColor": "rgba(243, 156, 18, 0.15)"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "racing-thoughts",
+                        "insomnia-cognitive"
+                    ]
+                }
+            },
+            "replayingConversations": {
+                "id": "gregory.behavior.replayingConversations",
+                "displayText": "replaying conversations",
+                "aliases": [
+                    "replay conversations",
+                    "go over conversations",
+                    "think about what I said"
+                ],
+                "description": "Rumination pattern - common in GAD",
+                "importance": "high",
+                "style": {
+                    "color": "#3498db",
+                    "bgColor": "rgba(52, 152, 219, 0.15)"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "rumination",
+                        "social-anxiety"
+                    ]
+                }
+            },
+            "performing": {
+                "id": "gregory.behavior.performing",
+                "displayText": "performing",
+                "aliases": [
+                    "putting on a show",
+                    "acting normal",
+                    "pretending"
+                ],
+                "description": "BREAKTHROUGH: Gregory masks his struggles",
+                "importance": "critical",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.2)",
+                    "animation": "glow"
+                },
+                "effects": {
+                    "focusCost": 8,
+                    "reveals": [
+                        "masking-behavior",
+                        "authenticity-struggle"
+                    ],
+                    "triggers": [
+                        "breakthrough-masking"
+                    ]
+                }
+            }
+        },
+        "emotion": {
+            "_category": {
+                "label": "Gregory's Emotional Expressions",
+                "icon": "heart",
+                "description": "How Gregory expresses and experiences emotions"
+            },
+            "beingWatched": {
+                "id": "gregory.emotion.beingWatched",
+                "displayText": "being watched",
+                "aliases": [
+                    "someone watching",
+                    "eyes on me",
+                    "people looking"
+                ],
+                "description": "Hypervigilance - feeling constantly observed",
+                "importance": "high",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.15)",
+                    "icon": "eye"
+                },
+                "effects": {
+                    "focusCost": 5,
+                    "reveals": [
+                        "hypervigilance",
+                        "paranoid-features"
+                    ]
+                }
+            },
+            "terrifiedMistakes": {
+                "id": "gregory.emotion.terrifiedMistakes",
+                "displayText": "terrified of making mistakes",
+                "aliases": [
+                    "scared of mistakes",
+                    "afraid to mess up",
+                    "can't make mistakes"
+                ],
+                "description": "BREAKTHROUGH: Deep fear connected to childhood",
+                "importance": "critical",
+                "style": {
+                    "color": "#e74c3c",
+                    "bgColor": "rgba(231, 76, 60, 0.2)",
+                    "animation": "shake"
+                },
+                "effects": {
+                    "focusCost": 8,
+                    "reveals": [
+                        "perfectionism-fear",
+                        "childhood-pressure"
+                    ],
+                    "triggers": [
+                        "breakthrough-childhood-fear"
+                    ]
+                }
+            },
+            "onEdge": {
+                "id": "gregory.emotion.onEdge",
+                "displayText": "on edge",
+                "aliases": [
+                    "feeling on edge",
+                    "tense",
+                    "wound up"
+                ],
+                "description": "Constant state of tension",
+                "importance": "medium",
+                "style": {
+                    "color": "#f39c12",
+                    "bgColor": "rgba(243, 156, 18, 0.12)"
+                },
+                "effects": {
+                    "focusCost": 3,
+                    "reveals": [
+                        "chronic-tension"
+                    ]
+                }
+            }
+        },
+        "background": {
+            "_category": {
+                "label": "Gregory's Background",
+                "icon": "book",
+                "description": "References to Gregory's history and background"
+            },
+            "perfectChildhood": {
+                "id": "gregory.background.perfectChildhood",
+                "displayText": "perfect childhood",
+                "aliases": [
+                    "nothing was wrong",
+                    "normal childhood",
+                    "fine growing up"
+                ],
+                "description": "Initial denial of childhood issues",
+                "importance": "medium",
+                "style": {
+                    "color": "#7f8c8d",
+                    "bgColor": "rgba(127, 140, 141, 0.12)"
+                },
+                "effects": {
+                    "focusCost": 3,
+                    "reveals": [
+                        "potential-denial"
+                    ]
+                },
+                "note": "May contradict later disclosures"
+            },
+            "parentsExpectations": {
+                "id": "gregory.background.parentsExpectations",
+                "displayText": "parents' expectations",
+                "aliases": [
+                    "what they expected",
+                    "had to be perfect",
+                    "couldn't disappoint them"
+                ],
+                "description": "High parental expectations - core to perfectionism",
+                "importance": "high",
+                "style": {
+                    "color": "#9b59b6",
+                    "bgColor": "rgba(155, 89, 182, 0.15)"
+                },
+                "effects": {
+                    "focusCost": 6,
+                    "reveals": [
+                        "parental-pressure",
+                        "perfectionism-origin"
+                    ],
+                    "unlocks": [
+                        "topic-childhood"
+                    ]
+                }
+            }
+        }
+    },
+    "menuOptions": {
+        "default": [
+            {
+                "id": "collect",
+                "label": "Collect as Token",
+                "icon": "plus-circle",
+                "action": "collect"
+            },
+            {
+                "id": "note",
+                "label": "Add Clinical Note",
+                "icon": "edit-3",
+                "action": "note"
+            },
+            {
+                "id": "highlight",
+                "label": "Find in Handbook",
+                "icon": "book-open",
+                "action": "highlight-handbook"
+            },
+            {
+                "id": "explore",
+                "label": "Explore Further",
+                "icon": "search",
+                "action": "explore"
+            }
+        ],
+        "contradiction": [
+            {
+                "id": "collect",
+                "label": "Collect Contradiction",
+                "icon": "alert-circle",
+                "action": "collect"
+            },
+            {
+                "id": "note-contradiction",
+                "label": "Note Discrepancy",
+                "icon": "edit-3",
+                "action": "note",
+                "params": {
+                    "template": "Contradiction noted: {keyword} vs {contradicts}"
+                }
+            },
+            {
+                "id": "challenge",
+                "label": "Gently Challenge",
+                "icon": "message-circle",
+                "action": "ask-about"
+            }
+        ],
+        "breakthrough": [
+            {
+                "id": "collect",
+                "label": "Collect Breakthrough",
+                "icon": "star",
+                "action": "collect"
+            },
+            {
+                "id": "validate",
+                "label": "Validate & Support",
+                "icon": "heart",
+                "action": "note"
+            },
+            {
+                "id": "deepen",
+                "label": "Explore Deeper",
+                "icon": "layers",
+                "action": "explore"
+            }
+        ]
+    }
+}

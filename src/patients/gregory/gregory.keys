@@ -1,0 +1,364 @@
+// Gregory Vigil - Keyword Definitions
+// Patient-specific keywords for Gregory's sessions
+// Use this file to define keywords, actions, and animations
+
+===META===
+
+source: "gregory"
+displayName: "Gregory Vigil Keywords"
+version: "1.0.0"
+
+patientInfo: {
+    name: "Gregory Vigil"
+    diagnosis: "Generalized Anxiety Disorder (GAD)"
+    keyTraits: ["hedging", "seeking validation", "perfectionism", "hypervigilance"]
+}
+
+===KEYWORDS===
+
+// Time-related keywords
+[time.monthsActually] {
+    category: time
+    displayText: "Months, actually"
+    aliases: ["months actually", "actually months", "a few months now"]
+    description: "Gregory reveals the true duration of his struggles - first honest admission"
+    importance: high
+    note: "First admission of duration - important trust moment"
+    
+    style: {
+        color: "#6b7fd7"
+        bgColor: "rgba(107, 127, 215, 0.18)"
+        icon: "calendar"
+    }
+    
+    effects: {
+        focusCost: 5
+        reveals: ["symptom-duration", "trust-building"]
+        rapportChange: 3
+        setVars: { gregory_admitted_duration: true }
+    }
+    
+    menuOptions: [
+        {
+            id: "note-duration"
+            label: "Note: Months of struggling"
+            icon: "edit-3"
+            action: "note"
+            params: { template: "Gregory has been struggling for months before seeking help" }
+        }
+        {
+            id: "ask-why-wait"
+            label: "Ask: What made you wait?"
+            icon: "message-circle"
+            action: "ask-about"
+            params: { topic: "therapy.delay" }
+        }
+    ]
+}
+
+// Cognition keywords
+[cognition.overreacting] {
+    category: cognition
+    displayText: "overreacting"
+    aliases: ["maybe I'm overreacting", "probably overreacting"]
+    description: "Gregory minimizes his own experiences - classic anxiety presentation"
+    importance: medium
+    note: "Classic anxiety presentation - doubting own experiences"
+    
+    style: {
+        color: "#9b59b6"
+        bgColor: "rgba(155, 89, 182, 0.15)"
+        icon: "minimize"
+    }
+    
+    effects: {
+        focusCost: 4
+        reveals: ["self-doubt", "minimization"]
+        rapportChange: 2
+    }
+}
+
+[cognition.trustPerception] {
+    category: cognition
+    displayText: "trust my own perception"
+    aliases: ["trust myself", "trust what I see", "believe my own eyes"]
+    description: "BREAKTHROUGH: Gregory's deep self-doubt about reality"
+    importance: critical
+    note: "Core breakthrough - connects to childhood invalidation"
+    
+    style: {
+        color: "#e74c3c"
+        bgColor: "rgba(231, 76, 60, 0.2)"
+        animation: "pulse"
+    }
+    
+    effects: {
+        focusCost: 8
+        reveals: ["core-self-doubt", "breakthrough-trust"]
+        triggers: ["breakthrough-trust"]
+        rapportChange: 5
+    }
+}
+
+[cognition.feelingsDidntMatter] {
+    category: cognition
+    displayText: "feelings didn't matter"
+    aliases: ["my feelings didn't matter", "feelings weren't important"]
+    description: "BREAKTHROUGH: Childhood emotional invalidation"
+    importance: critical
+    note: "Deep breakthrough - root of self-doubt"
+    
+    style: {
+        color: "#9b59b6"
+        bgColor: "rgba(155, 89, 182, 0.25)"
+        animation: "pulse"
+    }
+    
+    effects: {
+        focusCost: 10
+        reveals: ["childhood-invalidation", "core-belief-formation"]
+        triggers: ["breakthrough-childhood"]
+        rapportChange: 8
+    }
+}
+
+// Behavior keywords
+[behavior.sleepFine] {
+    category: behavior
+    displayText: "sleep fine"
+    aliases: ["sleep is fine", "sleeping fine", "I sleep okay"]
+    description: "Gregory denies sleep issues - contradicts visible exhaustion"
+    importance: high
+    note: "Clear contradiction with visible dark circles"
+    
+    style: {
+        color: "#e74c3c"
+        bgColor: "rgba(231, 76, 60, 0.15)"
+        icon: "alert-circle"
+    }
+    
+    effects: {
+        focusCost: 5
+        reveals: ["contradiction-sleep"]
+        contradicts: ["observation-dark-circles", "observation-exhaustion"]
+    }
+}
+
+[behavior.mindWontShutOff] {
+    category: behavior
+    displayText: "mind won't shut off"
+    aliases: ["can't turn off my mind", "brain won't stop", "thoughts keep coming"]
+    description: "Racing thoughts preventing sleep"
+    importance: high
+    
+    style: {
+        color: "#f39c12"
+        bgColor: "rgba(243, 156, 18, 0.15)"
+    }
+    
+    effects: {
+        focusCost: 5
+        reveals: ["racing-thoughts", "insomnia-cognitive"]
+    }
+}
+
+[behavior.performing] {
+    category: behavior
+    displayText: "performing"
+    aliases: ["putting on a show", "acting normal", "pretending"]
+    description: "BREAKTHROUGH: Gregory masks his struggles"
+    importance: critical
+    
+    style: {
+        color: "#9b59b6"
+        bgColor: "rgba(155, 89, 182, 0.2)"
+        animation: "glow"
+    }
+    
+    effects: {
+        focusCost: 8
+        reveals: ["masking-behavior", "authenticity-struggle"]
+        triggers: ["breakthrough-masking"]
+    }
+}
+
+// Emotion keywords
+[emotion.beingWatched] {
+    category: emotion
+    displayText: "being watched"
+    aliases: ["someone watching", "eyes on me", "people looking"]
+    description: "Hypervigilance - feeling constantly observed"
+    importance: high
+    
+    style: {
+        color: "#e74c3c"
+        bgColor: "rgba(231, 76, 60, 0.15)"
+        icon: "eye"
+    }
+    
+    effects: {
+        focusCost: 5
+        reveals: ["hypervigilance", "paranoid-features"]
+    }
+}
+
+[emotion.terrifiedMistakes] {
+    category: emotion
+    displayText: "terrified of making mistakes"
+    aliases: ["scared of mistakes", "afraid to mess up", "can't make mistakes"]
+    description: "BREAKTHROUGH: Deep fear connected to childhood"
+    importance: critical
+    
+    style: {
+        color: "#e74c3c"
+        bgColor: "rgba(231, 76, 60, 0.2)"
+        animation: "shake"
+    }
+    
+    effects: {
+        focusCost: 8
+        reveals: ["perfectionism-fear", "childhood-pressure"]
+        triggers: ["breakthrough-childhood-fear"]
+    }
+}
+
+===ACTIONS===
+
+// Actions that can be triggered from keywords or dialogue
+
+@askAbout.therapy.delay {
+    label: "Ask About Waiting"
+    description: "Ask Gregory why he waited so long to seek help"
+    
+    dialogueOptions: [
+        {
+            text: "What made you decide to finally come in?"
+            response: "I guess... things just got bad enough that I couldn't ignore it anymore. My partner kept saying I should talk to someone."
+            mood: "hesitant"
+            effects: {
+                rapportChange: 2
+                focusCost: 5
+            }
+        }
+        {
+            text: "You mentioned months. What's been stopping you from seeking help sooner?"
+            response: "I don't know. Part of me kept thinking I could handle it on my own. That maybe I was just... being dramatic."
+            mood: "vulnerable"
+            effects: {
+                rapportChange: 3
+                focusCost: 5
+                reveals: ["self-reliance-issue"]
+            }
+        }
+    ]
+}
+
+@askAbout.sleep {
+    label: "Ask About Sleep"
+    description: "Follow up on Gregory's sleep issues"
+    
+    dialogueOptions: [
+        {
+            text: "Tell me more about what happens when you try to sleep."
+            response: "I just... lie there. My mind starts going over everything. Things I said, things I should have said. It's like a loop I can't stop."
+            mood: "exhausted"
+            effects: {
+                rapportChange: 2
+                focusCost: 5
+                reveals: ["rumination-pattern"]
+            }
+        }
+        {
+            text: "When you say your mind won't shut off, what kinds of thoughts come up?"
+            response: "Work stuff, mostly. Did I send that email right? Did I come across wrong in that meeting? Sometimes I'll check my phone at 3am just to make sure."
+            mood: "anxious"
+            effects: {
+                rapportChange: 2
+                focusCost: 5
+                reveals: ["work-anxiety", "checking-behavior"]
+            }
+        }
+    ]
+}
+
+@explore.childhood {
+    label: "Explore Childhood"
+    description: "Explore Gregory's childhood experiences"
+    
+    dialogueOptions: [
+        {
+            text: "What was it like growing up in your family?"
+            response: "Normal, I guess? My parents worked a lot. They had high expectations. Good grades, good behavior. You know how it is."
+            mood: "guarded"
+            effects: {
+                rapportChange: 1
+                focusCost: 5
+            }
+        }
+        {
+            text: "You mentioned your feelings didn't matter. Can you tell me more about that?"
+            response: "*long pause* I... I learned pretty early that crying or getting upset just made things worse. My dad would get frustrated. 'What do you have to cry about?' So I just... stopped."
+            mood: "vulnerable"
+            effects: {
+                rapportChange: 5
+                focusCost: 8
+                reveals: ["emotional-suppression", "parental-invalidation"]
+                triggers: ["breakthrough-childhood"]
+            }
+        }
+    ]
+}
+
+===ANIMATIONS===
+
+// Text animations that can be applied to words in dialogue
+// Usage in .session files: [word]<anim:shake>
+
+@shake {
+    type: "shake"
+    duration: 500
+    intensity: 3
+    easing: "ease-in-out"
+    description: "Subtle shake for emphasis or distress"
+}
+
+@pulse {
+    type: "pulse"
+    duration: 1000
+    scale: 1.1
+    easing: "ease-in-out"
+    description: "Gentle pulse for important revelations"
+}
+
+@glow {
+    type: "glow"
+    duration: 800
+    color: "#f39c12"
+    intensity: 0.5
+    easing: "ease-out"
+    description: "Soft glow for breakthroughs"
+}
+
+@fade {
+    type: "fade"
+    duration: 600
+    direction: "in"
+    easing: "ease-in"
+    description: "Fade in effect for gradual reveals"
+}
+
+@highlight {
+    type: "highlight"
+    duration: 400
+    color: "#fff3cd"
+    easing: "ease-out"
+    description: "Quick highlight flash for attention"
+}
+
+@wiggle {
+    type: "wiggle"
+    duration: 300
+    intensity: 2
+    easing: "linear"
+    description: "Small wiggle for nervous or uncertain words"
+}

@@ -220,13 +220,40 @@
         "keyword-metadata": {
             "patterns": [
                 {
+                    "comment": "New keyword link syntax: <keyword:source.category.id>",
+                    "name": "entity.other.attribute-name.keyword-link.sdns",
+                    "match": "<keyword:([a-z]+)\\.([a-z]+)\\.([a-zA-Z_-]+)>",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.source.sdns"
+                        },
+                        "2": {
+                            "name": "entity.name.type.category.sdns"
+                        },
+                        "3": {
+                            "name": "variable.other.keyword-id.sdns"
+                        }
+                    }
+                },
+                {
+                    "comment": "Animation syntax: <anim:shake>, <anim:pulse>, etc.",
+                    "name": "entity.other.attribute-name.animation.sdns",
+                    "match": "<anim:(shake|pulse|glow|fade|highlight|wiggle|wave|typewriter|glitch|bounce)>",
+                    "captures": {
+                        "1": {
+                            "name": "support.function.animation.sdns"
+                        }
+                    }
+                },
+                {
+                    "comment": "Legacy metadata syntax: <type:value>",
                     "name": "entity.other.attribute-name.metadata.sdns",
                     "begin": "<",
                     "end": ">",
                     "patterns": [
                         {
                             "name": "entity.other.attribute-name.type.sdns",
-                            "match": "[\\w-]+(?=\s*:)"
+                            "match": "[\\w-]+(?=\\s*:)"
                         },
                         {
                             "name": "punctuation.separator.key-value.sdns",

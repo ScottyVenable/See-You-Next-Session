@@ -6,11 +6,11 @@
  * Provides branching narrative, dynamic responses, and game state integration.
  * 
  * @module sdns
- * @version 1.0.0
+ * @version 2.0.0
  * 
  * @example
  * // Import the system
- * import { useDialogue, loadSessionDialogue, parseDialogue } from '../sdns';
+ * import { useDialogue, loadSessionDialogue, parseDialogue, initKeywordParser } from '../sdns';
  * 
  * // In a React component
  * function DialogueBox({ gameState, actions }) {
@@ -18,6 +18,9 @@
  *     
  *     useEffect(() => {
  *         async function loadDialogue() {
+ *             // Initialize keyword parser first
+ *             await initKeywordParser();
+ *             
  *             const source = await loadSessionDialogue('gregory', 1);
  *             if (source) {
  *                 dialogue.loadDialogue(source);
@@ -43,6 +46,13 @@ import {
     preloadPatientDialogue,
     clearSessionCache,
 } from './loader.js';
+import {
+    parseKeywords,
+    renderKeywords,
+    stripKeywordMarkup,
+    initKeywordParser,
+    getKeywordLoader,
+} from './keyword-parser.js';
 
 // Re-export all modules
 export { parseDialogue, parseDialogueFile, Lexer, Parser, TokenType };
@@ -55,6 +65,15 @@ export {
     getPatientList,
     preloadPatientDialogue,
     clearSessionCache,
+};
+
+// Keyword system exports
+export {
+    parseKeywords,
+    renderKeywords,
+    stripKeywordMarkup,
+    initKeywordParser,
+    getKeywordLoader,
 };
 
 // Patient ID to folder mapping (for backwards compatibility)
@@ -89,7 +108,7 @@ export async function loadPatientDialogue(patientId, turn, forceReload = false) 
 }
 
 // Version info
-export const SDNS_VERSION = '1.0.0';
+export const SDNS_VERSION = '2.0.0';
 export const SDNS_NAME = 'Session Dialogue and Narration System';
 
 // Default export
@@ -101,6 +120,11 @@ export default {
     loadSessionDialogue: loadPatientDialogue,
     loadPatientDialogue,
     resolvePatientId,
+    parseKeywords,
+    renderKeywords,
+    stripKeywordMarkup,
+    initKeywordParser,
+    getKeywordLoader,
     SDNS_VERSION,
     SDNS_NAME,
 };

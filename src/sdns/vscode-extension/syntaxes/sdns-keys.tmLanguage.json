@@ -1,0 +1,207 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "SDNS Keywords",
+    "scopeName": "source.sdns-keys",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#keyword-blocks"
+        },
+        {
+            "include": "#action-blocks"
+        },
+        {
+            "include": "#meta-blocks"
+        },
+        {
+            "include": "#keyword-definitions"
+        },
+        {
+            "include": "#action-definitions"
+        },
+        {
+            "include": "#strings"
+        },
+        {
+            "include": "#numbers"
+        },
+        {
+            "include": "#properties"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line.double-slash.sdns-keys",
+                    "match": "//.*$"
+                },
+                {
+                    "name": "comment.block.sdns-keys",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                },
+                {
+                    "name": "comment.line.hash.sdns-keys",
+                    "match": "#.*$"
+                }
+            ]
+        },
+        "keyword-blocks": {
+            "patterns": [
+                {
+                    "name": "entity.name.section.keyword.sdns-keys",
+                    "match": "^\\s*(===)\\s*(KEYWORD|KEYWORDS)\\s*(===)\\s*$",
+                    "captures": {
+                        "1": {
+                            "name": "punctuation.definition.section.begin.sdns-keys"
+                        },
+                        "2": {
+                            "name": "keyword.control.section.sdns-keys"
+                        },
+                        "3": {
+                            "name": "punctuation.definition.section.end.sdns-keys"
+                        }
+                    }
+                }
+            ]
+        },
+        "action-blocks": {
+            "patterns": [
+                {
+                    "name": "entity.name.section.action.sdns-keys",
+                    "match": "^\\s*(===)\\s*(ACTION|ACTIONS)\\s*(===)\\s*$",
+                    "captures": {
+                        "1": {
+                            "name": "punctuation.definition.section.begin.sdns-keys"
+                        },
+                        "2": {
+                            "name": "keyword.control.section.sdns-keys"
+                        },
+                        "3": {
+                            "name": "punctuation.definition.section.end.sdns-keys"
+                        }
+                    }
+                }
+            ]
+        },
+        "meta-blocks": {
+            "patterns": [
+                {
+                    "name": "entity.name.section.meta.sdns-keys",
+                    "match": "^\\s*(===)\\s*(META|ANIMATIONS|STYLES)\\s*(===)\\s*$",
+                    "captures": {
+                        "1": {
+                            "name": "punctuation.definition.section.begin.sdns-keys"
+                        },
+                        "2": {
+                            "name": "keyword.control.section.sdns-keys"
+                        },
+                        "3": {
+                            "name": "punctuation.definition.section.end.sdns-keys"
+                        }
+                    }
+                }
+            ]
+        },
+        "keyword-definitions": {
+            "patterns": [
+                {
+                    "name": "entity.name.function.keyword-id.sdns-keys",
+                    "match": "^\\s*\\[([a-zA-Z][a-zA-Z0-9_.-]*)\\]",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.function.sdns-keys"
+                        }
+                    }
+                }
+            ]
+        },
+        "action-definitions": {
+            "patterns": [
+                {
+                    "name": "entity.name.function.action-id.sdns-keys",
+                    "match": "^\\s*@([a-zA-Z][a-zA-Z0-9_.-]*)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.tag.action.sdns-keys"
+                        }
+                    }
+                }
+            ]
+        },
+        "properties": {
+            "patterns": [
+                {
+                    "name": "meta.property.sdns-keys",
+                    "match": "^\\s*(type|category|description|importance|displayText|aliases|note|safety|icon|color|bgColor|animation|focusCost|rapportChange|reveals|triggers|contradicts|unlocks|setVars|onCollect|onAskAbout|onHighlight|onExplore|dialogueOptions|effects|style|menuOptions|label|action|params|duration|easing)\\s*:",
+                    "captures": {
+                        "1": {
+                            "name": "support.type.property-name.sdns-keys"
+                        }
+                    }
+                },
+                {
+                    "name": "keyword.other.importance.critical.sdns-keys",
+                    "match": "\\b(critical)\\b"
+                },
+                {
+                    "name": "keyword.other.importance.high.sdns-keys",
+                    "match": "\\b(high)\\b"
+                },
+                {
+                    "name": "keyword.other.importance.medium.sdns-keys",
+                    "match": "\\b(medium)\\b"
+                },
+                {
+                    "name": "keyword.other.importance.low.sdns-keys",
+                    "match": "\\b(low)\\b"
+                },
+                {
+                    "name": "keyword.other.category.sdns-keys",
+                    "match": "\\b(time|emotion|behavior|cognition|relationship|background|symptom)\\b"
+                },
+                {
+                    "name": "constant.language.boolean.sdns-keys",
+                    "match": "\\b(true|false)\\b"
+                }
+            ]
+        },
+        "strings": {
+            "patterns": [
+                {
+                    "name": "string.quoted.double.sdns-keys",
+                    "begin": "\"",
+                    "end": "\"",
+                    "patterns": [
+                        {
+                            "name": "constant.character.escape.sdns-keys",
+                            "match": "\\\\."
+                        }
+                    ]
+                },
+                {
+                    "name": "string.quoted.single.sdns-keys",
+                    "begin": "'",
+                    "end": "'",
+                    "patterns": [
+                        {
+                            "name": "constant.character.escape.sdns-keys",
+                            "match": "\\\\."
+                        }
+                    ]
+                }
+            ]
+        },
+        "numbers": {
+            "patterns": [
+                {
+                    "name": "constant.numeric.sdns-keys",
+                    "match": "[+-]?\\b\\d+\\.?\\d*\\b"
+                }
+            ]
+        }
+    }
+}

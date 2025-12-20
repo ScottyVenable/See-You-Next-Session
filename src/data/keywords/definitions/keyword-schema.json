@@ -1,0 +1,304 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "SDNS Keyword Definition File",
+    "description": "Schema for SDNS keyword definition files used in See You Next Session",
+    "type": "object",
+    "required": [
+        "source",
+        "displayName",
+        "keywords"
+    ],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "Reference to this schema file"
+        },
+        "source": {
+            "type": "string",
+            "description": "Source identifier (e.g., 'generic', 'gregory')",
+            "pattern": "^[a-z][a-z0-9_-]*$"
+        },
+        "displayName": {
+            "type": "string",
+            "description": "Human-readable name for this keyword source"
+        },
+        "description": {
+            "type": "string",
+            "description": "Description of this keyword collection"
+        },
+        "version": {
+            "type": "string",
+            "description": "Version of this keyword file"
+        },
+        "keywords": {
+            "type": "object",
+            "description": "Keywords organized by category",
+            "additionalProperties": {
+                "$ref": "#/definitions/keywordCategory"
+            }
+        },
+        "menuOptions": {
+            "type": "object",
+            "description": "Menu option templates for different keyword types",
+            "additionalProperties": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/definitions/menuOption"
+                }
+            }
+        }
+    },
+    "definitions": {
+        "keywordCategory": {
+            "type": "object",
+            "properties": {
+                "_category": {
+                    "type": "object",
+                    "description": "Category metadata",
+                    "properties": {
+                        "label": {
+                            "type": "string"
+                        },
+                        "icon": {
+                            "type": "string"
+                        },
+                        "description": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "additionalProperties": {
+                "oneOf": [
+                    {
+                        "$ref": "#/definitions/keyword"
+                    },
+                    {
+                        "$ref": "#/definitions/categoryMeta"
+                    }
+                ]
+            }
+        },
+        "categoryMeta": {
+            "type": "object",
+            "properties": {
+                "label": {
+                    "type": "string"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "label"
+            ]
+        },
+        "keyword": {
+            "type": "object",
+            "required": [
+                "id",
+                "displayText",
+                "description",
+                "importance"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier in format: source.category.name",
+                    "pattern": "^[a-z][a-z0-9_-]*\\.[a-z][a-z0-9_-]*\\.[a-zA-Z][a-zA-Z0-9_-]*$"
+                },
+                "displayText": {
+                    "type": "string",
+                    "description": "Default text to display for this keyword"
+                },
+                "aliases": {
+                    "type": "array",
+                    "description": "Alternative text matches",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Tooltip description shown to player"
+                },
+                "importance": {
+                    "type": "string",
+                    "enum": [
+                        "low",
+                        "medium",
+                        "high",
+                        "critical"
+                    ],
+                    "description": "Importance level for styling and scoring"
+                },
+                "style": {
+                    "$ref": "#/definitions/keywordStyle"
+                },
+                "effects": {
+                    "$ref": "#/definitions/keywordEffects"
+                },
+                "conditions": {
+                    "$ref": "#/definitions/keywordConditions"
+                },
+                "menuOptions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/menuOption"
+                    }
+                },
+                "safetyFlag": {
+                    "type": "boolean",
+                    "description": "If true, this keyword triggers safety assessment protocols"
+                },
+                "criticalAction": {
+                    "type": "string",
+                    "description": "Action to trigger for critical keywords"
+                },
+                "note": {
+                    "type": "string",
+                    "description": "Writer's note (not shown to player)"
+                }
+            }
+        },
+        "keywordStyle": {
+            "type": "object",
+            "properties": {
+                "color": {
+                    "type": "string",
+                    "description": "Primary text/border color (hex)"
+                },
+                "bgColor": {
+                    "type": "string",
+                    "description": "Background color (rgba recommended)"
+                },
+                "icon": {
+                    "type": "string",
+                    "description": "Icon identifier"
+                },
+                "animation": {
+                    "type": "string",
+                    "enum": [
+                        "none",
+                        "pulse",
+                        "glow",
+                        "shake"
+                    ],
+                    "description": "Animation effect"
+                }
+            }
+        },
+        "keywordEffects": {
+            "type": "object",
+            "properties": {
+                "focusCost": {
+                    "type": "number",
+                    "description": "Focus cost to collect"
+                },
+                "reveals": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Symptoms/info to reveal"
+                },
+                "contradicts": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Contradicting observations"
+                },
+                "rapportChange": {
+                    "type": "number",
+                    "description": "Rapport modifier (+/-)"
+                },
+                "unlocks": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Topics/blocks to unlock"
+                },
+                "triggers": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Breakthroughs or events to trigger"
+                },
+                "setVars": {
+                    "type": "object",
+                    "description": "Variables to set"
+                }
+            }
+        },
+        "keywordConditions": {
+            "type": "object",
+            "properties": {
+                "minRapport": {
+                    "type": "number"
+                },
+                "maxRapport": {
+                    "type": "number"
+                },
+                "requiresKeywords": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requiresSymptoms": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "turnMin": {
+                    "type": "number"
+                },
+                "turnMax": {
+                    "type": "number"
+                }
+            }
+        },
+        "menuOption": {
+            "type": "object",
+            "required": [
+                "id",
+                "label",
+                "action"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "collect",
+                        "note",
+                        "highlight-handbook",
+                        "ask-about",
+                        "explore",
+                        "safety-flag",
+                        "safety-assessment"
+                    ]
+                },
+                "params": {
+                    "type": "object",
+                    "description": "Action-specific parameters"
+                }
+            }
+        }
+    }
+}

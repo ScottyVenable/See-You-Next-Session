@@ -511,5 +511,75 @@
             "$0"
         ],
         "description": "Starting block for a turn"
+    },
+    "Text Animation Shake": {
+        "prefix": [
+            "animshake",
+            "<anim:shake"
+        ],
+        "body": [
+            "[${1:text}]<anim:shake>"
+        ],
+        "description": "Apply shake animation to text (for distress/emphasis)"
+    },
+    "Text Animation Pulse": {
+        "prefix": [
+            "animpulse",
+            "<anim:pulse"
+        ],
+        "body": [
+            "[${1:text}]<anim:pulse>"
+        ],
+        "description": "Apply pulse animation to text (for revelations)"
+    },
+    "Text Animation Glow": {
+        "prefix": [
+            "animglow",
+            "<anim:glow"
+        ],
+        "body": [
+            "[${1:text}]<anim:glow>"
+        ],
+        "description": "Apply glow animation to text (for breakthroughs)"
+    },
+    "Text Animation Fade": {
+        "prefix": [
+            "animfade",
+            "<anim:fade"
+        ],
+        "body": [
+            "[${1:text}]<anim:fade>"
+        ],
+        "description": "Apply fade-in animation to text (gradual reveals)"
+    },
+    "Text Animation Highlight": {
+        "prefix": [
+            "animhighlight",
+            "<anim:highlight"
+        ],
+        "body": [
+            "[${1:text}]<anim:highlight>"
+        ],
+        "description": "Apply highlight flash to text (attention)"
+    },
+    "Text Animation Wiggle": {
+        "prefix": [
+            "animwiggle",
+            "<anim:wiggle"
+        ],
+        "body": [
+            "[${1:text}]<anim:wiggle>"
+        ],
+        "description": "Apply wiggle animation to text (nervous/uncertain)"
+    },
+    "Keyword with Animation": {
+        "prefix": [
+            "keywordanim",
+            "[keyword:anim"
+        ],
+        "body": [
+            "[${1:keyword text}]<keyword:${2:source}.${3:category}.${4:id}><anim:${5|shake,pulse,glow,fade,highlight,wiggle|}>"
+        ],
+        "description": "Keyword with linked definition and animation"
     }
 }
