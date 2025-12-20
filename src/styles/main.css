@@ -36,6 +36,11 @@
     --spacing-lg: 24px;
     --spacing-xl: 32px;
 
+    /* Layout dimensions */
+    --sidebar-width: 60px;
+    --tray-height: 70px;
+    --drawer-width: 340px;
+
     /* Border radius */
     --radius-sm: 4px;
     --radius-md: 8px;
@@ -205,4 +210,28 @@ a:hover {
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN VARIABLES
+   ============================================ */
+
+/* Tablet landscape adjustments */
+@media (max-width: 1024px) {
+    :root {
+        --sidebar-width: 48px;
+        --tray-height: 60px;
+        --drawer-width: 320px;
+    }
+}
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+    :root {
+        --sidebar-width: 40px;
+        --tray-height: 55px;
+        --drawer-width: 100vw;
+        --spacing-md: 12px;
+        --spacing-lg: 18px;
+    }
 }

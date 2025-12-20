@@ -1,9 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useGame } from '../../context/GameContext.jsx';
+import { useUI, DRAWERS } from '../../context/UIContext.jsx';
 import PatientView from '../game/PatientView.jsx';
 import DialogueBox from '../game/DialogueBox.jsx';
 import SynsDialogueBox from '../game/SynsDialogueBox.jsx';
+import FloatingDialogue from '../game/FloatingDialogue.jsx';
 import DialogueSelector from '../game/DialogueSelector.jsx';
 import Clipboard from '../game/Clipboard.jsx';
 import FocusMeter from '../game/FocusMeter.jsx';
@@ -15,12 +17,30 @@ import '../../styles/game-screen.css';
 
 function GameScreen() {
     const { gameState, actions } = useGame();
-    const [isHandbookOpen, setIsHandbookOpen] = useState(false);
+    const {
+        settings,
+        openDrawers,
+        toggleDrawer,
+        closeDrawer,
+        dialogueVisible,
+        toggleDialogue,
+        drawers,
+        currentDialoguePosition,
+    } = useUI();
+
     const [draggedToken, setDraggedToken] = useState(null);
     const [breakthroughDialogue, setBreakthroughDialogue] = useState(null);
     const [showTutorialHint, setShowTutorialHint] = useState(true);
     const [selectedPrompt, setSelectedPrompt] = useState(null);
-    const [useSynsDialogue, setUseSynsDialogue] = useState(true); // Toggle for SYNS vs legacy dialogue
+    const [dialogueDimensions, setDialogueDimensions] = useState({ width: 500, height: 200 });
+    const [dialoguePosition, setDialoguePosition] = useState(() => ({
+        left: Math.max(100, (window.innerWidth - 500) / 2),
+        bottom: 70
+    }));
+    const [isResizing, setIsResizing] = useState(false);
+
+    const resizeRef = useRef(null);
+    const startPosRef = useRef({ x: 0, y: 0, width: 0, height: 0, left: 0, bottom: 0 });
 
     const { currentPatient, currentTurn, focus, isFocusMode, rapport } = gameState;
 
@@ -28,24 +48,131 @@ function GameScreen() {
     const rapportLevel = getRapportLevelName(rapport);
     const bodyLanguage = getBodyLanguage(rapport);
 
+    // Resize handlers
+    const startResize = useCallback((edge, e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsResizing(true);
+        resizeRef.current = edge;
+        startPosRef.current = {
+            x: e.clientX,
+            y: e.clientY,
+            width: dialogueDimensions.width,
+            height: dialogueDimensions.height,
+            left: dialoguePosition.left,
+            bottom: dialoguePosition.bottom
+        };
+    }, [dialogueDimensions, dialoguePosition]);
+
+    useEffect(() => {
+        if (!isResizing) return;
+
+        const handleMouseMove = (e) => {
+            if (!resizeRef.current) return;
+
+            const deltaX = e.clientX - startPosRef.current.x;
+            const deltaY = e.clientY - startPosRef.current.y;
+            const edge = resizeRef.current;
+
+            let newWidth = startPosRef.current.width;
+            let newHeight = startPosRef.current.height;
+            let newLeft = startPosRef.current.left;
+            let newBottom = startPosRef.current.bottom;
+
+            // Handle horizontal resizing
+            if (edge.includes('e')) {
+                newWidth = startPosRef.current.width + deltaX;
+            }
+            if (edge.includes('w')) {
+                newWidth = startPosRef.current.width - deltaX;
+                newLeft = startPosRef.current.left + deltaX;
+            }
+
+            // Handle vertical resizing
+            if (edge.includes('s')) {
+                newHeight = startPosRef.current.height + deltaY;
+                newBottom = startPosRef.current.bottom - deltaY;
+            }
+            if (edge.includes('n')) {
+                newHeight = startPosRef.current.height - deltaY;
+            }
+
+            // Constrain width to viewport minus sidebar margins (100px each side)
+            const maxWidth = window.innerWidth - 200;
+            const constrainedWidth = Math.max(300, Math.min(maxWidth, newWidth));
+
+            // Adjust left if width was constrained and resizing from west
+            if (edge.includes('w') && constrainedWidth !== newWidth) {
+                newLeft = startPosRef.current.left + (startPosRef.current.width - constrainedWidth);
+            }
+
+            // Constrain height to viewport minus interaction tray (70px) and top margin (80px)
+            const maxHeight = window.innerHeight - 150;
+            const constrainedHeight = Math.max(120, Math.min(maxHeight, newHeight));
+
+            // Adjust bottom if height was constrained and resizing from south
+            if (edge.includes('s') && constrainedHeight !== newHeight) {
+                newBottom = startPosRef.current.bottom - (constrainedHeight - startPosRef.current.height);
+            }
+
+            setDialogueDimensions({ width: constrainedWidth, height: constrainedHeight });
+            setDialoguePosition({ left: newLeft, bottom: newBottom });
+        };
+
+        const handleMouseUp = () => {
+            setIsResizing(false);
+            resizeRef.current = null;
+        };
+
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [isResizing]);
+
     // Handle dialogue prompt selection from selector
     const handleSelectPrompt = useCallback((prompt) => {
         setSelectedPrompt(prompt);
         console.log('Selected dialogue prompt:', prompt);
 
-        // Deduct focus cost if applicable
         if (prompt.focusCost && prompt.focusCost > 0) {
             actions.spendFocus(prompt.focusCost);
         }
 
-        // Apply rapport change
         if (prompt.rapportValue && prompt.rapportValue !== 0) {
             actions.changeRapport(prompt.rapportValue, `dialogue_${prompt.rapportImpact}`);
         }
-
-        // TODO: Integrate with dialogue system to generate response
-        // This could trigger a new dialogue entry or advance conversation
     }, [actions]);
+
+    // Keyboard shortcuts
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            // Don't trigger if typing in an input
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+            switch (e.key.toLowerCase()) {
+                case 'd':
+                    toggleDialogue();
+                    break;
+                case 'h':
+                    toggleDrawer('handbook');
+                    break;
+                case 'e':
+                    toggleDrawer('clipboard');
+                    break;
+                case 'escape':
+                    closeDrawer('left');
+                    closeDrawer('right');
+                    break;
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [toggleDialogue, toggleDrawer, closeDrawer]);
 
     if (!currentPatient) {
         return (
@@ -56,10 +183,8 @@ function GameScreen() {
         );
     }
 
-    // Get current phase dialogue + any unlocked breakthrough dialogue
     const currentPhase = currentPatient.phases.find(p => p.turn === currentTurn);
 
-    // Find breakthrough dialogue for a given text/visual pair
     const findBreakthroughDialogue = (textTokenId, visualSymptomId) => {
         if (!currentPatient.breakthroughDialogue) return null;
 
@@ -93,13 +218,100 @@ function GameScreen() {
         setBreakthroughDialogue(null);
     };
 
-    // Calculate session progress
     const sessionProgress = (currentTurn / gameState.maxTurns) * 100;
-    const breakthroughCount = gameState.breakthroughs?.length || 0;
+
+    // Get drawers by side for the sidebar buttons
+    const leftDrawers = Object.values(drawers).filter(d => d.side === 'left');
+    const rightDrawers = Object.values(drawers).filter(d => d.side === 'right');
+
+    // Render drawer content based on which drawer is open
+    const renderDrawerContent = (drawerId) => {
+        switch (drawerId) {
+            case 'handbook':
+                return (
+                    <Handbook
+                        embedded={true}
+                        onTokenDrop={(disorderId) => {
+                            if (draggedToken) {
+                                console.log(`Testing ${draggedToken.id} against ${disorderId}`);
+                            }
+                        }}
+                    />
+                );
+            case 'clipboard':
+                return (
+                    <Clipboard
+                        tokens={gameState.clipboardTokens}
+                        onRemoveToken={actions.removeFromClipboard}
+                        onDragStart={handleDragStart}
+                        onDragEnd={handleDragEnd}
+                        clipboardTokens={gameState.clipboardTokens}
+                        showTutorialHint={showTutorialHint && gameState.clipboardTokens.length === 0}
+                        onSynthesisAttempt={(textToken, visualToken, isSuccess) => {
+                            if (isSuccess) {
+                                actions.recordBreakthrough({
+                                    textToken: textToken.id,
+                                    visualToken: visualToken.id,
+                                    timestamp: Date.now(),
+                                });
+                                actions.restoreFocus(40);
+                                actions.changeRapport(15, 'breakthrough_success');
+
+                                const btDialogue = findBreakthroughDialogue(textToken.id, visualToken.symptomRef);
+                                if (btDialogue) {
+                                    actions.unlockDialogue(btDialogue.key);
+                                    setBreakthroughDialogue(btDialogue);
+                                }
+                            } else {
+                                actions.spendFocus(10);
+                                actions.changeRapport(-5, 'synthesis_failed');
+                            }
+                        }}
+                    />
+                );
+            case 'synthesis':
+                return (
+                    <div className="drawer-placeholder">
+                        <span className="placeholder-icon">🧩</span>
+                        <span className="placeholder-text">Synthesis Zone</span>
+                        <span className="placeholder-hint">Coming soon...</span>
+                    </div>
+                );
+            case 'notes':
+                return (
+                    <div className="drawer-placeholder">
+                        <span className="placeholder-icon">📝</span>
+                        <span className="placeholder-text">Session Notes</span>
+                        <span className="placeholder-hint">Coming soon...</span>
+                    </div>
+                );
+            case 'stats':
+                return (
+                    <div className="drawer-content-stats">
+                        <h3 className="drawer-section-title">Session Progress</h3>
+                        <TurnClock currentTurn={currentTurn} maxTurns={gameState.maxTurns} />
+                        <FocusMeter
+                            current={focus}
+                            max={gameState.maxFocus}
+                            onToggleFocus={actions.toggleFocusMode}
+                            isFocusMode={isFocusMode}
+                        />
+                        <RapportMeter
+                            value={rapport}
+                            maxValue={gameState.maxRapport || 100}
+                            showEffects={false}
+                            compact={false}
+                        />
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
 
     return (
-        <div className={`game-screen ${isFocusMode ? 'focus-mode' : ''}`}>
-            {/* Focus Mode Overlay with enhanced effect */}
+        <div className={`game-screen drawer-layout ${isFocusMode ? 'focus-mode' : ''}`}>
+            {/* Focus Mode Overlay */}
             <AnimatePresence>
                 {isFocusMode && (
                     <motion.div
@@ -122,239 +334,247 @@ function GameScreen() {
                 />
             </div>
 
-            {/* Main Game Area */}
-            <div className="game-layout">
-                {/* Left Panel: Patient */}
-                <motion.div
-                    className="patient-panel"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4 }}
-                >
-                    <div className="panel-header">
-                        <span className="panel-icon">👤</span>
-                        <h2 className="panel-title">{currentPatient.name || 'Patient'}</h2>
+            {/* Left Sidebar - Vertical buttons */}
+            <div className="sidebar sidebar-left">
+                {leftDrawers.map(drawer => (
+                    <button
+                        key={drawer.id}
+                        className={`sidebar-btn ${openDrawers.left === drawer.id ? 'active' : ''}`}
+                        onClick={() => toggleDrawer(drawer.id)}
+                        title={`${drawer.label} (${drawer.id === 'handbook' ? 'H' : drawer.id[0].toUpperCase()})`}
+                    >
+                        <span className="sidebar-btn-icon">{drawer.icon}</span>
+                        <span className="sidebar-btn-label">{drawer.label}</span>
+                    </button>
+                ))}
+            </div>
+
+            {/* Left Drawer Panel */}
+            <AnimatePresence>
+                {openDrawers.left && (
+                    <motion.div
+                        className="drawer drawer-left"
+                        initial={{ x: -400, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{ x: -400, opacity: 0 }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                        style={{ width: drawers[openDrawers.left]?.width || 360 }}
+                    >
+                        <div className="drawer-header">
+                            <span className="drawer-icon">{drawers[openDrawers.left]?.icon}</span>
+                            <h3 className="drawer-title">{drawers[openDrawers.left]?.label}</h3>
+                            <button className="drawer-close" onClick={() => closeDrawer('left')}>×</button>
+                        </div>
+                        <div className="drawer-content">
+                            {renderDrawerContent(openDrawers.left)}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Main Content Area - Full screen patient within viewable game window */}
+            <div className="main-content">
+                <div className="viewable-game-window">
+                    {/* Patient View - Full screen background */}
+                    <div className="patient-fullscreen">
+                        <PatientView
+                            patient={currentPatient}
+                            isFocusMode={isFocusMode}
+                            fullscreen={true}
+                            onSymptomFound={(symptomId) => {
+                                actions.revealSymptom(symptomId);
+                            }}
+                            onDragStart={handleDragStart}
+                            onDragEnd={handleDragEnd}
+                        />
+
+                        {/* Patient name overlay */}
+                        <div className="patient-name-overlay">
+                            <span className="patient-name">{currentPatient.name || 'Patient'}</span>
+                        </div>
                     </div>
-                    <PatientView
-                        patient={currentPatient}
-                        isFocusMode={isFocusMode}
-                        onSymptomFound={(symptomId) => {
-                            actions.revealSymptom(symptomId);
-                        }}
-                        onDragStart={handleDragStart}
-                        onDragEnd={handleDragEnd}
-                    />
-                </motion.div>
 
-                {/* Center Panel: Dialogue */}
-                <motion.div
-                    className="dialogue-panel"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.1 }}
-                >
-                    {useSynsDialogue ? (
-                        <SynsDialogueBox
-                            patientId={currentPatient.id}
-                            turn={currentTurn}
-                            isFocusMode={isFocusMode}
-                            patientName={currentPatient.name}
-                            fallbackDialogue={currentPhase?.dialogue || []}
-                            onKeywordCollected={(token) => {
-                                actions.collectToken(token);
-                                actions.addToClipboard(token);
-                                setShowTutorialHint(false);
-                            }}
-                            onSpeechChange={(speech) => {
-                                console.log('Current speech:', speech);
-                            }}
-                            onDialogueEnd={() => {
-                                console.log('Dialogue block ended');
-                            }}
-                            onAskAbout={(keyword) => {
-                                console.log('Ask about keyword:', keyword);
-                            }}
-                            onHighlightInHandbook={(keyword) => {
-                                setIsHandbookOpen(true);
-                            }}
-                            onExploreBackground={(keyword) => {
-                                console.log('Explore background:', keyword);
-                            }}
-                        />
-                    ) : (
-                        <DialogueBox
-                            dialogue={currentPhase?.dialogue || []}
-                            isFocusMode={isFocusMode}
-                            patientName={currentPatient.name}
-                            onKeywordCollected={(keyword) => {
-                                const token = {
-                                    id: keyword.id,
-                                    type: 'text',
-                                    content: keyword.text,
-                                    contradicts: keyword.contradicts,
-                                    relatedSymptom: keyword.relatedSymptom,
-                                };
-                                actions.collectToken(token);
-                                actions.addToClipboard(token);
-                                setShowTutorialHint(false);
-                            }}
-                            onAskAbout={(keyword) => {
-                                console.log('Ask about keyword:', keyword);
-                            }}
-                            onHighlightInHandbook={(keyword) => {
-                                setIsHandbookOpen(true);
-                            }}
-                            onExploreBackground={(keyword) => {
-                                console.log('Explore background:', keyword);
-                            }}
-                        />
-                    )}
-
-                    {/* Selected Prompt Indicator */}
+                    {/* Dialogue Drawer - slides up from bottom */}
                     <AnimatePresence>
-                        {selectedPrompt && (
+                        {dialogueVisible && (
                             <motion.div
-                                className="selected-prompt-indicator"
-                                initial={{ opacity: 0, y: -10 }}
+                                className="dialogue-floating draggable"
+                                style={{
+                                    left: `${dialoguePosition.left}px`,
+                                    bottom: `${dialoguePosition.bottom}px`,
+                                    width: `${dialogueDimensions.width}px`,
+                                    height: `${dialogueDimensions.height}px`
+                                }}
+                                initial={{ opacity: 0, y: 100 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                                exit={{ opacity: 0, y: 100 }}
+                                drag={!isResizing}
+                                dragMomentum={false}
+                                dragElastic={0}
+                                dragConstraints={{
+                                    left: 70 - dialoguePosition.left,
+                                    right: Math.max(0, window.innerWidth - dialoguePosition.left - dialogueDimensions.width - 70),
+                                    top: Math.max(-(window.innerHeight - dialogueDimensions.height - 150), -window.innerHeight + 200),
+                                    bottom: 0
+                                }}
+                                whileDrag={{ scale: 1.02, boxShadow: '0 -8px 40px rgba(0, 0, 0, 0.5)' }}
+                                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                             >
-                                <span className="prompt-label">You asked:</span>
-                                <span className="prompt-text">"{selectedPrompt.prompt}"</span>
-                                <button
-                                    className="prompt-dismiss"
-                                    onClick={() => setSelectedPrompt(null)}
-                                >
-                                    ×
-                                </button>
+                                {/* Resize handles */}
+                                <div className="resize-handle resize-handle-n" onMouseDown={(e) => startResize('n', e)} />
+                                <div className="resize-handle resize-handle-s" onMouseDown={(e) => startResize('s', e)} />
+                                <div className="resize-handle resize-handle-e" onMouseDown={(e) => startResize('e', e)} />
+                                <div className="resize-handle resize-handle-w" onMouseDown={(e) => startResize('w', e)} />
+                                <div className="resize-handle resize-handle-ne" onMouseDown={(e) => startResize('ne', e)} />
+                                <div className="resize-handle resize-handle-nw" onMouseDown={(e) => startResize('nw', e)} />
+                                <div className="resize-handle resize-handle-se" onMouseDown={(e) => startResize('se', e)} />
+                                <div className="resize-handle resize-handle-sw" onMouseDown={(e) => startResize('sw', e)} />
+
+                                <div className="dialogue-header">
+                                    <span className="dialogue-speaker">{currentPatient.name}</span>
+                                    <button
+                                        className="dialogue-hide-btn"
+                                        onClick={toggleDialogue}
+                                        title="Hide dialogue (D)"
+                                    >
+                                        ▼
+                                    </button>
+                                </div>
+                                <FloatingDialogue
+                                    patientId={currentPatient.id}
+                                    turn={currentTurn}
+                                    fallbackDialogue={currentPhase?.dialogue || []}
+                                    onKeywordCollected={(token) => {
+                                        actions.collectToken(token);
+                                        actions.addToClipboard(token);
+                                        setShowTutorialHint(false);
+                                    }}
+                                    onDialogueEnd={() => {
+                                        console.log('Dialogue block ended');
+                                    }}
+                                />
                             </motion.div>
                         )}
                     </AnimatePresence>
+                </div>
+            </div>
 
+            {/* Show dialogue button when hidden - fixed position */}
+            <AnimatePresence>
+                {!dialogueVisible && (
+                    <motion.button
+                        className="dialogue-show-btn"
+                        onClick={toggleDialogue}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        title="Show dialogue (D)"
+                    >
+                        <span className="show-btn-icon">💬</span>
+                        <span className="show-btn-text">Show Dialogue</span>
+                    </motion.button>
+                )}
+            </AnimatePresence>
+
+            {/* Right Sidebar - Vertical buttons */}
+            <div className="sidebar sidebar-right">
+                {rightDrawers.map(drawer => (
+                    <button
+                        key={drawer.id}
+                        className={`sidebar-btn ${openDrawers.right === drawer.id ? 'active' : ''}`}
+                        onClick={() => toggleDrawer(drawer.id)}
+                        title={`${drawer.label} (${drawer.id === 'clipboard' ? 'E' : drawer.id[0].toUpperCase()})`}
+                    >
+                        <span className="sidebar-btn-icon">{drawer.icon}</span>
+                        <span className="sidebar-btn-label">{drawer.label}</span>
+                    </button>
+                ))}
+            </div>
+
+            {/* Right Drawer Panel */}
+            <AnimatePresence>
+                {openDrawers.right && (
+                    <motion.div
+                        className="drawer drawer-right"
+                        initial={{ x: 400, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{ x: 400, opacity: 0 }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                        style={{ width: drawers[openDrawers.right]?.width || 340 }}
+                    >
+                        <div className="drawer-header">
+                            <span className="drawer-icon">{drawers[openDrawers.right]?.icon}</span>
+                            <h3 className="drawer-title">{drawers[openDrawers.right]?.label}</h3>
+                            <button className="drawer-close" onClick={() => closeDrawer('right')}>×</button>
+                        </div>
+                        <div className="drawer-content">
+                            {renderDrawerContent(openDrawers.right)}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Bottom Interaction Tray */}
+            <div className="interaction-tray">
+                <div className="tray-left">
+                    <div className="tray-meters">
+                        <div className="tray-meter focus-mini">
+                            <span className="meter-icon">🔍</span>
+                            <div className="meter-bar">
+                                <div
+                                    className="meter-fill focus-fill"
+                                    style={{ width: `${(focus.current / gameState.maxFocus) * 100}%` }}
+                                />
+                            </div>
+                            <span className="meter-value">{focus.current}</span>
+                        </div>
+                        <div className="tray-meter rapport-mini">
+                            <span className="meter-icon">💚</span>
+                            <div className="meter-bar">
+                                <div
+                                    className="meter-fill rapport-fill"
+                                    style={{ width: `${(rapport / (gameState.maxRapport || 100)) * 100}%` }}
+                                />
+                            </div>
+                            <span className="meter-value">{rapport}</span>
+                        </div>
+                    </div>
+                    <button
+                        className={`focus-toggle-btn ${isFocusMode ? 'active' : ''}`}
+                        onClick={actions.toggleFocusMode}
+                        title="Toggle Focus Mode"
+                    >
+                        <span className="focus-icon">{isFocusMode ? '👁️' : '👁️‍🗨️'}</span>
+                        <span className="focus-label">{isFocusMode ? 'Exit Focus' : 'Focus'}</span>
+                    </button>
+                </div>
+
+                <div className="tray-center">
                     <DialogueSelector
                         onSelectPrompt={handleSelectPrompt}
                         disabledTopics={[]}
                         currentFocus={focus.current}
+                        compact={true}
                     />
+                </div>
 
-                    <div className="turn-controls">
-                        <div className="turn-info-inline">
-                            <span className="turn-label-inline">Session Progress</span>
-                            <div className="turn-dots">
-                                {Array.from({ length: gameState.maxTurns }, (_, i) => (
-                                    <span
-                                        key={i}
-                                        className={`turn-dot ${i < currentTurn ? 'completed' : ''} ${i === currentTurn - 1 ? 'current' : ''}`}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                        <motion.button
-                            className="end-turn-btn"
-                            onClick={handleEndTurn}
-                            whileHover={{ scale: 1.02, y: -2 }}
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            <span className="btn-text">
-                                {currentTurn >= gameState.maxTurns ? 'Complete Session' : 'Next Topic'}
-                            </span>
-                            <span className="btn-icon">→</span>
-                        </motion.button>
+                <div className="tray-right">
+                    <div className="turn-indicator">
+                        <span className="turn-label">Turn</span>
+                        <span className="turn-current">{currentTurn}</span>
+                        <span className="turn-divider">/</span>
+                        <span className="turn-max">{gameState.maxTurns}</span>
                     </div>
-                </motion.div>
-
-                {/* Right Panel: Workstation */}
-                <motion.div
-                    className="workstation-panel"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: 0.2 }}
-                >
-                    <div className="workstation-header">
-                        <TurnClock
-                            currentTurn={currentTurn}
-                            maxTurns={gameState.maxTurns}
-                        />
-                    </div>
-
-                    <FocusMeter
-                        current={focus}
-                        max={gameState.maxFocus}
-                        onToggleFocus={actions.toggleFocusMode}
-                        isFocusMode={isFocusMode}
-                    />
-
-                    <RapportMeter
-                        value={rapport}
-                        maxValue={gameState.maxRapport || 100}
-                        showEffects={false}
-                        compact={false}
-                    />
-
-                    <Clipboard
-                        tokens={gameState.clipboardTokens}
-                        onRemoveToken={actions.removeFromClipboard}
-                        onDragStart={handleDragStart}
-                        onDragEnd={handleDragEnd}
-                        clipboardTokens={gameState.clipboardTokens}
-                        showTutorialHint={showTutorialHint && gameState.clipboardTokens.length === 0}
-                        onSynthesisAttempt={(textToken, visualToken, isSuccess) => {
-                            if (isSuccess) {
-                                // Successful breakthrough!
-                                actions.recordBreakthrough({
-                                    textToken: textToken.id,
-                                    visualToken: visualToken.id,
-                                    timestamp: Date.now(),
-                                });
-                                actions.restoreFocus(40);
-
-                                // Rapport boost for gentle breakthrough
-                                actions.changeRapport(15, 'breakthrough_success');
-
-                                // Find and show breakthrough dialogue
-                                const btDialogue = findBreakthroughDialogue(textToken.id, visualToken.symptomRef);
-                                if (btDialogue) {
-                                    actions.unlockDialogue(btDialogue.key);
-                                    setBreakthroughDialogue(btDialogue);
-                                }
-                            } else {
-                                // Failed match - penalize focus
-                                actions.spendFocus(10);
-
-                                // Slight rapport penalty for fumbled attempt
-                                actions.changeRapport(-5, 'synthesis_failed');
-                            }
-                        }}
-                    />
-
                     <motion.button
-                        className="handbook-btn"
-                        onClick={() => setIsHandbookOpen(true)}
-                        whileHover={{ scale: 1.02, y: -1 }}
+                        className="end-turn-btn"
+                        onClick={handleEndTurn}
+                        whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                     >
-                        <span className="handbook-icon">📖</span>
-                        <span className="handbook-text">Handbook</span>
-                        <span className="handbook-shortcut">H</span>
+                        {currentTurn >= gameState.maxTurns ? 'End Session' : 'Next →'}
                     </motion.button>
-                </motion.div>
+                </div>
             </div>
-
-            {/* Handbook Modal */}
-            <AnimatePresence>
-                {isHandbookOpen && (
-                    <Handbook
-                        onClose={() => setIsHandbookOpen(false)}
-                        onTokenDrop={(disorderId) => {
-                            // Handle dragging tokens to handbook entries
-                            if (draggedToken) {
-                                console.log(`Testing ${draggedToken.id} against ${disorderId}`);
-                            }
-                        }}
-                    />
-                )}
-            </AnimatePresence>
 
             {/* Breakthrough Dialogue Modal */}
             <AnimatePresence>
@@ -444,8 +664,20 @@ function GameScreen() {
                 )}
             </AnimatePresence>
 
-            {/* Keyboard Shortcut Handler */}
-            {/* Add keyboard event listener for handbook shortcut */}
+            {/* Debug Dimension Overlay */}
+            {settings.showDimensionOverlay && (
+                <div className="debug-dimensions-overlay">
+                    <div className="debug-info">
+                        <span className="debug-label">Layout:</span> Drawer-based
+                    </div>
+                    <div className="debug-info">
+                        <span className="debug-label">Left Drawer:</span> {openDrawers.left || 'closed'}
+                    </div>
+                    <div className="debug-info">
+                        <span className="debug-label">Right Drawer:</span> {openDrawers.right || 'closed'}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

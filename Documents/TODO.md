@@ -40,6 +40,34 @@
 
 ---
 
+## [TODO] Dialogue Timer System (Future Feature)
+
+15. **Dialogue Response Timer** - A countdown timer for each dialogue turn that creates pressure to respond
+    - Visual: Small ring/arc showing time remaining before needing to say something
+    - Makes gameplay more realistic (therapists don't stare silently at clients for 3 minutes)
+    - Toggleable in difficulty settings
+    - **Consequences when timer runs out:**
+      - Patient becomes more nervous (mood shift)
+      - Rapport depletes slightly
+      - After multiple silences: progressive dialogue changes ("Are you listening?" -> "Is everything okay?" -> patient becomes frustrated/leaves session)
+    - Timer duration should vary by difficulty level
+
+16. **Silence Penalty Progression** - Chain of events when player is repeatedly silent
+    - First silence: Patient fidgets, slight rapport loss
+    - Second silence: Patient asks if you're listening, moderate rapport loss
+    - Third silence: Patient becomes visibly uncomfortable, significant rapport loss
+    - Fourth+ silence: Patient considers leaving early, major rapport loss
+    - Ultimate consequence: Patient ends session prematurely (fail state)
+
+17. **Timer-Related Skill Upgrades** (part of Skill Tree system)
+    - "Patient Patience" - Increases base timer duration
+    - "Thoughtful Pause" - Ability to pause timer briefly using focus points
+    - "Comfortable Silence" - Reduces rapport penalty from silence
+    - "Recovery" - First silence per session has no penalty
+    - Specialization: "Mindfulness Expert" - Timer pauses automatically during focus mode
+
+---
+
 ## [TODO] UI/UX Features
 
 1. Have the "Synthesis Zone" be contained inside the Clipboard expanded view, rather than a separate area
@@ -96,6 +124,8 @@
 - [ ] Separate menu tabs: buttons, quick cheats, testing features, diagnostics
 - [ ] More robust command implementations
 - [ ] Error handling with automatic adjustments for code changes
+- [ ] Make the contents and background opacity allowed to be adjusted with a slider.
+- [ ] 
 
 ---
 
@@ -125,6 +155,55 @@
 11. Make a plan for implementing various aspect ratios and screen sizes for the game to ensure compatibility across different devices and resolutions. This could include responsive UI design, scalable graphics, and adaptable layouts.
 12. Come up with a plan in case we move from React to another framework or engine in the future. This could include modularizing code, separating game logic from UI components, and using standard data formats for game assets and configurations. Unity is our most likely candidate if we move away from React. This needs to be planned carefully to avoid major rewrites later on (some may be unavoidable though due to Unity being in C# and React in mostly Javascript, CSS).
 13. Work on the Wiki in the GitHub repository to ensure that all documentation is up to date and comprehensive for future contributors or team members. This could include setup instructions, coding standards, feature overviews, and troubleshooting guides as well as game information for players (lore, characters, disorders, etc.) and anything else relevant to the project. This would be most helpful for Kiki to reference when writing and designing the game content.
+14. An automated system for version tracking/changelog in game which would automatically pull the data from the most recent commit hash and display it in the game menu or dev console for reference. This would help with debugging and tracking changes over time without manually creating change logs. We would need to make a changelog screen in the game menu that displays this information pulled from git and display it as a list of changes made in each version along with the commit hash and date, with the ability to filter by version or date range and search for specific changes or keywords as well as export the changelog to a text file for reference outside the game. Additionally in the filters, there should be chips for "Completed", "In Progress", and "Planned" to categorize changes based on their status. As well as a "chip selector" for different areas of the game (UI, Dialogue System, Audio, Progression, etc.) to filter changes by specific features or modules. This would be very useful for tracking the development progress and understanding the evolution of the game over time. Especially for players who might be looking for big UI changes for example or someone else interested in dialogue system improvements. We could then have the option to filter based on it's "significance" to the user (e.g., major changes, minor tweaks, bug fixes, etc.) to help users quickly find relevant updates based on their interests or needs. We would then need to make sure we have a very structured commit message format to ensure consistency and clarity in the changelog entries and come up with how we are able to parse the data from git commit messages to extract this information accurately and efficiently for display in the game menu which would be in CSS and Javascript/React.
+15. **CRITICAL** rename most of the panels as follows:
+    PatientView = the main panel containing the game view, showing the patient sprite (no container but the outline shows up with a "wireframe" debug setting), the office space, etc.
+    
+    BottomPanel = the bottom panel containing the InteractionPanel, DialoguePanel, Next Topic button, Turn counter. --THIS MUST BE A FIXED HEIGHT IN RELITIVITY TO THE GAME-- SHOULD NOT EXPAND AND THEREBY SHRINK THE ABOVE PATIENTVIEWPANEL
+
+    InteractionPanel = the bottom area containing dialogue options and actions.
+
+    RightSidePanel = the right side panel containing the clipboard, handbook, synthesis zone, etc
+    
+    RightSideButtonPanel = the right side panel containing the buttons for opening the rightsidepanel and loading it's contents.
+    
+    LeftSidePanel = the left side panel containing patient info, session history, mood tracker, Notes, etc.
+16. The PatientView panel should take up the entire screen minus the fixed height BottomPanel and the variable width LeftSidePanel and RightSidePanel. The PatientView should NOT resize dynamically based on the size of these other panels. Other panels should appear OVER the Patient View panel (if that makes sense).
+17. Transition from emojis to Phospher/Material icons but make sure they are still viewable
+
+
+## Layout Optimizations
+- [x] Optimize layout for 16:9 and mobile devices.
+- [x] Ensure all UI elements scale properly with different resolutions.
+- [x] Make the `draggable-dialogue` component FIXED while resizing. It must stay in the same position and adjusts size accordingly when adjustde (like windows dialogues)
+- [x] Ensure dialogue box does not overlap important UI elements when expanded.
+- [ ] Create a `viewable-game-window` component that contains the main game view and ensures all other panels expand/contract around it without overlapping. The bottom bar is seperate and the left and right side panels are on top of it.
+- [x] Fix the `focus-mode-hint` components position inside of the `viewable game window`
+- [x] Add 8px left and right padding to the `dialogue-text` component inside of the `draggable-dialogue` component to prevent text from touching the edges when resized to small widths.
+- [x] Ensure the `draggable-dialogue` component cannot be dragged offscreen or overlap the bottom interaction tray when expanded or moved.
+- [x] Ensure the `draggable-dialogue` component resizes properly without breaking layout or overflowing content.
+- [x] Turn off dragging when resizing the `draggable-dialogue` component to prevent accidental movement.
+- [x] Improve padding for dialogue text.
+- [x] Remove justified text alignment for better readability.
+- [x] Add markdown support for dialogue text (bold, italics, etc.) and make sure keywords with `[brackets]` are not rendered with the brackets.
+- [x] Markdown formatting does not wait until typewriter effect is finished to render properly.
+- [ ] add an animation popup for a keyword when it shows up in dialogue using the animation plugin for react that we have.
+- [ ] add an animation dev menu tab to preview various animations used in the game for testing and tweaking purposes and also adjust animation settings like speed, easing, etc. It should also contain many "examples" of animations used in the game for reference and choosing an example element to preview the animation on.
+- [ ] add a full menu for a dialogue creator tool that allows easy creation of dialogue trees with branching options, conditions, and effects. This would be a major feature but would greatly improve the workflow for creating dialogue content for the game. It should allow exporting to the .session file format used by the game. The player can choose which patient to create dialogue for and then create the dialogue tree visually with nodes and connections. Each node represents a piece of dialogue or an option, and connections represent the flow of conversation. The tool should also allow adding keywords, mood changes, focus costs, and other effects to each dialogue option. Once the dialogue tree is complete, it can be exported to a .session file that can be imported into the game for testing and use. Markdown support should also be included for formatting dialogue text within the tool and should render properly in that editor when typed in real time.
+- [ ] Speaker labels used in the dialogue system should change based on the person currently speaking. For example, when the patient is speaking, it should show "Patient" or their name, and when the therapist (player) is speaking, it should show "You" or "Therapist". This will help clarify who is speaking during dialogue exchanges.
+
+### Bugs
+- [x] Resizing the dialogue box from the bottom or left side causes it to resize from the opposite side instead of the intended side.
+- [x] The "click to continue" overflows when dialogue box is resized to small widths. It should not be hidden when we switch to the scrolling mode.
+- [ ] The end quote mark is showing up before the dialogue text is finished typing. It should only appear after the full text is displayed.
+- [ ] Somewhere the context menu/tooltip for keywords was removed. It needs to be re-added so that right-clicking keywords shows the context menu again based on the type of keyword from the keyword code we worked on.
+- [ ] "no patients found" message in the Dialogue Dev Tools tab. 
+
+## Debug Optimizations
+- [ ] Rename the Dev Errors tab to "Degug Logs"
+- [ ] Add an option to "copy all" in the debug logs based on current filters.
+- [ ] Expand on the functionality of the Debug Logs to include more detailed information about game state, errors, warnings, and other useful debugging information.
+
 
 ## [BUILD] Requirements
 

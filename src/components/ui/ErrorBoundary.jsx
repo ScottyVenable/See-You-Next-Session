@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { errorHandler, ErrorLevel, ErrorCategory } from '../utils/ErrorHandler.js';
+import { errorHandler, ErrorLevel, ErrorCategory } from '../../utils/ErrorHandler.js';
 
 /**
  * ErrorBoundary - React Error Boundary with visual error display
